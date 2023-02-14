@@ -16,7 +16,6 @@
 # gdalbuildvrt y.vrt *y*.tif
 # gdalbuildvrt -overwrite -resolution average -separate -r nearest mosaic.vrt *prob*.vrt 
 #
-
 # To run this script on a folder:
 #
 # python gdal_convert_nan_to_nodata.py g:\temp\mosaics g:\temp\nodata_mosaics
