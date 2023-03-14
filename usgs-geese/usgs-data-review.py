@@ -23,10 +23,17 @@ from visualization import visualization_utils as visutils
 
 output_json_file = os.path.expanduser('~/data/usgs_geese.json')
 
-base_folder = '/media/user/My Passport1/2017-2019'
+base_folder = '/media/user/My Passport/2017-2019'
 image_folder = os.path.join(base_folder,'01_JPGs')
 annotations_folder = os.path.join(base_folder,'03_Manually_corrected_annotations')
 
+# Should we include annotations that don't have a label?  They're not really a "mystery",
+# they're just annotations that began life as false positives, which were later removed.
+include_mystery_annotations = False
+
+# We are only keeping images with annotations, but some images end up only having annotations
+# that we filter out ("mystery annotations").  Should we keep those?
+include_images_with_only_removed_annotations = False
 
 assert os.path.isdir(image_folder)
 assert os.path.isdir(annotations_folder)
@@ -229,8 +236,6 @@ for i_file,csv_fn_relative in tqdm(enumerate(csv_files_relative),total=len(csv_f
                 ignore_ann_file,ignore_ann_file_size))
         continue
     
-    image_id_to_image[image_id] = im
-    
     csv_fn = os.path.join(annotations_folder,csv_fn_relative)
     json_fn = os.path.join(annotations_folder,json_fn_relative)
     image_fn = os.path.join(image_folder,image_fn_relative)
@@ -266,6 +271,8 @@ for i_file,csv_fn_relative in tqdm(enumerate(csv_files_relative),total=len(csv_f
     
     # For each row in the .csv file
     
+    n_annotations_this_file = 0
+    
     # i_row = 0; row = df.iloc[i_row]
     for i_row,row in df.iterrows():
     
@@ -280,7 +287,9 @@ for i_file,csv_fn_relative in tqdm(enumerate(csv_files_relative),total=len(csv_f
             assert json_sample['Label'] == ''
             json_sample['filename'] = json_fn
             assert json_sample['ConfidenceLevel'] < 0
-            mystery_annotations.append(json_sample)            
+            mystery_annotations.append(json_sample)
+            if not include_mystery_annotations:
+                continue            
         
         w = json_sample['Width_Pixels']
         h = json_sample['Height_Pixels']
@@ -355,8 +364,13 @@ for i_file,csv_fn_relative in tqdm(enumerate(csv_files_relative),total=len(csv_f
         ann['category_id'] = category_name_to_category_id[category_name]
         
         annotations.append(ann)
+        
+        n_annotations_this_file += 1
                 
-    # ...for each annotation in this file    
+    # ...for each annotation in this file
+    
+    if (n_annotations_this_file > 0) or (include_images_with_only_removed_annotations):
+        image_id_to_image[image_id] = im
         
 # ...for each file
 
@@ -403,6 +417,7 @@ if False:
     output_dir = os.path.expanduser('~/data/usgs-geese-tmp')
     os.makedirs(output_dir,exist_ok=True)
 
+
     #%% Render bounding boxes for one image (independent of the .json data)
     
     i_file = 0
@@ -413,8 +428,10 @@ if False:
     json_fn = os.path.join(annotations_folder,json_fn_relative)
     image_fn = os.path.join(image_folder,image_fn_relative)
     
-    json_fn = '/media/user/My Passport1/2017-2019/03_Manually_corrected_annotations/2017/Replicate_2017-10-02/Cam1/CAM26281_i0037.json'
-    image_fn = '/media/user/My Passport1/2017-2019/01_JPGs/2017/Replicate_2017-10-01/Cam2/CAM26281.JPG'
+    json_fn = '/media/user/My Passport1/2017-2019/03_Manually_corrected_annotations/' + \
+        '2017/Replicate_2017-10-02/Cam1/CAM26281_i0037.json'
+    image_fn = '/media/user/My Passport1/2017-2019/01_JPGs/2017/Replicate_2017-10-01/' + \
+        'Cam2/CAM26281.JPG'
     
     with open(json_fn,'r') as f:
         json_data = json.load(f)
@@ -422,7 +439,8 @@ if False:
     image_relative_fn = os.path.relpath(image_fn,base_folder)
     image_preview_folder = os.path.join(output_dir,'image-preview')
     os.makedirs(image_preview_folder,exist_ok=True)
-    output_file = os.path.join(image_preview_folder,image_relative_fn.replace('/','_') + '_preview.jpg')
+    output_file = os.path.join(image_preview_folder,image_relative_fn.replace('/','_') + \
+                               '_preview.jpg')
     im = visutils.open_image(image_fn)
     image_w = im.size[0]
     image_h = im.size[1]
@@ -459,7 +477,8 @@ if False:
         
     category_id_to_name = {v:k for k,v in category_name_to_category_id.items()}
     visutils.draw_bounding_boxes_on_file(image_fn, output_file, detection_formatted_boxes,       
-                                         confidence_threshold=0.0,detector_label_map=category_id_to_name)
+                                         confidence_threshold=0.0,
+                                         detector_label_map=category_id_to_name)
     
     path_utils.open_file(output_file)
     
@@ -490,7 +509,8 @@ if False:
         categories.append(ann['category_id'])
         
     input_file = os.path.join(image_folder,im['file_name'])
-    output_file = os.path.join(image_preview_folder,im['file_name'].replace('/','_') + '_preview.jpg')
+    output_file = os.path.join(image_preview_folder,im['file_name'].replace('/','_') + \
+                               '_preview.jpg')
     
     visutils.draw_db_boxes_on_file(input_file, output_file, 
                                    boxes=boxes, classes=categories,
@@ -515,7 +535,6 @@ if False:
     """
     424790 Brant
      47561 Canada
-     44442 Mystery
      41275 Other
       5631 Gull
       2013 Emperor
