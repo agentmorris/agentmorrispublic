@@ -67,5 +67,3 @@ for fn in filenames:
     results_transformed = deepforest_utils.boxes_to_shapefile(results,base_folder,projected=True)
     shapefile_fn = fn + '_results_{}_{}_{}.shp'.format(patch_size,patch_overlap,iou_threshold)
     results_transformed.to_file(shapefile_fn)
-    
-
