@@ -24,12 +24,11 @@ from tqdm import tqdm
 
 from visualization import visualization_utils as visutils
 
-
 input_annotations_file = os.path.expanduser('~/data/usgs_geese.json')
 input_base_folder = '/media/user/My Passport/2017-2019'
 input_image_folder = os.path.join(input_base_folder,'01_JPGs')
 
-debug_max_image = 500 # -1
+debug_max_image = -1
 
 if debug_max_image < 0:
     output_dir = os.path.expanduser('~/data/usgs-geese')
@@ -96,7 +95,7 @@ patch_jpeg_quality = 95
 
 # When we clip bounding boxes that are right on the edge of an image, clip them back
 # by just a little more than we need to, to make BoundingBoxEditor happy
-clip_epsilon_pixels = 1.0
+clip_epsilon_pixels = 0.01
 
 do_tile_writes = True
 do_image_copies = True
@@ -478,8 +477,9 @@ average_patches_per_image = n_patches / n_images_with_annotations
 
 candidate_hard_negatives = []
 n_bypassed_candidates = 0
-for s in d['images_without_annotations']:
-    if s in d['images_that_might_not_be_empty']:
+non_empty_images = set(d['images_that_might_not_be_empty'])
+for s in tqdm(d['images_without_annotations']):
+    if s in non_empty_images:
         n_bypassed_candidates += 1
     else:
         candidate_hard_negatives.append(s)
@@ -692,5 +692,3 @@ def create_virtual_yolo_dirs(yolo_base_dir):
 create_virtual_yolo_dirs(yolo_all_dir)
 create_virtual_yolo_dirs(yolo_train_dir)
 create_virtual_yolo_dirs(yolo_val_dir)
-
-

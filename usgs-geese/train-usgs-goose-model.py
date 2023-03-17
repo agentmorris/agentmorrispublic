@@ -20,8 +20,6 @@ https://github.com/microsoft/CameraTraps/tree/main/detection#training-with-yolov
 
 * Tinker with test-time augmentation
 
-* Possibly parallelize patch generation if I find myself running it often
-
 """
 
 
@@ -44,12 +42,18 @@ pip install -r requirements.txt  # install
 # I got this error:
 #    
 # OSError: /home/user/anaconda3/envs/yolov5/lib/python3.10/site-packages/nvidia/cublas/lib/libcublas.so.11: undefined symbol: cublasLtGetStatusString, version libcublasLt.so.11
-
-# I don't fully understand what that's about, but this fixed it:
+#
+# There are two ways I've found to fix this:
+#
+# CUDA was on my LD_LIBRARY_PATH, so this fixes it:
+#
+# LD_LIBRARY_PATH=
+#
+# Or if I do this:
 # 
 # pip uninstall nvidia_cublas_cu11
 #
-# Strangely, when I run train.py again, it reinstalls the missing CUDA components,
+# ...when I run train.py again, it reinstalls the missing CUDA components,
 # and everything is fine, but then the error comes back the *next* time I run it.
 # So I pip uninstall again, and the circle of life continues.
 
@@ -57,6 +61,7 @@ pip install -r requirements.txt  # install
 
 # Train
 """
+# I can run this workload with both GPUs at 225W, not higher
 ~/limit_gpu_power
 cd ~/git/yolov5-current
 
@@ -82,9 +87,11 @@ pass
 #%% Back up trained weights
 
 """
-cp ~/git/yolov5-current/usgs-geese/usgs-geese-yolov5x6-autobatch-1280-300/weights/best.pt ~/models/usgs-geese/usgs-geese-yolov5x6-autobatch-1280-300-mini-2023.03.12-best.pt
+TRAINING_RUN_NAME="usgs-geese-yolov5x6-b8-img1280-e100"
+TRAINING_OUTPUT_FOLDER="/home/user/git/yolov5-current/usgs-geese/${TRAINING_RUN_NAME}/weights"
 
-cp ~/git/yolov5-current/usgs-geese/usgs-geese-yolov5x6-autobatch-1280-300/weights/last.pt ~/models/usgs-geese/usgs-geese-yolov5x6-autobatch-1280-300-mini-2023.03.12-last.pt
+cp ${TRAINING_OUTPUT_FOLDER}/best.pt ~/models/usgs-geese/${TRAINING_RUN_NAME}-best.pt
+cp ${TRAINING_OUTPUT_FOLDER}/last.pt ~/models/usgs-geese/${TRAINING_RUN_NAME}-last.pt
 """
 
 pass
@@ -93,12 +100,15 @@ pass
 #%% Validation
 
 #
-# Val
+# Validate using YOLOv5's tools
 #
 
 """
-MODEL_FILE="/home/user/models/usgs-geese/usgs-geese-yolov5x6-autobatch-1280-300-mini-2023.03.12-best.pt"
-python val.py --img 1280 --batch-size 8 --weights ${MODEL_FILE} --project usgs-geese --name usgs-geese-mini --data "/home/user/data/usgs-geese/dataset.yaml" --conf-thres 0.1
+TRAINING_RUN_NAME="usgs-geese-yolov5x6-b8-img1280-e100"
+MODEL_FILE="/home/user/models/usgs-geese/${TRAINING_RUN_NAME}-best.pt"
+DATA_FOLDER="/home/user/data/usgs-geese-mini-500"
+
+python val.py --img 1280 --batch-size 8 --weights ${MODEL_FILE} --project usgs-geese --name ${TRAINING_RUN_NAME} --data ${DATA_FOLDER}/dataset.yaml 
 """
 
 #
@@ -110,12 +120,14 @@ export PYTHONPATH=/home/user/git/cameratraps/:/home/user/git/yolov5-current:/hom
 cd ~/git/cameratraps/detection/
 conda activate yolov5
 
-MODEL_NAME="usgs-geese-yolov5x6-autobatch-1280-300-mini-2023.03.12-best.pt"
-MODEL_FILE="/home/user/models/usgs-geese/${MODEL_NAME}"
+TRAINING_RUN_NAME="usgs-geese-yolov5x6-b8-img1280-e100"
+MODEL_FILE="/home/user/models/usgs-geese/${TRAINING_RUN_NAME}-best.pt"
+DATA_FOLDER="/home/user/data/usgs-geese-mini-500"
+RESULTS_FOLDER=${DATA_FOLDER}/results
 
-python run_detector_batch.py ${MODEL_FILE} "/home/user/data/usgs-geese/yolo_val" "/home/user/data/usgs-geese/results/${MODEL_NAME}-val.json" --recursive --quiet --output_relative_filenames --class_mapping_filename "/home/user/models/usgs-geese/usgs-geese-class-mapping.json"
+python run_detector_batch.py ${MODEL_FILE} ${DATA_FOLDER}/yolo_val ${RESULTS_FOLDER}/${TRAINING_RUN_NAME}-val.json --recursive --quiet --output_relative_filenames --class_mapping_filename ${DATA_FOLDER}/usgs-geese-md-class-mapping.json
 
-python run_detector_batch.py ${MODEL_FILE} "/home/user/data/usgs-geese/yolo_train" "/home/user/data/usgs-geese/results/${MODEL_NAME}-train.json" --recursive --quiet --output_relative_filenames --class_mapping_filename "/home/user/models/usgs-geese/usgs-geese-class-mapping.json"
+python run_detector_batch.py ${MODEL_FILE} ${DATA_FOLDER}/yolo_train ${RESULTS_FOLDER}/${TRAINING_RUN_NAME}-train.json --recursive --quiet --output_relative_filenames --class_mapping_filename ${DATA_FOLDER}/usgs-geese-md-class-mapping.json
 
 """
 
@@ -128,13 +140,17 @@ conda deactivate
 
 cd ~/git/cameratraps/api/batch_processing/postprocessing/
 
-MODEL_NAME="usgs-geese-yolov5x6-autobatch-1280-300-mini-2023.03.12-best.pt"
+TRAINING_RUN_NAME="usgs-geese-yolov5x6-b8-img1280-e100"
+DATA_FOLDER="/home/user/data/usgs-geese-mini-500"
+RESULTS_FOLDER=${DATA_FOLDER}/results
+PREVIEW_FOLDER=${DATA_FOLDER}/preview
 
-python postprocess_batch_results.py /home/user/data/usgs-geese/results/${MODEL_NAME}-val.json /home/user/data/usgs-geese/preview/${MODEL_NAME}-val --image_base_dir /home/user/data/usgs-geese/yolo_val --n_cores 10 --confidence_threshold 0.25
-xdg-open /home/user/data/usgs-geese/preview/${MODEL_NAME}-val/index.html
+python postprocess_batch_results.py ${RESULTS_FOLDER}/${TRAINING_RUN_NAME}-val.json ${PREVIEW_FOLDER}/${TRAINING_RUN_NAME}-val --image_base_dir ${DATA_FOLDER}/yolo_val --n_cores 12 --confidence_threshold 0.25 --parallelize_rendering_with_processes
 
-python postprocess_batch_results.py /home/user/data/usgs-geese/results/${MODEL_NAME}-train.json /home/user/data/usgs-geese/preview/${MODEL_NAME}-train --image_base_dir /home/user/data/usgs-geese/yolo_train --n_cores 10 --confidence_threshold 0.25
-xdg-open /home/user/data/usgs-geese/preview/${MODEL_NAME}-train/index.html
+python postprocess_batch_results.py ${RESULTS_FOLDER}/${TRAINING_RUN_NAME}-train.json ${PREVIEW_FOLDER}/${TRAINING_RUN_NAME}-train --image_base_dir ${DATA_FOLDER}/yolo_train --n_cores 12 --confidence_threshold 0.25 --parallelize_rendering_with_processes
+
+xdg-open ${PREVIEW_FOLDER}/${TRAINING_RUN_NAME}-val/index.html 
+xdg-open ${PREVIEW_FOLDER}/${TRAINING_RUN_NAME}-train/index.html
 
 """
 

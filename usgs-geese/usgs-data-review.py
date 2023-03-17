@@ -125,6 +125,11 @@ print('No annotations available for {} of {} images'.format(
     len(images_without_annotations),len(image_files_relative)))
 
 
+if False:
+    sample_image = os.path.join(image_folder,list(images_with_annotations)[0])
+    path_utils.open_file(sample_image)
+
+
 #%% Remove some candidates from the list of possible hard negatives
 
 # Among the images without annotations, some are more likely than others
