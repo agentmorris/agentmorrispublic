@@ -13,12 +13,18 @@ https://github.com/microsoft/CameraTraps/blob/main/detection/detector_training/e
 
 https://github.com/microsoft/CameraTraps/tree/main/detection#training-with-yolov5
 
-* Generate a bunch more hard negative patches and manually review them, especially if
-  they look qualitatively different.
+* Add hard negative patches, and/or mine for hard negative images
 
 * Tinker with box size
 
 * Tinker with test-time augmentation
+
+* Try smaller YOLOv5's
+
+* Try 1280px YOLOv8 when it's available
+
+* Try fancier patch sampling to minimize the number of birds that are split across
+  patches.
 
 """
 
@@ -72,13 +78,29 @@ conda activate yolov5
 # On my 2x24GB GPU setup, a batch size of 16 failed, but 8 was safe.  Autobatch did not
 # work; I got an incomprehensible error that I decided not to fix, but I'm pretty sure
 # it would have come out with a batch size of 8 anyway.
-python train.py --img 1280 --batch 8 --epochs 100 --weights yolov5x6.pt --device 0,1 --project usgs-geese --name usgs-geese-yolov5x6-b8-img1280-e100 --data "/home/user/data/usgs-geese-mini-500/dataset.yaml"
+BATCH_SIZE=8
+IMAGE_SIZE=1280
+EPOCHS=200
+DATA_YAML_FILE=/home/user/data/usgs-geese/dataset.yaml
+
+TRAINING_RUN_NAME=usgs-geese-yolov5x6-b${BATCH_SIZE}-img${IMAGE_SIZE}-e${EPOCHS}
+
+python train.py --img ${IMAGE_SIZE} --batch ${BATCH_SIZE} --epochs ${EPOCHS} --weights yolov5x6.pt --device 0,1 --project usgs-geese --name ${TRAINING_RUN_NAME} --data ${DATA_YAML_FILE}
 """
 
 # Monitor training
 """
-cd ~/git/yolov5-current/usgs-geese/usgs-geese-yolov5x6-autobatch-1280-300
-tensorboard --logdir .
+cd ~/git/yolov5-current
+tensorboard --logdir usgs-geese
+"""
+
+# Resume training
+"""
+cd ~/git/yolov5-current
+conda activate yolov5
+LD_LIBRARY_PATH=
+export PYTHONPATH=
+python train.py --resume
 """
 
 pass

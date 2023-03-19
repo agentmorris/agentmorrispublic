@@ -433,11 +433,6 @@ if False:
     json_fn = os.path.join(annotations_folder,json_fn_relative)
     image_fn = os.path.join(image_folder,image_fn_relative)
     
-    json_fn = '/media/user/My Passport1/2017-2019/03_Manually_corrected_annotations/' + \
-        '2017/Replicate_2017-10-02/Cam1/CAM26281_i0037.json'
-    image_fn = '/media/user/My Passport1/2017-2019/01_JPGs/2017/Replicate_2017-10-01/' + \
-        'Cam2/CAM26281.JPG'
-    
     with open(json_fn,'r') as f:
         json_data = json.load(f)
     
