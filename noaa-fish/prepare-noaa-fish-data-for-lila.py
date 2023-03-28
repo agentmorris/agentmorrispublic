@@ -1,3 +1,11 @@
+#
+# prepare-noaa-fish-data-for-lila
+#
+# Given the Excel file provided by NOAA, prepare data in COCO format for release on LILA:
+#    
+# https://lila.science/datasets/noaa-puget-sound-nearshore-fish
+#
+
 #%% Constants and imports
 
 import os
