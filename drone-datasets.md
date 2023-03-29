@@ -1,5 +1,6 @@
 This is an informal list of datasets with annotated aerial/drone/satellite imagery for wildlife surveys.  Everything listed here is also either listed on LILA's <a href="https://lila.science/otherdatasets">list of other conservation datasets</a> or is on <a href="https://lila.science">LILA</a>.
 
+This is also in a very temporary state, while I sort out what's what, whether this is redundant with someone else's list, etc.  So... YMMV.  Check back in a few weeks for what will hopefully be either a cleaned-up list or a link to a cleaned-up list.
 
 * Improving the precision and accuracy of animal population estimates with aerial image object detection  
 https://data.4tu.nl/articles/dataset/Improving_the_precision_and_accuracy_of_animal_population_estimates_with_aerial_image_object_detection/12713903/1
