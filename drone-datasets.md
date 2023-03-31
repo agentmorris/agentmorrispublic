@@ -64,7 +64,8 @@ https://lila.science/datasets/conservationdrones
 * Short description
 * Citation
 * Approximate size in GB
-* Download mechanism (http direct download, Globus, etc.)
+* Hosting site (LILA, Zenodo, etc.)
+* Download mechanism (http direct download, cloud download (e.g. via gsutil, azcopy), Globus, etc.)
 * Metadata raw format (.json, .csv, etc.)
 * Metadata standard, if applicable (e.g. COCO, YOLO)
 * Species present (proper taxonomic names not necessary, just common names... e.g. "albatross" or "elephant")
