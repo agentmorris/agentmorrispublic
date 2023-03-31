@@ -72,6 +72,8 @@ https://lila.science/datasets/conservationdrones
 * Vehicle type: drone/aerial/satellite
 * Channels: RGB, RGB+IR, thermal, etc.
 * Ground resolution (i.e., pixel resolution in m)
+* Number of annotated animals
+* Annotation type (boxes/points/etc.)
 * Approximate typical size of an animal in pixels (double-check this, but it should be roughly consistent with "rough animal size in meters divided by pixel size in meters")
 * Sample image or image patch, ideally with annotations displayed for that image (this requires us to make sure annotations can actually be aligned to images).  Something like [this](http://lila.science/wp-content/uploads/2021/04/noaa_seals_2019_web.png), potentially useful as a thumbnail.
 * Link to code (any code you wrote in the process of gathering information, e.g. to accelerate downloads or render a sample image)
