@@ -70,9 +70,11 @@ https://lila.science/datasets/conservationdrones
 * Metadata standard, if applicable (e.g. COCO, YOLO)
 * Species present (proper taxonomic names not necessary, just common names... e.g. "albatross" or "elephant")
 * Vehicle type: drone/aerial/satellite
+* Video, stills, or stills extracted from video
+* Number of images or videos
 * Channels: RGB, RGB+IR, thermal, etc.
 * Ground resolution (i.e., pixel resolution in m)
-* Number of annotated animals
+* Number of annotations
 * Annotation type (boxes/points/etc.)
 * Approximate typical size of an animal in pixels (double-check this, but it should be roughly consistent with "rough animal size in meters divided by pixel size in meters")
 * Sample image or image patch, ideally with annotations displayed for that image (this requires us to make sure annotations can actually be aligned to images).  Something like [this](http://lila.science/wp-content/uploads/2021/04/noaa_seals_2019_web.png), potentially useful as a thumbnail.
