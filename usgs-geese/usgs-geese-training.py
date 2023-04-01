@@ -67,12 +67,12 @@ pip install -r requirements.txt  # install
 
 # Train
 """
-# I can run this workload with both GPUs at 225W, not higher
-~/limit_gpu_power
+~/limit_gpu_power 150
 cd ~/git/yolov5-current
 
 # I usually have an older commit of yolov5 on my PYTHONPATH, remove it.
 export PYTHONPATH=
+LD_LIBRARY_PATH=
 conda activate yolov5
 
 # On my 2x24GB GPU setup, a batch size of 16 failed, but 8 was safe.  Autobatch did not
@@ -83,7 +83,8 @@ IMAGE_SIZE=1280
 EPOCHS=200
 DATA_YAML_FILE=/home/user/data/usgs-geese/dataset.yaml
 
-TRAINING_RUN_NAME=usgs-geese-yolov5x6-b${BATCH_SIZE}-img${IMAGE_SIZE}-e${EPOCHS}
+# TRAINING_RUN_NAME=usgs-geese-yolov5x-b${BATCH_SIZE}-img${IMAGE_SIZE}-e${EPOCHS}
+TRAINING_RUN_NAME=usgs-geese-yolov5x-nolinks-b${BATCH_SIZE}-img${IMAGE_SIZE}-e${EPOCHS}
 
 python train.py --img ${IMAGE_SIZE} --batch ${BATCH_SIZE} --epochs ${EPOCHS} --weights yolov5x6.pt --device 0,1 --project usgs-geese --name ${TRAINING_RUN_NAME} --data ${DATA_YAML_FILE}
 """
@@ -91,6 +92,7 @@ python train.py --img ${IMAGE_SIZE} --batch ${BATCH_SIZE} --epochs ${EPOCHS} --w
 # Monitor training
 """
 cd ~/git/yolov5-current
+conda activate yolov5
 tensorboard --logdir usgs-geese
 """
 
