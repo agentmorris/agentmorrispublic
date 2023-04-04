@@ -121,19 +121,342 @@ cp ${TRAINING_OUTPUT_FOLDER}/last.pt ~/models/usgs-geese/${TRAINING_RUN_NAME}-la
 pass
 
 
-#%% Validation
+#%% Validation with YOLOv5
 
-#
-# Validate using YOLOv5's tools
-#
+import os
+
+model_base = os.path.expanduser('~/models/usgs-geese')
+training_run_names = [
+    'usgs-geese-yolov5x6-b8-img1280-e125-of-200-20230401-ss',
+    'usgs-geese-yolov5x6-b8-img1280-e49-of-200-20230401-dm'
+]
+
+data_folder = os.path.expanduser('~/data/usgs-geese')
+image_size = 1280
+batch_size_val = 8
+project_name = 'usgs-geese'
+data_file = os.path.join(data_folder,'dataset.yaml')
+augment = True
+
+assert os.path.isfile(data_file)
+
+model_file_to_command = {}
+
+# training_run_name = training_run_names[0]
+for training_run_name in training_run_names:
+    model_file_base = os.path.join(model_base,training_run_name)
+    model_files = [model_file_base + s for s in ('-last.pt','-best.pt')]
+    
+    # model_file = model_files[0]
+    for model_file in model_files:
+        assert os.path.isfile(model_file)
+        
+        model_short_name = os.path.basename(model_file).replace('.pt','')
+        cmd = 'python val.py --img {} --batch-size {} --weights {} --project {} --name {} --data {} --save-txt --save-json --save-conf'.format(
+            image_size,batch_size_val,model_file,project_name,model_short_name,data_file)        
+        if augment:
+            cmd += ' --augment'
+        model_file_to_command[model_file] = cmd
+        
+    # ...for each model
+    
+# ...for each training run    
+
+for k in model_file_to_command.keys():
+    # print(os.path.basename(k))
+    print('')
+    cmd = model_file_to_command[k]
+    print(cmd + '\n')
+    
+
+"""
+Results without augmentation
+"""
+
+"""
+usgs-geese-yolov5x6-b8-img1280-e125-of-200-20230401-ss-last.pt
+
+  Class     Images  Instances          P          R      mAP50   mAP50-95:
+    all      11547     136014      0.591      0.562      0.513      0.287
+  Brant      11547     101770      0.877      0.919      0.901       0.53
+  Other      11547      21246      0.694       0.35      0.398      0.223
+   Gull      11547       1594      0.481      0.561      0.422      0.204
+ Canada      11547      10961      0.761      0.793      0.783      0.445
+Emperor      11547        443      0.141      0.187     0.0619     0.0325
+Speed: 0.5ms pre-process, 53.6ms inference, 0.9ms NMS per image at shape (8, 3, 1280, 1280)
+
+
+usgs-geese-yolov5x6-b8-img1280-e125-of-200-20230401-ss-best.pt
+
+  Class     Images  Instances          P          R      mAP50   mAP50-95:
+    all      11547     136014      0.618      0.563      0.539      0.295
+  Brant      11547     101770      0.861      0.927      0.908      0.526
+  Other      11547      21246      0.734      0.358      0.419      0.219
+   Gull      11547       1594      0.607      0.528       0.45      0.213
+ Canada      11547      10961      0.766      0.853      0.844      0.479
+Emperor      11547        443       0.12      0.147      0.074     0.0372
+Speed: 0.5ms pre-process, 53.8ms inference, 1.1ms NMS per image at shape (8, 3, 1280, 1280)
+
+
+usgs-geese-yolov5x6-b8-img1280-e49-of-200-20230401-dm-last.pt
+
+  Class     Images  Instances          P          R      mAP50   mAP50-95:
+    all      11547     136014      0.621      0.559      0.536       0.29
+  Brant      11547     101770      0.865      0.925      0.908       0.53
+  Other      11547      21246      0.742      0.355       0.42      0.214
+   Gull      11547       1594      0.601      0.523      0.442      0.203
+ Canada      11547      10961      0.776      0.848      0.839      0.467
+Emperor      11547        443      0.119      0.142     0.0708     0.0356
+Speed: 0.5ms pre-process, 53.5ms inference, 1.2ms NMS per image at shape (8, 3, 1280, 1280)
+
+
+usgs-geese-yolov5x6-b8-img1280-e49-of-200-20230401-dm-best.pt
+
+  Class     Images  Instances          P          R      mAP50   mAP50-95:
+    all      11547     136014      0.621      0.559      0.536       0.29
+  Brant      11547     101770      0.865      0.926      0.908       0.53
+  Other      11547      21246      0.742      0.355       0.42      0.214
+   Gull      11547       1594      0.601      0.523      0.442      0.203
+ Canada      11547      10961      0.776      0.848      0.839      0.467
+Emperor      11547        443      0.119      0.142     0.0708     0.0356
+Speed: 0.5ms pre-process, 53.2ms inference, 1.1ms NMS per image at shape (8, 3, 1280, 1280)
+
+"""
+
+"""
+Results with augmentation
+"""
+
+"""
+usgs-geese-yolov5x6-b8-img1280-e125-of-200-20230401-ss-last.pt
+
+Class     Images  Instances          P          R      mAP50   mAP50-95:
+    all      11547     136014      0.587      0.565      0.515      0.324
+  Brant      11547     101770      0.868      0.924      0.899      0.572
+  Other      11547      21246      0.689      0.357      0.392      0.233
+   Gull      11547       1594      0.486      0.551      0.435      0.283
+ Canada      11547      10961      0.755      0.809      0.792      0.497
+Emperor      11547        443      0.135      0.183     0.0579     0.0336
+
+  
+usgs-geese-yolov5x6-b8-img1280-e125-of-200-20230401-ss-best.pt
+
+  Class     Images  Instances          P          R      mAP50   mAP50-95:
+    all      11547     136014      0.601      0.563      0.535      0.324
+  Brant      11547     101770      0.844      0.928      0.906      0.562
+  Other      11547      21246      0.729       0.36      0.406      0.225
+   Gull      11547       1594      0.553      0.528       0.44       0.28
+ Canada      11547      10961      0.764      0.857      0.849      0.513
+Emperor      11547        443      0.118       0.14     0.0731      0.041
+Speed: 0.5ms pre-process, 118.5ms inference, 1.8ms NMS per image at shape (8, 3, 1280, 1280)
+
+
+usgs-geese-yolov5x6-b8-img1280-e49-of-200-20230401-dm-last.pt
+
+  Class     Images  Instances          P          R      mAP50   mAP50-95:
+    all      11547     136014      0.607      0.561      0.531      0.326
+  Brant      11547     101770      0.852      0.928      0.908      0.571
+  Other      11547      21246      0.738      0.361       0.41      0.226
+   Gull      11547       1594      0.564      0.529      0.423      0.274
+ Canada      11547      10961      0.769      0.857      0.843       0.52
+Emperor      11547        443      0.112      0.132     0.0694     0.0403
+Speed: 0.5ms pre-process, 118.5ms inference, 1.7ms NMS per image at shape (8, 3, 1280, 1280)
+
+
+usgs-geese-yolov5x6-b8-img1280-e49-of-200-20230401-dm-best.pt
+
+ Class     Images  Instances          P          R      mAP50   mAP50-95:
+    all      11547     136014      0.607      0.561      0.531      0.326
+  Brant      11547     101770      0.852      0.928      0.908      0.571
+  Other      11547      21246      0.738      0.361       0.41      0.226
+   Gull      11547       1594      0.564      0.529      0.423      0.274
+ Canada      11547      10961      0.769      0.857      0.843       0.52
+Emperor      11547        443      0.112      0.132     0.0694     0.0403
+
+"""
+
+"""
+cd ~/git/yolov5-current
+conda activate yolov5
+LD_LIBRARY_PATH=
+export PYTHONPATH=
+"""
 
 """
 TRAINING_RUN_NAME="usgs-geese-yolov5x6-b8-img1280-e100"
 MODEL_FILE="/home/user/models/usgs-geese/${TRAINING_RUN_NAME}-best.pt"
-DATA_FOLDER="/home/user/data/usgs-geese-mini-500"
+DATA_FOLDER="/home/user/data/usgs-geese"
 
 python val.py --img 1280 --batch-size 8 --weights ${MODEL_FILE} --project usgs-geese --name ${TRAINING_RUN_NAME} --data ${DATA_FOLDER}/dataset.yaml 
 """
+pass
+
+
+#%% Convert YOLO val .json results to MD .json format
+
+from tqdm import tqdm
+from collections import defaultdict
+from visualization import visualization_utils as visutils
+
+import json
+import glob
+
+class_mapping_file = os.path.expanduser('~/data/usgs-geese/usgs-geese-md-class-mapping.json')
+with open(class_mapping_file,'r') as f:
+    category_id_to_name = json.load(f)
+                        
+base_folder = '/home/user/git/yolov5-current/usgs-geese'
+run_folders = os.listdir(base_folder)
+run_folders = [os.path.join(base_folder,s) for s in run_folders]
+run_folders = [s for s in run_folders if os.path.isdir(s)]
+
+image_base = os.path.expanduser('~/data/usgs-geese/yolo_val')
+image_files = glob.glob(image_base + '/*.jpg')
+
+prediction_files = []
+
+# run_folder = run_folders[0]
+for run_folder in run_folders:
+    prediction_files_this_folder = glob.glob(run_folder+'/*_predictions.json')
+    assert len(prediction_files_this_folder) <= 1
+    if len(prediction_files_this_folder) == 1:
+        prediction_files.append(prediction_files_this_folder[0])        
+
+md_format_prediction_files = []
+
+# prediction_file = prediction_files[0]
+for prediction_file in prediction_files:
+    
+    print('Converting {} to MD format'.format(prediction_file))
+    output_file = prediction_file.replace('.json','_md-format.json')
+    assert output_file != prediction_file
+    
+    
+    with open(prediction_file,'r') as f:
+        detections = json.load(f)
+    assert isinstance(detections,list)
+    
+    image_ids_to_detections = defaultdict(list)
+    
+    # det = detections[0]
+    for det in detections:
+        image_id = det['image_id']
+        image_ids_to_detections[image_id].append(det)
+    
+    output_images = []
+    
+    # image_file = image_files[0]
+    for image_file in tqdm(image_files):
+        
+        im = {}
+        im['file'] = os.path.relpath(image_file,image_base)
+        im['detections'] = []
+        im['max_detection_conf'] = 0
+        image_id = os.path.splitext(os.path.basename(image_file))[0]
+        detections = image_ids_to_detections[image_id]
+        
+        pil_im = visutils.open_image(image_file)
+        
+        image_w = pil_im.size[0]
+        image_h = pil_im.size[1]
+        
+        # det = detections[0]
+        for det in detections:
+            
+            output_det = {}
+            output_det['category'] = str(det['category_id'])
+            output_det['conf'] = det['score']
+            input_bbox = det['bbox']
+            
+            # YOLO's COCO .json is not *that* COCO-like, but it is COCO-like in
+            # that the boxes are already [xmin/ymin/w/h]
+            box_xmin_absolute = input_bbox[0]
+            box_ymin_absolute = input_bbox[1]
+            box_width_absolute = input_bbox[2]
+            box_height_absolute = input_bbox[3]
+            
+            box_xmin_relative = box_xmin_absolute / image_w
+            box_ymin_relative = box_ymin_absolute / image_h
+            box_width_relative = box_width_absolute / image_w
+            box_height_relative = box_height_absolute / image_h
+            
+            output_bbox = [box_xmin_relative,box_ymin_relative,
+                           box_width_relative,box_height_relative]
+                
+            output_det['bbox'] = output_bbox
+            im['detections'].append(output_det)
+            
+        # ...for each detection            
+        
+        if len(im['detections']) > 0:
+            im['max_detection_conf'] = max([det['conf'] for det in im['detections']])
+            
+        output_images.append(im)
+        
+    # ...for each image file
+    
+    d = {}
+    d['images'] = output_images
+    detector_name = os.path.splitext(os.path.basename(prediction_file))[0].replace('_predictions','')
+    d['info'] = {'format_version':1.2,'detector':detector_name}
+    d['detection_categories'] = category_id_to_name
+    
+    with open(output_file,'w') as f:
+        json.dump(d,f,indent=1)
+        
+    md_format_prediction_files.append(output_file)
+
+# ...for each prediction file
+
+
+#%% Visualize results with the MD visualization pipeline
+
+postprocessing_output_folder = os.path.expanduser('~/tmp/usgs-geese-previews')
+
+import path_utils
+
+from api.batch_processing.postprocessing.postprocess_batch_results import (
+    PostProcessingOptions, process_batch_results)
+
+with open(prediction_file,'r') as f:
+    d = json.load(f)
+
+# prediction_file = md_format_prediction_files[0]
+for prediction_file in md_format_prediction_files:
+    
+    assert '_md-format.json' in prediction_file
+    base_task_name = os.path.basename(prediction_file).replace('_md-format.json','')
+
+    options = PostProcessingOptions()
+    options.image_base_dir = image_base
+    options.include_almost_detections = True
+    options.num_images_to_sample = 7500
+    options.confidence_threshold = 0.15
+    options.almost_detection_confidence_threshold = options.confidence_threshold - 0.05
+    options.ground_truth_json_file = None
+    options.separate_detections_by_category = True
+    # options.sample_seed = 0
+    
+    options.parallelize_rendering = True
+    options.parallelize_rendering_n_cores = 16
+    options.parallelize_rendering_with_threads = False
+    
+    output_base = os.path.join(postprocessing_output_folder,
+        base_task_name + '_{:.3f}'.format(options.confidence_threshold))
+    
+    os.makedirs(output_base, exist_ok=True)
+    print('Processing to {}'.format(output_base))
+    
+    options.api_output_file = prediction_file
+    options.output_dir = output_base
+    ppresults = process_batch_results(options)
+    html_output_file = ppresults.output_html_file
+    path_utils.open_file(html_output_file)
+
+# ...for each prediction file
+
+
+#%%
 
 #
 # Run the MD pred pipeline 
