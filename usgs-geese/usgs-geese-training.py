@@ -294,9 +294,7 @@ pass
 
 #%% Convert YOLO val .json results to MD .json format
 
-from tqdm import tqdm
-from collections import defaultdict
-from visualization import visualization_utils as visutils
+from data_management import yolo_output_to_md_output
 
 import json
 import glob
@@ -326,84 +324,22 @@ md_format_prediction_files = []
 
 # prediction_file = prediction_files[0]
 for prediction_file in prediction_files:
+
+    detector_name = os.path.splitext(os.path.basename(prediction_file))[0].replace('_predictions','')
     
     print('Converting {} to MD format'.format(prediction_file))
     output_file = prediction_file.replace('.json','_md-format.json')
     assert output_file != prediction_file
     
+    yolo_output_to_md_output.yolo_json_output_to_md_output(
+        yolo_json_file=prediction_file,
+        image_folder=image_base,
+        output_file=output_file,
+        yolo_category_id_to_name=category_id_to_name,                              
+        detector_name=detector_name,
+        image_id_to_relative_path=None,
+        offset_yolo_class_ids=False)    
     
-    with open(prediction_file,'r') as f:
-        detections = json.load(f)
-    assert isinstance(detections,list)
-    
-    image_ids_to_detections = defaultdict(list)
-    
-    # det = detections[0]
-    for det in detections:
-        image_id = det['image_id']
-        image_ids_to_detections[image_id].append(det)
-    
-    output_images = []
-    
-    # image_file = image_files[0]
-    for image_file in tqdm(image_files):
-        
-        im = {}
-        im['file'] = os.path.relpath(image_file,image_base)
-        im['detections'] = []
-        im['max_detection_conf'] = 0
-        image_id = os.path.splitext(os.path.basename(image_file))[0]
-        detections = image_ids_to_detections[image_id]
-        
-        pil_im = visutils.open_image(image_file)
-        
-        image_w = pil_im.size[0]
-        image_h = pil_im.size[1]
-        
-        # det = detections[0]
-        for det in detections:
-            
-            output_det = {}
-            output_det['category'] = str(det['category_id'])
-            output_det['conf'] = det['score']
-            input_bbox = det['bbox']
-            
-            # YOLO's COCO .json is not *that* COCO-like, but it is COCO-like in
-            # that the boxes are already [xmin/ymin/w/h]
-            box_xmin_absolute = input_bbox[0]
-            box_ymin_absolute = input_bbox[1]
-            box_width_absolute = input_bbox[2]
-            box_height_absolute = input_bbox[3]
-            
-            box_xmin_relative = box_xmin_absolute / image_w
-            box_ymin_relative = box_ymin_absolute / image_h
-            box_width_relative = box_width_absolute / image_w
-            box_height_relative = box_height_absolute / image_h
-            
-            output_bbox = [box_xmin_relative,box_ymin_relative,
-                           box_width_relative,box_height_relative]
-                
-            output_det['bbox'] = output_bbox
-            im['detections'].append(output_det)
-            
-        # ...for each detection            
-        
-        if len(im['detections']) > 0:
-            im['max_detection_conf'] = max([det['conf'] for det in im['detections']])
-            
-        output_images.append(im)
-        
-    # ...for each image file
-    
-    d = {}
-    d['images'] = output_images
-    detector_name = os.path.splitext(os.path.basename(prediction_file))[0].replace('_predictions','')
-    d['info'] = {'format_version':1.2,'detector':detector_name}
-    d['detection_categories'] = category_id_to_name
-    
-    with open(output_file,'w') as f:
-        json.dump(d,f,indent=1)
-        
     md_format_prediction_files.append(output_file)
 
 # ...for each prediction file
@@ -417,9 +353,6 @@ import path_utils
 
 from api.batch_processing.postprocessing.postprocess_batch_results import (
     PostProcessingOptions, process_batch_results)
-
-with open(prediction_file,'r') as f:
-    d = json.load(f)
 
 # prediction_file = md_format_prediction_files[0]
 for prediction_file in md_format_prediction_files:
