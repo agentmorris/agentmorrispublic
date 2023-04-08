@@ -498,7 +498,7 @@ from api.batch_processing.postprocessing.compare_batch_results import (
 options = BatchComparisonOptions()
 
 options.job_name = 'noaa-fish-aug-comparison'
-options.output_folder = '~/tmp/noaa-fish/results/augmentation-comparison'
+options.output_folder = os.path.expanduser('~/tmp/noaa-fish/results/augmentation-comparison')
 options.image_folder = yolo_val_folder
 
 options.pairwise_options = []
