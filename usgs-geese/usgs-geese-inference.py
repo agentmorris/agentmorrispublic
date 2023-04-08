@@ -5,7 +5,14 @@
 # 1280x1280 patches, running the model on each patch, and eliminating redundant
 # boxes from the results.
 #
-
+# TODO:
+#
+# * Finish folder inference
+# * Experiment with batch size
+# * Image-level accuracy assessment
+# * Add checkpointing to folder-level inference
+# * Add timestamps to the folder name
+#
 
 #%% Constants and imports
 
@@ -447,7 +454,10 @@ def run_model_on_folder(input_folder_base):
     run_yolo_model(project_dir,run_name,dataset_file,model_file)
     
 
-    #%% Read patch results    
+    #%% Read patch results
+    
+    # ...just to validate that they were written sensibly, we don't use the loaded
+    # results directly.
     
     run_dir = os.path.join(project_dir,run_name)
     
@@ -458,7 +468,10 @@ def run_model_on_folder(input_folder_base):
     
     with open(yolo_json_file,'r') as f:
         yolo_results = json.load(f)
-            
+    
+    print('Read results for {} of {} patches'.format(
+        len(patch_id_to_file),len(yolo_results)))
+
 
     #%% Convert patch results to MD output format
         
@@ -495,7 +508,7 @@ def run_model_on_folder(input_folder_base):
     options = PostProcessingOptions()
     options.image_base_dir = patch_folder_base
     options.include_almost_detections = True
-    options.num_images_to_sample = 5000
+    options.num_images_to_sample = 7500
     options.confidence_threshold = 0.4
     options.almost_detection_confidence_threshold = options.confidence_threshold - 0.025
     options.ground_truth_json_file = None
@@ -519,8 +532,8 @@ def run_model_on_folder(input_folder_base):
     
     path_utils.open_file(html_output_file)
     
-    
-    #%% Ckea
+        
+    #%% Clean up
 
 
 #%% Interactive driver

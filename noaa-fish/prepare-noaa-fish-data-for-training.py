@@ -1,5 +1,5 @@
 #
-# Scratch notebook for training a detector based on:
+# Scratch notebook for training and validating a detector based on:
 #
 # https://lila.science/datasets/noaa-puget-sound-nearshore-fish
 #
@@ -16,19 +16,26 @@ base_folder = os.path.expanduser('~/data/noaa-fish')
 input_image_folder = os.path.join(base_folder,'JPEGImages')
 input_file = os.path.join(base_folder,'noaa_estuary_fish.json')
 
+assert os.path.isdir(input_image_folder)
+assert os.path.isfile(input_file)
+
 yolo_all_folder = os.path.join(base_folder,'AllImagesWithAnnotations')
 yolo_train_folder = os.path.join(base_folder,'train')
 yolo_val_folder = os.path.join(base_folder,'val')
 
 yolo_dataset_file = os.path.join(base_folder,'dataset.yaml')
 class_file_name = 'classes.txt'
-os.makedirs(yolo_train_folder,exist_ok=True)
-os.makedirs(yolo_val_folder,exist_ok=True)
 
 image_id_mapping_file = os.path.join(yolo_all_folder,'image_id_to_output_image_name.json')
 
 val_location_frac = 0.2
 empty_image_selection_fraction = 0.1
+
+
+#%% Prepare training folders
+
+os.makedirs(yolo_train_folder,exist_ok=True)
+os.makedirs(yolo_val_folder,exist_ok=True)
 
 
 #%% Convert from COCO to YOLO
@@ -44,7 +51,9 @@ coco_to_yolo(input_image_folder,yolo_all_folder,input_file,
              )
 
 
-#%% Load the original metadata, and the file that maps image IDs in the original COCO file to YOLO images
+#%% Load the original metadata
+
+# ...and the file that maps image IDs in the original COCO file to YOLO images.
 
 import json
 
@@ -206,6 +215,18 @@ for im in tqdm(input_metadata['images']):
 # ...for each image
 
 
+#%% Confirm that the val set hasn't changed between runs
+
+val_file = os.path.join(base_folder,'val.json')
+with open(val_file,'r') as f:
+    val_images = json.load(f)
+val_files_previous = [im['file_name'] for im in val_images['images']]
+val_files_current = os.listdir(yolo_val_folder)
+val_files_current = [fn for fn in val_files_current if fn.lower().endswith('.jpg')]
+assert len(val_files_current) == len(val_files_previous)
+assert set(val_files_current) == set(val_files_previous)
+
+
 #%% Generate the YOLO training dataset file
 
 # Read class names
@@ -234,7 +255,7 @@ with open(yolo_dataset_file,'w') as f:
         f.write('  {}: {}\n'.format(i_class,class_name))
 
 
-#%% Train and validate YOLOv5
+#%% Train YOLOv5
 
 # Environment prep
 """
@@ -264,20 +285,92 @@ conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvi
 """
 cd ~/git/yolov5-current
 conda activate yolov5
+LD_LIBRARY_PATH=
+PYTHONPATH=
 python train.py --img 1280 --batch -1 --epochs 200 --weights yolov5x6.pt --device 0,1 --project noaa-fish --name noaa-fish-yolov5x6-01-1280-200 --data "/home/user/data/noaa-fish/dataset.yaml"
 """
 
-#
-# Val
-#
+
+#%% Run the trained model using val.py
 
 """
-python val.py --img 1280 --batch-size 8 --weights /home/user/data/noaa-fish/models/yolov5x6-1280-70-best.pt --project noaa-fish --name yolov5x6-val --data "/home/user/data/noaa-fish/dataset.yaml" --conf-thres 0.1
+cd ~/git/yolov5-current
+conda activate yolov5
+LD_LIBRARY_PATH=
+PYTHONPATH=
 """
 
-#
-# Run the MD pred pipeline 
-#
+image_size = 1280
+batch_size = 1
+model_file = '/home/user/data/noaa-fish/models/noaa-fish-yolov5x6-01-1280-200-best.pt'
+project_folder = '/home/user/tmp/noaa-fish/results'
+dataset_file = '/home/user/data/noaa-fish/dataset.yaml'
+conf_thres = 0.001
+device_string = '0'
+
+assert os.path.isfile(model_file)
+assert os.path.isfile(dataset_file)
+
+# First without augmentation...
+
+results_folder = 'noaa-yolov5x6-val-noaug'
+os.makedirs(os.path.join(project_folder,results_folder),exist_ok=True)
+
+cmd = f'python val.py --img {image_size} --batch-size {batch_size} --weights {model_file}' \
+  f' --project {project_folder} --name {results_folder} --data {dataset_file}' \
+  f' --conf-thres {conf_thres} --device {device_string} --save-json --exist-ok'
+
+# import clipboard; clipboard.copy(cmd)
+
+# Then with augmentation...
+
+results_folder = 'noaa-yolov5x6-val-aug'
+os.makedirs(os.path.join(project_folder,results_folder),exist_ok=True)
+
+cmd = f'python val.py --img {image_size} --batch-size {batch_size} --weights {model_file}' \
+  f' --project {project_folder} --name {results_folder} --data {dataset_file}' \
+  f' --conf-thres {conf_thres} --device {device_string} --save-json --augment --exist-ok'
+
+# import clipboard; clipboard.copy(cmd)
+
+
+#%% Convert results to MegaDetector format
+
+project_folder = '/home/user/tmp/noaa-fish/results'
+results_folders = ['noaa-yolov5x6-val-noaug','noaa-yolov5x6-val-aug']
+
+results_files_md = []
+
+from data_management.yolo_output_to_md_output import yolo_json_output_to_md_output
+
+yolo_category_id_to_name = {1:'animal'}
+
+# results_folder = results_folders[0]
+for results_folder in results_folders:
+    
+    results_folder_full_path = os.path.join(project_folder,results_folder)
+    assert os.path.isdir(results_folder_full_path)
+    json_files = [fn for fn in os.listdir(results_folder_full_path) \
+                  if fn.endswith('.json')]
+    assert len(json_files) == 1
+    yolo_json_file = os.path.join(results_folder_full_path,json_files[0])
+    md_formatted_results_file = yolo_json_file.replace('.json','_md-format.json')
+    assert md_formatted_results_file != yolo_json_file
+    model_short_name = results_folder
+    
+    results_files_md.append(md_formatted_results_file)
+    yolo_json_output_to_md_output(yolo_json_file,
+                                  image_folder=yolo_val_folder,
+                                  output_file=md_formatted_results_file,
+                                  yolo_category_id_to_name=yolo_category_id_to_name,
+                                  detector_name=model_short_name,
+                                  image_id_to_relative_path=None,
+                                  offset_yolo_class_ids=False)
+
+# ...for each results folder
+
+
+#%% Run the trained model using the MD pred pipeline 
 
 """
 export PYTHONPATH=/home/user/git/cameratraps/:/home/user/git/yolov5-current:/home/user/git/ai4eutils
@@ -290,12 +383,10 @@ MODEL_FILE="/home/user/data/noaa-fish/models/${MODEL_NAME}.pt"
 python run_detector_batch.py ${MODEL_FILE} /home/user/data/noaa-fish/val "/home/user/data/noaa-fish/results/${MODEL_NAME}-val.json" --recursive --quiet --output_relative_filenames
 
 python run_detector_batch.py ${MODEL_FILE} /home/user/data/noaa-fish/train "/home/user/data/noaa-fish/results/${MODEL_NAME}-train.json" --recursive --quiet --output_relative_filenames
-
 """
 
-#
-# Visualize results using the MD pipeline
-#
+
+#%% Visualize raw results (from the command line)
 
 """
 cd ~/git/cameratraps/api/batch_processing/postprocessing/
@@ -311,9 +402,138 @@ xdg-open /home/user/data/noaa-fish/preview/${MODEL_NAME}-train/index.html
 """
 
 
-#%% Train and validate YOLOv8
+#%% Filter out tall narrow things that aren't fish
 
-# Train
+import json
+
+results_files_md_filtered = []
+
+for results_file in results_files_md:
+    
+    results_file_out = results_file.replace('.json','-filtered.json')
+    assert results_file_out != results_file
+
+    results_files_md_filtered.append(results_file_out)
+        
+    assert os.path.isfile(results_file)
+    
+    with open(results_file,'r') as f:
+        d = json.load(f)
+    
+    for im in tqdm(d['images']):
+        
+        for det in im['detections']:
+            
+            # Box with in normalized units
+            w = det['bbox'][2]
+            aspect = det['bbox'][3] / det['bbox'][2]
+            
+            # Is this a very tall, narrow box?
+            if aspect > 5 and w < 0.03 and det['conf'] > 0:
+                
+                # Set it to negative confidence
+                det['conf']  = -1 * det['conf']
+    
+    # ...for each image
+    
+    with open(results_file_out,'w') as f:
+        json.dump(d,f,indent=1)
+
+# ...for each results file
+
+            
+#%% Visualize results 
+
+import path_utils
+
+from api.batch_processing.postprocessing.postprocess_batch_results import (
+    PostProcessingOptions, process_batch_results)
+
+gt_file = '/home/user/data/noaa-fish/val.json'
+
+# results_file = results_files_md_filtered[0]
+for results_file in results_files_md_filtered: 
+
+    assert os.path.isfile(results_file)
+    
+    # E.g. noaa-yolov5x6-val-noaug
+    run_name = results_file.split('/')[-2]
+    
+    postprocessing_output_folder = os.path.join(os.path.dirname(results_file),'preview')
+    
+    options = PostProcessingOptions()
+    options.image_base_dir = yolo_val_folder
+    options.ground_truth_json_file = gt_file
+    options.include_almost_detections = True
+    options.num_images_to_sample = 7500
+    options.confidence_threshold = 0.3
+    options.almost_detection_confidence_threshold = options.confidence_threshold - 0.05
+    options.separate_detections_by_category = True
+    options.sample_seed = 0
+    options.viz_target_width = 1280
+    options.negative_classes.append('#NO_LABELS#')
+    
+    options.parallelize_rendering = True
+    options.parallelize_rendering_n_cores = 20
+    options.parallelize_rendering_with_threads = False
+    
+    os.makedirs(postprocessing_output_folder, exist_ok=True)
+    print('Processing to {}'.format(postprocessing_output_folder))
+    
+    options.api_output_file = results_file
+    options.output_dir = postprocessing_output_folder
+    ppresults = process_batch_results(options)
+    html_output_file = ppresults.output_html_file
+    
+    path_utils.open_file(html_output_file)
+    
+
+#%% Compare results with and without augmentation
+
+import itertools
+
+from api.batch_processing.postprocessing.compare_batch_results import (
+    BatchComparisonOptions,PairwiseBatchComparisonOptions,compare_batch_results)
+
+options = BatchComparisonOptions()
+
+options.job_name = 'noaa-fish-aug-comparison'
+options.output_folder = '~/tmp/noaa-fish/results/augmentation-comparison'
+options.image_folder = yolo_val_folder
+
+options.pairwise_options = []
+
+filenames = results_files_md_filtered
+
+detection_thresholds = [0.15,0.15]
+
+assert len(detection_thresholds) == len(filenames)
+
+rendering_thresholds = [(x*0.6666) for x in detection_thresholds]
+
+# Choose all pairwise combinations of the files in [filenames]
+for i, j in itertools.combinations(list(range(0,len(filenames))),2):
+        
+    pairwise_options = PairwiseBatchComparisonOptions()
+    
+    pairwise_options.results_filename_a = filenames[i]
+    pairwise_options.results_filename_b = filenames[j]
+    
+    pairwise_options.rendering_confidence_threshold_a = rendering_thresholds[i]
+    pairwise_options.rendering_confidence_threshold_b = rendering_thresholds[j]
+    
+    pairwise_options.detection_thresholds_a = {'animal':detection_thresholds[i]}
+    pairwise_options.detection_thresholds_b = {'animal':detection_thresholds[j]}
+    options.pairwise_options.append(pairwise_options)
+
+results = compare_batch_results(options)
+
+from path_utils import open_file # from ai4eutils
+open_file(results.html_output_file)
+
+
+#%% TODO: train and validate YOLOv8
+
 """
 yolo detect train data="/home/user/data/noaa-fish/dataset.yaml" model=yolov8n.pt epochs=200 imgsz=1280
 """
@@ -323,119 +543,3 @@ yolo detect train data="/home/user/data/noaa-fish/dataset.yaml" model=yolov8n.pt
 # https://github.com/ultralytics/ultralytics/issues/338
 
 
-#%% Filter for tall narrow things that aren't fish
-
-import json
-
-data_subset = 'val'
-input_path = os.path.join(base_folder,data_subset)
-postprocessing_output_folder = os.path.join(base_folder,data_subset + '-postprocessing')
-model_name = "noaa-fish-yolov5x6-01-1280-200-best"
-results_file = os.path.join(base_folder, 'results/' + model_name + '-val.json')
-results_file_out = os.path.join(base_folder, 'results/' + model_name + '-val-filtered.json')
-
-assert os.path.isfile(results_file)
-assert os.path.isdir(input_path)
-
-with open(results_file,'r') as f:
-    d = json.load(f)
-
-for im in d['images']:
-    for det in im['detections']:
-        # Box with in normalized units
-        w = det['bbox'][2]
-        aspect = det['bbox'][3] / det['bbox'][2]
-        if aspect > 5 and w < 0.03 and det['conf'] > 0:
-            det['conf']  = -1 * det['conf']
-    # Update the maximum confidence for the image
-    if len(im['detections']) > 0:
-        im['max_conf'] = max([d['conf'] for d in im['detections']])
-
-with open(results_file_out,'w') as f:
-    json.dump(d,f,indent=1)
-
-            
-#%% Programmatically run the postprocessing script (val)
-
-from api.batch_processing.postprocessing.postprocess_batch_results import (
-    PostProcessingOptions, process_batch_results)
-
-data_subset = 'val'
-input_path = os.path.join(base_folder,data_subset)
-postprocessing_output_folder = os.path.join(base_folder,data_subset + '-postprocessing')
-model_name = "noaa-fish-yolov5x6-01-1280-200-best"
-results_file = os.path.join(base_folder, 'results/' + model_name + '-val-filtered.json')
-gt_file = '/home/user/data/noaa-fish/val.json'
-
-assert os.path.isfile(results_file)
-assert os.path.isdir(input_path)
-
-options = PostProcessingOptions()
-options.image_base_dir = input_path
-options.ground_truth_json_file = gt_file
-options.include_almost_detections = True
-options.num_images_to_sample = 7500
-options.confidence_threshold = 0.3
-options.almost_detection_confidence_threshold = options.confidence_threshold - 0.05
-options.separate_detections_by_category = True
-options.sample_seed = 0
-options.viz_target_width = 1280
-options.negative_classes.append('#NO_LABELS#')
-
-options.parallelize_rendering = True
-options.parallelize_rendering_n_cores = 50
-options.parallelize_rendering_with_threads = False
-
-os.makedirs(postprocessing_output_folder, exist_ok=True)
-print('Processing to {}'.format(postprocessing_output_folder))
-
-options.api_output_file = results_file
-options.output_dir = postprocessing_output_folder
-ppresults = process_batch_results(options)
-html_output_file = ppresults.output_html_file
-
-import path_utils
-path_utils.open_file(html_output_file)
-
-
-#%% Programmatically run the postprocessing script (test)
-
-from api.batch_processing.postprocessing.postprocess_batch_results import (
-    PostProcessingOptions, process_batch_results)
-
-data_subset = 'train'
-input_path = os.path.join(base_folder,data_subset)
-postprocessing_output_folder = os.path.join(base_folder,data_subset + '-postprocessing')
-model_name = "noaa-fish-yolov5x6-01-1280-200-best"
-results_file = os.path.join(base_folder, 'results/' + model_name + '-train.json')
-gt_file = '/home/user/data/noaa-fish/train.json'
-
-assert os.path.isfile(results_file)
-assert os.path.isdir(input_path)
-
-options = PostProcessingOptions()
-options.image_base_dir = input_path
-options.ground_truth_json_file = gt_file
-options.include_almost_detections = True
-options.num_images_to_sample = 7500
-options.confidence_threshold = 0.3
-options.almost_detection_confidence_threshold = options.confidence_threshold - 0.05
-options.separate_detections_by_category = True
-options.sample_seed = 0
-options.viz_target_width = 1280
-options.negative_classes.append('#NO_LABELS#')
-
-options.parallelize_rendering = True
-options.parallelize_rendering_n_cores = 50
-options.parallelize_rendering_with_threads = False
-
-os.makedirs(postprocessing_output_folder, exist_ok=True)
-print('Processing to {}'.format(postprocessing_output_folder))
-
-options.api_output_file = results_file
-options.output_dir = postprocessing_output_folder
-ppresults = process_batch_results(options)
-html_output_file = ppresults.output_html_file
-
-import path_utils
-path_utils.open_file(html_output_file)
