@@ -11,8 +11,8 @@
 import os
 import pandas as pd
 
-image_folder = r"G:\temp\drone-datasets\noaa-right-whale-recognition\imgs\imgs"
-metadata_file = r"G:\temp\drone-datasets\noaa-right-whale-recognition\train.csv"
+image_folder = r'g:\temp\drone-datasets\noaa-right-whale-recognition\imgs\imgs'
+metadata_file = r'g:\temp\drone-datasets\noaa-right-whale-recognition\train.csv'
 
 
 #%% Process metadata

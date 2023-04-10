@@ -16,10 +16,11 @@ from visualization import visualization_utils as visutils
 from PIL import Image, ImageDraw
 
 # PIL gets very sad when you try to load large images, suppress the error
-Image.MAX_IMAGE_PIXELS=None
+Image.MAX_IMAGE_PIXELS = None
 
-annotation_csv_file = r"G:\temp\drone-datasets\aerial-seabirds-west-africa\labels_birds_full.csv"
-data_file = r"G:\temp\drone-datasets\aerial-seabirds-west-africa\seabirds_rgb.tif"
+annotation_csv_file = r'gG:\temp\drone-datasets\aerial-seabirds-west-africa\labels_birds_full.csv'
+data_file = r'g:\temp\drone-datasets\aerial-seabirds-west-africa\seabirds_rgb.tif'
+output_file = r'g:\temp\aerial-seabirds-annotated.jpg'
 
 # From gdalinfo
 image_width_meters = 292.482 # 305.691
@@ -94,6 +95,6 @@ for i_ann,row in tqdm(df.iterrows(),total=len(df)):
     # draw.ellipse((x0,y0,x1,y1),fill=None,outline=(255,0,0),width=10)
     draw.ellipse((x0,y0,x1,y1),fill=(255,0,0),outline=None)
         
-pil_im.save(r'g:\temp\aerial-seabirds-annotated.jpg',quality=60)
+pil_im.save(output_file,quality=60)
 
 print('Done rendering')    

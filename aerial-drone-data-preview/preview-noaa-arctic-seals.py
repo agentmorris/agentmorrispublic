@@ -10,13 +10,19 @@
 
 import os
 import pandas as pd
-from tqdm import tqdm
+import shutil
+import numpy as np
+from collections import defaultdict
 
 from visualization import visualization_utils as visutils
 
 annotation_csv_file = r"G:\temp\drone-datasets\noaa-arctic-seals\surv_test_kamera_detections_20210212_full_paths.csv"
 
 file_base = r"I:\lila\noaa-kotz"
+
+output_file_annotated = r'g:\temp\noaa_arctic_seals_sample_image_annotated.jpg'
+output_file_unannotated = r'g:\temp\noaa_arctic_seals_sample_image_unannotated.jpg'
+
 
 #%% Read and summarize annotations
 
@@ -44,9 +50,6 @@ for i_species in range(0,len(species)):
 
 
 #%% Find unique RGB image files, count annotations, find average annotation size
-
-import numpy as np
-from collections import defaultdict
 
 box_widths = []
 
@@ -124,13 +127,8 @@ for i_row in annotations_rows:
     det['bbox'] = box    
     detection_formatted_boxes.append(det)
     
-output_file = r'g:\temp\noaa_arctic_seals_sample_image_annotated.jpg'
-visutils.draw_bounding_boxes_on_file(rgb_full_path, output_file, detection_formatted_boxes,       
+visutils.draw_bounding_boxes_on_file(rgb_full_path, output_file_annotated, detection_formatted_boxes,       
                                      confidence_threshold=0.0,detector_label_map=category_id_to_name,
                                      thickness=2,expansion=0)
 
-
-import shutil
-shutil.copyfile(rgb_full_path,r'g:\temp\noaa_arctic_seals_sample_image_unannotated.jpg')    
-    
-    
+shutil.copyfile(rgb_full_path,output_file_unannotated)    

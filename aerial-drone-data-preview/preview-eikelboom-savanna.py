@@ -10,7 +10,12 @@
 #%% Constants and imports
 
 import pandas as pd
+import operator
 import os
+import shutil
+
+import path_utils
+from visualization import visualization_utils as visutils
 
 base_folder = r'C:\drone-data\02 - eikelboom'
 
@@ -24,6 +29,9 @@ expected_species = ['zebra','elephant','giraffe']
 # [filename], [x1], [x2], [y1], [y2], [species]
 #
 #
+
+output_file_annotated = r'g:\temp\eikelboom_savanna_sample_image_annotated.jpg'
+output_file_unannotated = r'g:\temp\eikelboom_savanna_sample_image_unannotated.jpg'
 
 
 #%% List all images
@@ -56,8 +64,6 @@ for i_row,row in df.iterrows():
 
 #%% Render annotations for an image that has a decent number of annotations
 
-import operator
-
 # Sort in descending order by value
 sorted_annotations = dict(sorted(image_name_to_count.items(), 
                                  key=operator.itemgetter(1),reverse=True))
@@ -84,8 +90,6 @@ print('Found {} annotations for image {}'.format(
 
 
 #%% Render boxes
-
-from visualization import visualization_utils as visutils
 
 detection_formatted_boxes = []
 
@@ -116,13 +120,8 @@ for ann in image_annotations:
     det['bbox'] = box    
     detection_formatted_boxes.append(det)
     
-output_file = r'g:\temp\eikelboom_savanna_sample_image_annotated.jpg'
-visutils.draw_bounding_boxes_on_file(image_full_path, output_file, detection_formatted_boxes,
+visutils.draw_bounding_boxes_on_file(image_full_path, output_file_annotated, detection_formatted_boxes,
                                      confidence_threshold=0.0,detector_label_map=category_id_to_name)
+path_utils.open_file(output_file_annotated)
 
-
-import shutil
-shutil.copyfile(image_full_path,r'g:\temp\eikelboom_savanna_sample_image_unannotated.jpg')
-
-import path_utils
-path_utils.open_file(output_file)
+shutil.copyfile(image_full_path,output_file_unannotated)

@@ -11,11 +11,15 @@
 
 import pandas as pd
 import os
+import shutil
 
-base_folder = r'C:\drone-data\03 - hu'
-annotation_file = r"00_UAV-derived Thermal Waterfowl Dataset\00_UAV-derived Waterfowl Thermal Imagery Dataset\01_Thermal Images and Ground Truth (used for detector training and testing)\02_Groundtruth Label for Positive Images\Bounding Box Label.csv"
-positive_image_folder = r"00_UAV-derived Thermal Waterfowl Dataset\00_UAV-derived Waterfowl Thermal Imagery Dataset\01_Thermal Images and Ground Truth (used for detector training and testing)\01_Posistive Image"
-negative_image_folder = r"00_UAV-derived Thermal Waterfowl Dataset\00_UAV-derived Waterfowl Thermal Imagery Dataset\01_Thermal Images and Ground Truth (used for detector training and testing)\03_Negative Images"
+from visualization import visualization_utils as visutils
+import path_utils
+
+base_folder = r'c:\drone-data\03 - hu'
+annotation_file = r'00_UAV-derived Thermal Waterfowl Dataset\00_UAV-derived Waterfowl Thermal Imagery Dataset\01_Thermal Images and Ground Truth (used for detector training and testing)\02_Groundtruth Label for Positive Images\Bounding Box Label.csv'
+positive_image_folder = r'00_UAV-derived Thermal Waterfowl Dataset\00_UAV-derived Waterfowl Thermal Imagery Dataset\01_Thermal Images and Ground Truth (used for detector training and testing)\01_Posistive Image'
+negative_image_folder = r'00_UAV-derived Thermal Waterfowl Dataset\00_UAV-derived Waterfowl Thermal Imagery Dataset\01_Thermal Images and Ground Truth (used for detector training and testing)\03_Negative Images'
 
 annotation_file = os.path.join(base_folder,annotation_file)
 positive_image_folder = os.path.join(base_folder,positive_image_folder)
@@ -24,6 +28,9 @@ negative_image_folder = os.path.join(base_folder,negative_image_folder)
 assert os.path.isfile(annotation_file)
 assert os.path.isdir(positive_image_folder)
 assert os.path.isdir(negative_image_folder)
+
+output_file_annotated = r'g:\temp\hu_thermal_sample_image_annotated.jpg'
+output_file_unannotated = r'g:\temp\hu_thermal_sample_image_unannotated.tif'
 
 # 
 # The annotation columns are:
@@ -87,8 +94,6 @@ print('Found {} annotations for image {}'.format(
 
 #%% Render boxes
 
-from visualization import visualization_utils as visutils
-
 detection_formatted_boxes = []
 
 pil_im = visutils.open_image(image_full_path)
@@ -112,14 +117,10 @@ for ann in image_annotations:
     det['bbox'] = box    
     detection_formatted_boxes.append(det)
     
-output_file = r'g:\temp\hu_thermal_sample_image_annotated.jpg'
-visutils.draw_bounding_boxes_on_file(image_full_path, output_file, detection_formatted_boxes,
+visutils.draw_bounding_boxes_on_file(image_full_path, output_file_annotated, detection_formatted_boxes,
                                      confidence_threshold=0.0,detector_label_map=category_id_to_name,
                                      thickness=1,expansion=0)
 
 
-import shutil
-shutil.copyfile(image_full_path,r'g:\temp\hu_thermal_sample_image_unannotated.tif')
-
-import path_utils
-path_utils.open_file(output_file)
+shutil.copyfile(image_full_path,output_file_unannotated)
+path_utils.open_file(output_file_annotated)

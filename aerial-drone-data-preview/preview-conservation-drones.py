@@ -10,7 +10,11 @@
 #%% Constants and imports
 
 import pandas as pd
+import numpy as np
 import os
+import shutil
+
+from visualization import visualization_utils as visutils
 
 base_folder = r'G:\temp\drone-datasets\conservation-drones'
 
@@ -20,6 +24,9 @@ annotation_folders = {'train':'TrainReal/annotations',
 image_folders = {'train':'TrainReal/images',
                  'test':'TestReal/images'}
 
+output_file_annotated = r'g:\temp\conservation_drones_sample_image.jpg'
+output_file_unannotated = r'g:\temp\conservation_drones_sample_image_unannotated.jpg'
+
 # 
 # From the docs, the annotation columns are:
 # 
@@ -27,6 +34,22 @@ image_folders = {'train':'TrainReal/images',
 #
 # From the MOT page, x and y are top-left
 #
+
+# From the documentation:
+#
+# species: -1: unknown, 0: human, 1: elephant, 2: lion, 3: giraffe, 4: dog, 5: crocodile, 6: hippo, 
+# 7: zebra, 8: rhino. 3 and 4 occur only in real data. 5, 6, 7, 8 occur only in synthetic data.
+category_id_to_name = {
+    -1: 'unknown', 
+    0: 'human', 
+    1: 'elephant', 
+    2: 'lion', 
+    3: 'giraffe', 
+    4: 'dog', 
+    5: 'crocodile', 
+    6: 'hippo', 
+    7: 'zebra', 
+    8: 'rhino'}
 
 
 #%% Read annotation files
@@ -88,8 +111,6 @@ assert len(all_annotations) == 48
 
 #%% Find average box width, and also the average box width for an elephant
 
-import numpy as np
-
 elephant_category = 1
 animal_class = 0
 
@@ -114,20 +135,6 @@ print('Average elephant box width: {}'.format(np.mean(elephant_box_widths)))
 i_video = 2
 i_frame = 4
 
-# species: -1: unknown, 0: human, 1: elephant, 2: lion, 3: giraffe, 4: dog, 5: crocodile, 6: hippo, 
-# 7: zebra, 8: rhino. 3 and 4 occur only in real data. 5, 6, 7, 8 occur only in synthetic data.
-category_id_to_name = {
-    -1: 'unknown', 
-    0: 'human', 
-    1: 'elephant', 
-    2: 'lion', 
-    3: 'giraffe', 
-    4: 'dog', 
-    5: 'crocodile', 
-    6: 'hippo', 
-    7: 'zebra', 
-    8: 'rhino'}
-
 video_info = all_annotations[i_video]
 frame_annotations = [ann for ann in video_info['annotations'] if ann['frame_num'] == i_frame]
 
@@ -146,8 +153,6 @@ for frame_fn in frame_files:
         frame_image_path = os.path.join(video_image_folder,frame_fn)
         
 assert frame_image_path is not None
-
-from visualization import visualization_utils as visutils
 
 detection_formatted_boxes = []
 
@@ -168,10 +173,6 @@ for frame_ann in frame_annotations:
     det['bbox'] = box    
     detection_formatted_boxes.append(det)
     
-output_file = r'g:\temp\conservation_drones_sample_image.jpg'
-visutils.draw_bounding_boxes_on_file(frame_image_path, output_file, detection_formatted_boxes,       
+visutils.draw_bounding_boxes_on_file(frame_image_path, output_file_annotated, detection_formatted_boxes,       
                                      confidence_threshold=0.0,detector_label_map=category_id_to_name)
-
-
-import shutil
-shutil.copyfile(frame_image_path,r'g:\temp\conservation_drones_sample_image_unannotated.jpg')
+shutil.copyfile(frame_image_path,output_file_unannotated)
