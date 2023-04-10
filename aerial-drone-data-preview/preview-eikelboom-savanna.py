@@ -122,7 +122,7 @@ visutils.draw_bounding_boxes_on_file(image_full_path, output_file, detection_for
 
 
 import shutil
-shutil.copyfile(image_full_path,r'g:\temp\eikelboom_seabirds_sample_image_unannotated.jpg')
+shutil.copyfile(image_full_path,r'g:\temp\eikelboom_savanna_sample_image_unannotated.jpg')
 
 import path_utils
 path_utils.open_file(output_file)
