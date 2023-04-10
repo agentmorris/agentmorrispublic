@@ -4,6 +4,8 @@
 #
 # https://lila.science/datasets/aerial-seabirds-west-africa/
 #
+# Annotations are points in a .csv file.
+#
 
 #%% Constants and imports
 

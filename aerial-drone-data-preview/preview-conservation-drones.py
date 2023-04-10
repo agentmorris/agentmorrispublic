@@ -4,6 +4,8 @@
 #
 # https://lila.science/datasets/conservationdrones
 #
+# Annotations are boxes in a .csv file.
+#
 
 #%% Constants and imports
 
@@ -17,7 +19,6 @@ annotation_folders = {'train':'TrainReal/annotations',
 
 image_folders = {'train':'TrainReal/images',
                  'test':'TestReal/images'}
-
 
 # 
 # From the docs, the annotation columns are:

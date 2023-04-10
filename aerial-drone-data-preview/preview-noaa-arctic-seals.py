@@ -3,6 +3,8 @@
 #
 # https://lila.science/datasets/noaa-arctic-seals-2019/
 #
+# Annotations are boxes in a .csv file.
+#
 
 #%% Constants and imports
 

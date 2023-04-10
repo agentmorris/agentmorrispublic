@@ -3,6 +3,8 @@
 #
 # https://www.kaggle.com/c/noaa-right-whale-recognition
 #
+# Annotations are individual IDs in a .csv file.
+#
 
 #%% Imports and constants
 
