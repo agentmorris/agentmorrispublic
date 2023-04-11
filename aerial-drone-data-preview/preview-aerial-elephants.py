@@ -81,8 +81,6 @@ image_name_to_count = {}
 for image_name in image_to_annotations:
     image_name_to_count[image_name] = len(image_to_annotations[image_name])
     
-
-
 # Sort in descending order by value
 sorted_annotations = dict(sorted(image_name_to_count.items(), 
                                  key=operator.itemgetter(1),reverse=True))
