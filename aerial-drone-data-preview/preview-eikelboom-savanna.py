@@ -17,7 +17,7 @@ import shutil
 import path_utils
 from visualization import visualization_utils as visutils
 
-base_folder = r'C:\drone-data\02 - eikelboom'
+base_folder = r'c:\drone-data\02 - eikelboom'
 
 image_folders = ['test','train','val']
 
