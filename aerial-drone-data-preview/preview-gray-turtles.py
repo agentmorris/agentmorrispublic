@@ -53,15 +53,19 @@ image_to_annotations = defaultdict(list)
 
 n_annotations = 0
 
+all_images = set()
+
 # i_row = 0; row = df.iloc[i_row]
 for i_row,row in df.iterrows():
+    
+    image_file_relative = os.path.join(row['file_location'],row['filename'])
+    all_images.add(image_file_relative)
     
     # These are false positives
     if row['label'] != 'Certain Turtle':
         continue
 
     n_annotations += 1
-    image_file_relative = os.path.join(row['file_location'],row['filename'])
         
     ann = {}
     for s in ['label','ImageHeight','ImageWidth','top','left']:
@@ -70,7 +74,8 @@ for i_row,row in df.iterrows():
         
     image_to_annotations[image_file_relative].append(ann)
     
-print('Found {} annotations on {} images'.format(n_annotations,len(image_to_annotations)))
+print('Found {} annotations on {} images (of {})'.format(
+    n_annotations,len(image_to_annotations),len(all_images)))
 
       
 #%% Render annotations for an image that has a decent number of annotations

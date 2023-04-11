@@ -23,15 +23,15 @@ image_folders = ['test','train','val']
 
 expected_species = ['zebra','elephant','giraffe']
 
+output_file_annotated = r'g:\temp\eikelboom_savanna_sample_image_annotated.jpg'
+output_file_unannotated = r'g:\temp\eikelboom_savanna_sample_image_unannotated.jpg'
+
 # 
 # The annotation columns are:
 # 
 # [filename], [x1], [x2], [y1], [y2], [species]
 #
 #
-
-output_file_annotated = r'g:\temp\eikelboom_savanna_sample_image_annotated.jpg'
-output_file_unannotated = r'g:\temp\eikelboom_savanna_sample_image_unannotated.jpg'
 
 
 #%% List all images

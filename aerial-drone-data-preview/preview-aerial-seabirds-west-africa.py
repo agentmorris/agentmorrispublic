@@ -68,7 +68,7 @@ if False:
 #%% Render points on the image (for real)
 
 pil_im = visutils.open_image(data_file)
-print('Opened image width size: {}'.format(str(pil_im.size)))
+print('Opened image with size: {}'.format(str(pil_im.size)))
 
 draw = ImageDraw.Draw(pil_im)
 
