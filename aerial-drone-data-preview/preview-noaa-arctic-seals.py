@@ -17,6 +17,7 @@ from collections import defaultdict
 from visualization import visualization_utils as visutils
 
 annotation_csv_file = r"G:\temp\drone-datasets\noaa-arctic-seals\surv_test_kamera_detections_20210212_full_paths.csv"
+image_list_txt_file = r"G:\temp\drone-datasets\noaa-arctic-seals\surv_test_kamera_files.txt"
 
 file_base = r"I:\lila\noaa-kotz"
 
@@ -49,6 +50,27 @@ for i_species in range(0,len(species)):
     category_name_to_id[species[i_species]] = i_species
 
 
+#%% Count total number of images (including empty images)
+
+rgb_files = []
+ir_files = []
+
+with open(image_list_txt_file,'r') as f:
+    lines = f.readlines()
+    
+for s in lines:
+    s = s.strip()
+    if s.endswith('rgb.jpg'):
+        rgb_files.append(s)
+    elif s.endswith('ir.tif'):
+        ir_files.append(s)
+    else:
+        print('Non-image file: {}'.format(s))
+
+print('Enumerated {} RGB and {} thermal images'.format(
+    len(rgb_files),len(ir_files)))
+
+
 #%% Find unique RGB image files, count annotations, find average annotation size
 
 box_widths = []
@@ -70,7 +92,8 @@ for i_row,row in df.iterrows():
     assert box_width_pixels > 0
     box_widths.append(box_width_pixels)
     
-print('Found {} annotations, average width {}'.format(len(box_widths),np.mean(box_widths)))
+print('Found {} annotations on {} images, average box width {}'.format(
+    len(box_widths),len(rgb_path_to_ir_path),np.mean(box_widths)))
 
 rgb_paths = sorted(list(rgb_path_to_ir_path.keys()))
 
