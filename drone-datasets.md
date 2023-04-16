@@ -8,9 +8,9 @@
 
 ## Overview
 
-This is list of datasets with annotated aerial/drone/satellite imagery for wildlife surveys.  Everything listed here is also either listed on LILA's <a href="https://lila.science/otherdatasets">list of other conservation datasets</a> or is on <a href="https://lila.science">LILA</a>.
+This is list of datasets with annotated aerial/drone/satellite imagery for wildlife surveys.  We've tried to collected standardized metadata for each dataset, and to provide sample code in a similar format for each dataset that can match annotations to images and render a sample image.  The goal of this exercise was to make it easier to assess whther existing datasets could be useful for training new models, e.g. if you want to find birds in images with a particular gestalt, we wanted to make it easier for you to get the gestalt of existing datasets, and have a starting point for parsing that data.
 
-We've tried to collected standardized metadata for each dataset, and to provide sample code in a similar format for each dataset that can match annotations to images and render a sample image.
+Everything listed here is also either listed on LILA's <a href="https://lila.science/otherdatasets">list of other conservation datasets</a> or is on <a href="https://lila.science">LILA</a>.
 
 This list was curated by the following folks, after this list got started as a thread on the AI for Conservation Slack:
 
