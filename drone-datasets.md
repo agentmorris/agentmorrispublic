@@ -1,5 +1,11 @@
 # Datasets with annotated wildlife in drone/aerial images
 
+## TOC
+
+* <a href="#overview">Overview</a>
+* <a href="#publicly-available-datasets">Publicly available datasets</a>
+* <a href="#datasets-available-by-request">Datasets available by request</a>
+
 ## Overview
 
 This is list of datasets with annotated aerial/drone/satellite imagery for wildlife surveys.  Everything listed here is also either listed on LILA's <a href="https://lila.science/otherdatasets">list of other conservation datasets</a> or is on <a href="https://lila.science">LILA</a>.
@@ -17,7 +23,7 @@ This list was curated by the following folks, after this list got started as a t
 
 Email <a href="mailto:agentmorris+dronedatasets@gmail.com">Dan</a> if anything seems off, or if you know of datasets we're missing.
 
-## Data sets
+## Publicly available datasets
 
 ### Improving the precision and accuracy of animal population estimates with aerial image object detection
 
@@ -298,4 +304,36 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
   
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/conservation_drones_sample_image_annotated.jpg" width=700>
   
+  
+## Datasets available by request
+
+### Identification of free-ranging mugger crocodiles by applying deep learning methods on UAV imagery
+
+88,000 images focusing on the mugger’s dorsal body. The data was collected from 143 individuals across 19 different locations along the western part of India.
+  
+* 1.5 GB, downloadable via http from Dryad (<a href="https://datadryad.org/stash/landing/show?id=doi%3A10.5061%2Fdryad.s4mw6m98n">download link</a>)
+* Categories: mugger crocodile
+* Vehicle type: drone
+* Image information: 88000 RGB images
+* Annotation information:  individual ID
+* Typical animal size in pixels: 1000
+  
+  
+<img src="https://raw.githubusercontent.com/KalindiFonda/bAIo/main/aerial-drone-data-preview/mugger_crocodiles_31_2_sample.jpg" width=700>
+  
+  
+### Whales from Space
+
+633 satellite image chips with boxes on whales
+  
+Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite image dataset of whales for training machine learning models. Scientific Data. 2022 May 27;9(1):245.
+
+* 10 MB, downloadable via http from By request (<a href="https://www.nature.com/articles/s41597-022-01377-4#Sec8">download link</a>)
+* Metadata in csv, shapefile format
+* Categories: southern right whale, humpback whale, fin whale, grey whale
+* Vehicle type: satellite
+* Image information: 633 RGB images (150x150 chips)
+* Annotation information:  boxes
+* Typical animal size in pixels: 50
+    
   

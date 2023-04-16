@@ -21,7 +21,7 @@ starting_header_level = '###'
 
 # i_row = 0; row = df.iloc[i_row]
 for i_row,row in df.iterrows():
-
+    
     # Ignore everything below this
     if not isinstance(row['Assigned to'],str):
         break
@@ -60,7 +60,14 @@ for i_row,row in df.iterrows():
         
     s += '* Image information: {} {} images{}\n'.format(row['Number of images or videos'],row['Channels'],image_addendum)
     
-    s += '* Annotation information: {} {}\n'.format(int(row['Number of annotations']),row['Annotation type'])
+    ann_number_string = ''
+    try:
+        n = int(row['Number of annotations'])
+        ann_number_string = str(n) + ' '
+    except Exception as e:
+            pass
+        
+    s += '* Annotation information: {} {}\n'.format(ann_number_string,row['Annotation type'])
     s += '* Typical animal size in pixels: {}\n'.format(row['Typical animal width in pixels'])
     
     if isinstance(row['Sample code'],str):
