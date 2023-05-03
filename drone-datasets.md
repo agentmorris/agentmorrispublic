@@ -5,6 +5,7 @@
 * <a href="#overview">Overview</a>
 * <a href="#publicly-available-datasets">Publicly available datasets</a>
 * <a href="#datasets-available-by-request">Datasets available by request</a>
+* <a href="#datasets-added-recently-that-we-havent-had-a-chance-to-dig-into-yet">Datasets added recently that we haven't had a chance to dig into yet</a>
 
 ## Overview
 
@@ -337,3 +338,6 @@ Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite imag
 * Typical animal size in pixels: 50
     
   
+## Datasets added recently that we haven't had a chance to dig into yet
+
+* Miao Z, Fara LJ, Fronczak D, Landolt KL, Bragger A, Koneff MD, Lubinski B, Robinson LR, Yates S, 2023, [Images and annotations to automate the classification of avian species](https://www.sciencebase.gov/catalog/item/63bf21cdd34e92aad3cdac5a).  U.S. Geological Survey data release.
