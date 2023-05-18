@@ -3,14 +3,16 @@
 #
 # https://www.kaggle.com/c/noaa-right-whale-recognition
 #
+# Annotations are individual IDs in a .csv file.
+#
 
 #%% Imports and constants
 
 import os
 import pandas as pd
 
-image_folder = r"G:\temp\drone-datasets\noaa-right-whale-recognition\imgs\imgs"
-metadata_file = r"G:\temp\drone-datasets\noaa-right-whale-recognition\train.csv"
+image_folder = r'g:\temp\drone-datasets\noaa-right-whale-recognition\imgs\imgs'
+metadata_file = r'g:\temp\drone-datasets\noaa-right-whale-recognition\train.csv'
 
 
 #%% Process metadata

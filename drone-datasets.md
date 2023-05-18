@@ -1,84 +1,343 @@
-# Overview
+# Datasets with annotated wildlife in drone/aerial images
 
-This is an informal list of datasets with annotated aerial/drone/satellite imagery for wildlife surveys.  Everything listed here is also either listed on LILA's <a href="https://lila.science/otherdatasets">list of other conservation datasets</a> or is on <a href="https://lila.science">LILA</a>.
+## TOC
 
-This is also in a very temporary state, while I sort out what's what, whether this is redundant with someone else's list, etc.  So... YMMV.  Check back in a few weeks for what will hopefully be either a cleaned-up list or a link to a cleaned-up list.
+* <a href="#overview">Overview</a>
+* <a href="#publicly-available-datasets">Publicly available datasets</a>
+* <a href="#datasets-available-by-request">Datasets available by request</a>
+* <a href="#datasets-added-recently-that-we-havent-had-a-chance-to-dig-into-yet">Datasets added recently that we haven't had a chance to dig into yet</a>
 
-# Data sets
+## Overview
 
-* Improving the precision and accuracy of animal population estimates with aerial image object detection  
-https://data.4tu.nl/articles/dataset/Improving_the_precision_and_accuracy_of_animal_population_estimates_with_aerial_image_object_detection/12713903/1
+This is list of datasets with annotated aerial/drone/satellite imagery for wildlife surveys.  We've tried to collected standardized metadata for each dataset, and to provide sample code in a similar format for each dataset that can match annotations to images and render a sample image.  The goal of this exercise was to make it easier to assess whther existing datasets could be useful for training new models, e.g. if you want to find birds in images with a particular gestalt, we wanted to make it easier for you to get the gestalt of existing datasets, and have a starting point for parsing that data.
 
-* UAV-derived waterfowl thermal imagery dataset  
-https://data.mendeley.com/datasets/46k66mz9sz/4
+Everything listed here is also either listed on LILA's <a href="https://lila.science/otherdatasets">list of other conservation datasets</a> or is on <a href="https://lila.science">LILA</a>.
 
-* Drones count wildlife more accurately and precisely than humans  
-https://datadryad.org/stash/dataset/doi:10.5061/dryad.rd736
+This list was curated by the following folks, after this list got started as a thread on the AI for Conservation Slack:
 
-* Identification of free-ranging mugger crocodiles by applying deep learning methods on UAV imagery  
-https://datadryad.org/stash/landing/show?id=doi%3A10.5061%2Fdryad.s4mw6m98n
+* <a href="https://dmorris.net">Dan Morris</a>
+* <a href="https://www.linkedin.com/in/zhongqi-miao-17a50084/">Zhongqi Miao</a>
+* <a href="https://www.linkedin.com/in/kalindifonda">Kalindi Fonda</a>
+* <a href="https://www.linkedin.com/in/aakash-gupta-5ky">Aakash Gupta</a>
+* <a href="https://www.linkedin.com/in/jveitchmichaelis/">Josh Veitch-Michaelis</a>
+* <a href="https://www.linkedin.com/in/edbayes/">Ed Bayes</a>
 
-* Counting animals in aerial images with a density map estimation model  
-https://zenodo.org/record/7702635
+Email <a href="mailto:agentmorris+dronedatasets@gmail.com">Dan</a> if anything seems off, or if you know of datasets we're missing.
 
-* Data from: A convolutional neural network for detecting sea turtles in drone imagery  
-https://zenodo.org/record/5004596
+## Publicly available datasets
 
-* The Aerial Elephant Dataset  
-https://zenodo.org/record/3234780
+### Improving the precision and accuracy of animal population estimates with aerial image object detection
 
-* A global model of bird detection...  
-https://zenodo.org/record/5033174
+Aerial images with 4305 bounding boxes on zebra, giraffe, and elephants
+  
+Eikelboom JA, Wind J, van de Ven E, Kenana LM, Schroder B, de Knegt HJ, van Langevelde F, Prins HH. Improving the precision and accuracy of animal population estimates with aerial image object detection. Methods in Ecology and Evolution. 2019 Nov;10(11):1875-87.
 
-* Aerial Photo Imagery from Fall Waterfowl Surveys, Izembek Lagoon, Alaska, 2017-2019  
-https://alaska.usgs.gov/products/data.php?dataid=484
+* 5.7 GB, downloadable via http from 4TU (<a href="https://data.4tu.nl/articles/dataset/Improving_the_precision_and_accuracy_of_animal_population_estimates_with_aerial_image_object_detection/12713903/1">download link</a>)
+* Metadata in csv format
+* Categories: elephant, zebra, giraffe
+* Vehicle type: plane
+* Image information: 561 RGB images
+* Annotation information: 4305 boxes
+* Typical animal size in pixels: 50
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-eikelboom-savanna.py">preview-eikelboom-savanna.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/eikelboom_savanna_sample_image_annotated.jpg" width=700>
+  
+  
+### UAV-derived waterfowl thermal imagery dataset
 
-* Data from: Drones and deep learning produce accurate and efficient monitoring of large-scale seabird colonies  
-https://research.repository.duke.edu/concern/datasets/kp78gh20s?locale=en
+8976 bounding boxes on waterfowl in UAV-derived thermal images
+  
+Hu Q, Smith J, Woldt W, Tang Z. UAV-derived waterfowl thermal imagery dataset. Mendeley Data, V4. 2021.
 
-* Cattle detection and counting in UAV images based on convolutional neural networks  
-http://bird.nae-lab.org/cattle/
+* 4.1 GB, downloadable via http from Mendeley Data (<a href="https://data.mendeley.com/datasets/46k66mz9sz/4">download link</a>)
+* Metadata in csv format
+* Categories: waterfowl
+* Vehicle type: plane
+* Image information: 541 thermal images (unannotated RGB images included as a visual reference)
+* Annotation information: 8976 boxes
+* Typical animal size in pixels: 7
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-hu-thermal.py">preview-hu-thermal.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/hu_thermal_sample_image_annotated.jpg" width=700>
+  
+  
+### Drones count wildlife more accurately and precisely than humans
 
-* Whales from Space  
-https://ramadda.data.bas.ac.uk/repository/entry/show?entryid=c1afe32c-493c-4dc7-af9f-649593b97b2c
+Images of 10 life-sized, replica seabird colonies containing a known number of fake birds taken from four different heights (30m, 60m, 90m and 120m)
+  
+Hodgson JC, Mott R, Baylis SM, Pham TT, Wotherspoon S, Kilpatrick AD, Raja Segaran R, Reid I, Terauds A, Koh LP. Drones count wildlife more accurately and precisely than humans. Methods in Ecology and Evolution. 2018 May;9(5):1160-7.
 
-* NOAA Fisheries Steller Sea Lion Population Count  
-https://www.kaggle.com/c/noaa-fisheries-steller-sea-lion-population-count
+* 50 MB, downloadable via http from Dryad (<a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.rd736">download link</a>)
+* Metadata in csv format
+* Categories: fake seabirds
+* Vehicle type: drone
+* Image information: 40 RGB images
+* Annotation information: 1560 counts
+* Typical animal size in pixels: variable
+  
+  
+<img src="https://raw.githubusercontent.com/KalindiFonda/bAIo/main/aerial-drone-data-preview/drone_count_seabird_colony_60m_sample.jpg" width=700>
+  
+  
+### Counting animals in aerial images with a density map estimation model
 
-* Right Whale Recognition  
-https://www.kaggle.com/c/noaa-right-whale-recognition
+137365 point annotations on penguins in RGB UAV images
+  
+Qian Y, Humphries G, Trathan P, Lowther A, Donovan C.  Counting animals in aerial images with a density map estimation model [Data set]. 2023.
 
-* NOAA Arctic Seals 2019  
-https://lila.science/datasets/noaa-arctic-seals-2019/
+* 300 MB, downloadable via http from Zenodo (<a href="https://zenodo.org/record/7702635#.ZChnoHZBxD8">download link</a>)
+* Metadata in json format (LabelBox standard)
+* Categories: brush-tailed penguins
+* Vehicle type: plane
+* Image information: 753 RGB images (orthorectified)
+* Annotation information: 137365 points
+* Typical animal size in pixels: 30
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-qian-penguins.py">preview-qian-penguins.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/qian_penguins_sample_image_annotated.jpg" width=700>
+  
+  
+### Data from: A convolutional neural network for detecting sea turtles in drone imagery
 
-* Aerial Seabirds West Africa  
-https://lila.science/datasets/aerial-seabirds-west-africa/
+1902 point annotations on sea turtles in drone images
+  
+Gray PC, Fleishman AB, Klein DJ, McKown MW, Bezy VS, Lohmann KJ, Johnston DW. A convolutional neural network for detecting sea turtles in drone imagery. Methods in Ecology and Evolution. 2019 Mar;10(3):345-55.
 
-* Conservation Drones  
-https://lila.science/datasets/conservationdrones
+* 7.24 GB, downloadable via http from Zenodo (<a href="https://zenodo.org/record/5004596#.ZChnr3ZBxD8">download link</a>)
+* Metadata in csv format
+* Categories: olive ridley turtle
+* Vehicle type: drone
+* Image information: 1059 NIR images (false color NIR rendered to RGB)
+* Annotation information: 1902 points
+* Typical animal size in pixels: 10
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-gray-turtles.py">preview-gray-turtles.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/gray_turtles_sample_image_annotated.jpg" width=700>
+  
+  
+### The Aerial Elephant Dataset
 
-# Metadata I'd like to collect for each dataset
+15581 point annotations on elephants in aerial images
+  
+Naude J, Joubert D. The Aerial Elephant Dataset: A New Public Benchmark for Aerial Object Detection. InProceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops 2019 (pp. 48-55).
 
-* Name (included above)
-* URL (included above)
-* Short description (~two sentences)
-* Citation (Vancouver format preferred)
-* Approximate size in GB
-* Hosting site (LILA, Zenodo, Kaggle, etc.)
-* Download mechanism (http direct download, cloud download (e.g. via gsutil, azcopy), Globus, etc.)
-* Metadata raw format (.json, .csv, etc.)
-* Metadata standard, if applicable (e.g. COCO, YOLO)
-* Species present (proper taxonomic names not necessary, just common names... e.g. "albatross" or "elephant")
-* Vehicle type: drone/aerial/satellite
-* Video, stills, or stills extracted from video
-* Number of images or videos
-* Channels: RGB, RGB+IR, thermal, etc.
-* Ground resolution (i.e., pixel resolution in m)
-* Number of annotations
-* Annotation type (boxes/points/etc.)
-* Approximate typical size of an animal in pixels (double-check this, but it should be roughly consistent with "rough animal size in meters divided by pixel size in meters")
-* Sample image or image patch, ideally with annotations displayed for that image (this requires us to make sure annotations can actually be aligned to images).  Something like [this](http://lila.science/wp-content/uploads/2021/04/noaa_seals_2019_web.png), potentially useful as a thumbnail.
-* Link to code (any code you wrote in the process of gathering information, e.g. to accelerate downloads or render a sample image)
-* Notes (anything these categories don't capture)
+* 16.3 GB, downloadable via http from Zenodo (<a href="https://zenodo.org/record/3234780">download link</a>)
+* Metadata in csv format
+* Categories: elephant
+* Vehicle type: drone
+* Image information: 2074 RGB images
+* Annotation information: 15581 points
+* Typical animal size in pixels: 75
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-aerial-elephants.py">preview-aerial-elephants.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/aerial_elephants_sample_image_annotated.jpg" width=700>
+  
+  
+### A global model of bird detection in high resolution airborne images using computer vision
 
+386638 box annotations on 23765 drone images from 13 ecosystems
+  
+Weinstein BG, Garner L, Saccomanno VR, Steinkraus A, Ortega A, Brush K, Yenni G, McKellar AE, Converse R, Lippitt CD, Wegmann A. A general deep learning model for bird detection in high-resolution airborne imagery. Ecological Applications. 2022 Dec:e2694.
 
+* 29 GB, downloadable via http from Zenodo (<a href="https://zenodo.org/record/5033174">download link</a>)
+* Metadata in csv format
+* Categories: bird
+* Vehicle type: variable
+* Image information: 23765 RGB images
+* Annotation information: 386638 boxes
+* Typical animal size in pixels: 35
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weinstein-birds.py">preview-weinstein-birds.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/weinstein_birds_sample_image_annotated.jpg" width=700>
+  
+  
+### Aerial Photo Imagery from Fall Waterfowl Surveys, Izembek Lagoon, Alaska, 2017-2019
+
+631349 point annotations on waterfowl on 110,067 aerial images
+  
+Weiser EL, Flint PL, Marks DK, Shults BS, Wilson HM, Thompson SJ, Fischer JB. Aerial photo imagery from fall waterfowl surveys, Izembek Lagoon, Alaska, 2017-2019: U.S. Geological Survey data release. 2022.
+
+* 1.82 TB, downloadable via http from USGS (<a href="https://alaska.usgs.gov/products/data.php?dataid=484">download link</a>)
+* Metadata in csv, json format (CountThings standard)
+* Categories: brant goose, emperor goose, canada goose, gull, other
+* Vehicle type: plane
+* Image information: 110667 RGB images
+* Annotation information: 631349 points
+* Typical animal size in pixels: 50
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl.py">preview-weiser-waterfowl.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/weiser_waterfowl_sample_image_annotated.jpg" width=700>
+  
+  
+### Data from: Drones and deep learning produce accurate and efficient monitoring of large-scale seabird colonies
+
+44966 bounding boxes on drone images of black-browed albatrosses and southern rockhopper penguins
+  
+Hayes MC, Gray PC, Harris G, Sedgwick WC, Crawford VD, Chazal N, Crofts S, Johnston DW. Data from: Drones and deep learning produce accurate and efficient monitoring of large-scale seabird colonies. Duke Research Repository. doi. 2020;10:r4dn45v9g.
+
+* 20.5 GB, downloadable via Globus from Globus (<a href="https://research.repository.duke.edu/concern/datasets/kp78gh20s?locale=en">download link</a>)
+* Metadata in csv format
+* Categories: black-browed albatross, southern rockhopper penguin
+* Vehicle type: drone
+* Image information: 3947 RGB images
+* Annotation information: 44966 boxes
+* Typical animal size in pixels: 300
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-hayes-seabirds.py">preview-hayes-seabirds.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/hayes_seabirds_sample_image_annotated.jpg" width=700>
+  
+  
+### Cattle detection and counting in UAV images based on convolutional neural networks
+
+1919 bounding boxes on cattle in drone images, with individual IDs
+  
+Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection and counting in UAV images based on convolutional neural networks. International Journal of Remote Sensing. 2020 Jan 2;41(1):31-52.
+
+* 3.2 GB, downloadable via http from University of Tokyo (<a href="http://bird.nae-lab.org/cattle/">download link</a>)
+* Metadata in txt format
+* Categories: cattle
+* Vehicle type: drone
+* Image information: 663 RGB images
+* Annotation information: 1919 boxes
+* Typical animal size in pixels: 90
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-shao-cattle.py">preview-shao-cattle.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/shao_cattle_sample_image_annotated.jpg" width=700>
+  
+  
+### NOAA Fisheries Steller Sea Lion Population Count
+
+948 aerial images of sea lions with counts for each image
+  
+* 103 GB, downloadable via http or torrent from Kaggle (<a href="https://www.kaggle.com/c/noaa-fisheries-steller-sea-lion-population-count">download link</a>)
+* Metadata in csv format
+* Categories: steller sea lion
+* Vehicle type: plane
+* Image information: 948 RGB images
+* Annotation information: 948 counts
+* Typical animal size in pixels: 75
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-steller-sea-lion-count.py">preview-steller-sea-lion-count.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/steller_sea_lion_count_sample_image.jpg" width=700>
+  
+  
+### Right Whale Recognition
+
+4544 images of right whales with individual IDs
+  
+* 10 GB, downloadable via http from Kaggle (<a href="https://www.kaggle.com/c/noaa-right-whale-recognition">download link</a>)
+* Metadata in csv format
+* Categories: right whale
+* Vehicle type: helicopter
+* Image information: 11468 RGB images
+* Annotation information: 4544 individual IDs
+* Typical animal size in pixels: 1500
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-right-whale-recognition.py">preview-right-whale-recognition.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/right_whale_recognition_sample_image.jpg" width=700>
+  
+  
+### NOAA Arctic Seals 2019
+
+Around 14000 bounding boxes on seals in 44185 color/thermal image pairs 
+  
+Alaska Fisheries Science Center, 2021: A Dataset for Machine Learning Algorithm Development.
+
+* 1 TB, downloadable via azcopy from LILA (<a href="https://lila.science/datasets/noaa-arctic-seals-2019/">download link</a>)
+* Metadata in csv format
+* Categories: ringed_seal, ringed_pup, unknown_seal, bearded_pup, bearded_seal, unknown_pup
+* Vehicle type: plane
+* Image information: 44185 RGB+IR images (rGB and IR are different resolutions, but registered well, and annotations for every animal are provided for both images)
+* Annotation information: 14311 boxes
+* Typical animal size in pixels: 55
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-noaa-arctic-seals.py">preview-noaa-arctic-seals.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/noaa_arctic_seals_sample_image_annotated.jpg" width=700>
+  
+  
+### Aerial Seabirds West Africa
+
+High-resolution aerial RGB imagery obtained from a census of breeding seabirds in West Africa in 2019, with 21516 point annotations on seabirds
+  
+Kellenberger B, Veen T, Folmer E, Tuia D. 21,000 birds in 4.5 h: efficient large-scale seabird detection with machine learning. Remote Sensing in Ecology and Conservation. 2021.
+
+* 2.2 GB, downloadable via http or azcopy from LILA (<a href="https://lila.science/datasets/aerial-seabirds-west-africa/">download link</a>)
+* Metadata in csv format
+* Categories: great white pelican, royal tern, caspian tern, slender-billed gull, gray-headed gull, great cormorant
+* Vehicle type: plane
+* Image information: single aerial orthomosaic RGB images
+* Annotation information: 21516 points
+* Typical animal size in pixels: 30
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-aerial-seabirds-west-africa.py">preview-aerial-seabirds-west-africa.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/aerial_seabirds_west_africa_sample_image_annotated.jpg" width=700>
+  
+  
+### Conservation Drones
+
+Thermal drone videos with 166221 boxes and object IDs on humans, elephants, and several other animals
+  
+Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, Joppa L, Dilkina B, Tambe M. BIRDSAI: A Dataset for Detection and Tracking in Aerial Thermal Infrared Videos.
+
+* 3.7 GB, downloadable via http or azcopy from LILA (<a href="https://lila.science/datasets/conservationdrones">download link</a>)
+* Metadata in csv format (MOT standard)
+* Categories: human, elephant, giraffe, lion, dog
+* Vehicle type: drone
+* Image information: 61994 frames from 48 videos thermal images
+* Annotation information: 166221 boxes
+* Typical animal size in pixels: 35
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-conservation-drones.py">preview-conservation-drones.py</a>
+  
+  
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/conservation_drones_sample_image_annotated.jpg" width=700>
+  
+  
+## Datasets available by request
+
+### Identification of free-ranging mugger crocodiles by applying deep learning methods on UAV imagery
+
+88,000 images focusing on the mugger’s dorsal body. The data was collected from 143 individuals across 19 different locations along the western part of India.
+  
+* 1.5 GB, downloadable via http from Dryad (<a href="https://datadryad.org/stash/landing/show?id=doi%3A10.5061%2Fdryad.s4mw6m98n">download link</a>)
+* Categories: mugger crocodile
+* Vehicle type: drone
+* Image information: 88000 RGB images
+* Annotation information:  individual ID
+* Typical animal size in pixels: 1000
+  
+  
+<img src="https://raw.githubusercontent.com/KalindiFonda/bAIo/main/aerial-drone-data-preview/mugger_crocodiles_31_2_sample.jpg" width=700>
+  
+  
+### Whales from Space
+
+633 satellite image chips with boxes on whales
+  
+Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite image dataset of whales for training machine learning models. Scientific Data. 2022 May 27;9(1):245.
+
+* 10 MB, downloadable via http from By request (<a href="https://www.nature.com/articles/s41597-022-01377-4#Sec8">download link</a>)
+* Metadata in csv, shapefile format
+* Categories: southern right whale, humpback whale, fin whale, grey whale
+* Vehicle type: satellite
+* Image information: 633 RGB images (150x150 chips)
+* Annotation information:  boxes
+* Typical animal size in pixels: 50
+    
+  
+## Datasets added recently that we haven't had a chance to dig into yet
+
+* Miao Z, Fara LJ, Fronczak D, Landolt KL, Bragger A, Koneff MD, Lubinski B, Robinson LR, Yates S, 2023, [Images and annotations to automate the classification of avian species](https://www.sciencebase.gov/catalog/item/63bf21cdd34e92aad3cdac5a).  U.S. Geological Survey data release.

@@ -9,8 +9,8 @@
 import os
 import pandas as pd
 
-train_folder = r"G:\temp\drone-datasets\noaa-fisheries-steller-sea-lion-population-count\Train"
-train_metadata_file = r"train.csv"
+train_folder = r'g:\temp\drone-datasets\noaa-fisheries-steller-sea-lion-population-count\Train'
+train_metadata_file = r'train.csv'
 train_metadata_path = os.path.join(train_folder,train_metadata_file)
 
 assert os.path.isdir(train_folder)

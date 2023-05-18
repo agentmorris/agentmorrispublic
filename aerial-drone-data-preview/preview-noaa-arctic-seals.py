@@ -3,18 +3,27 @@
 #
 # https://lila.science/datasets/noaa-arctic-seals-2019/
 #
+# Annotations are boxes in a .csv file.
+#
 
 #%% Constants and imports
 
 import os
 import pandas as pd
-from tqdm import tqdm
+import shutil
+import numpy as np
+from collections import defaultdict
 
 from visualization import visualization_utils as visutils
 
 annotation_csv_file = r"G:\temp\drone-datasets\noaa-arctic-seals\surv_test_kamera_detections_20210212_full_paths.csv"
+image_list_txt_file = r"G:\temp\drone-datasets\noaa-arctic-seals\surv_test_kamera_files.txt"
 
 file_base = r"I:\lila\noaa-kotz"
+
+output_file_annotated = r'g:\temp\noaa_arctic_seals_sample_image_annotated.jpg'
+output_file_unannotated = r'g:\temp\noaa_arctic_seals_sample_image_unannotated.jpg'
+
 
 #%% Read and summarize annotations
 
@@ -41,10 +50,28 @@ for i_species in range(0,len(species)):
     category_name_to_id[species[i_species]] = i_species
 
 
-#%% Find unique RGB image files, count annotations, find average annotation size
+#%% Count total number of images (including empty images)
 
-import numpy as np
-from collections import defaultdict
+rgb_files = []
+ir_files = []
+
+with open(image_list_txt_file,'r') as f:
+    lines = f.readlines()
+    
+for s in lines:
+    s = s.strip()
+    if s.endswith('rgb.jpg'):
+        rgb_files.append(s)
+    elif s.endswith('ir.tif'):
+        ir_files.append(s)
+    else:
+        print('Non-image file: {}'.format(s))
+
+print('Enumerated {} RGB and {} thermal images'.format(
+    len(rgb_files),len(ir_files)))
+
+
+#%% Find unique RGB image files, count annotations, find average annotation size
 
 box_widths = []
 
@@ -65,7 +92,8 @@ for i_row,row in df.iterrows():
     assert box_width_pixels > 0
     box_widths.append(box_width_pixels)
     
-print('Found {} annotations, average width {}'.format(len(box_widths),np.mean(box_widths)))
+print('Found {} annotations on {} images, average box width {}'.format(
+    len(box_widths),len(rgb_path_to_ir_path),np.mean(box_widths)))
 
 rgb_paths = sorted(list(rgb_path_to_ir_path.keys()))
 
@@ -122,13 +150,8 @@ for i_row in annotations_rows:
     det['bbox'] = box    
     detection_formatted_boxes.append(det)
     
-output_file = r'g:\temp\noaa_arctic_seals_sample_image_annotated.jpg'
-visutils.draw_bounding_boxes_on_file(rgb_full_path, output_file, detection_formatted_boxes,       
+visutils.draw_bounding_boxes_on_file(rgb_full_path, output_file_annotated, detection_formatted_boxes,       
                                      confidence_threshold=0.0,detector_label_map=category_id_to_name,
                                      thickness=2,expansion=0)
 
-
-import shutil
-shutil.copyfile(rgb_full_path,r'g:\temp\noaa_arctic_seals_sample_image_unannotated.jpg')    
-    
-    
+shutil.copyfile(rgb_full_path,output_file_unannotated)    
