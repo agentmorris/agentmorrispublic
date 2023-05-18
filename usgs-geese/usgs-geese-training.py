@@ -1,12 +1,22 @@
 #
 # train-usgs-goose-model.py
 #
-# Not a lot of actual code here, just documenting model training.
+# This file documents the model training process, starting from where usgs-geese-training-data-prep.py
+# leaves off.  Training happens at the yolov5 CLI, and the exact command line arguments are documented
+# in the "Train" cell.
+#
+# Later cells in this file also:
+#
+# * Run the YOLOv5 validation scripts
+# * Convert YOLOv5 val results to MD .json format
+# * Use the MD visualization pipeline to visualize results
+# * Use the MD inference pipeline to run the trained model
 #
 
 #%% TODO
 
 """
+
 * Adjust hyperparameters (increase augmentation, match MDv5 parameters)
 
 https://github.com/microsoft/CameraTraps/blob/main/detection/detector_training/experiments/megadetector_v5_yolo/hyp_mosaic.yml
@@ -36,15 +46,18 @@ https://github.com/microsoft/CameraTraps/tree/main/detection#training-with-yolov
 # https://github.com/ultralytics/yolov5/wiki/Tips-for-Best-Training-Results
 
 
-# Environment prep
+## Environment prep
+
 """
 conda create --name yolov5
 conda activate yolov5
 conda install pip
-git clone https://github.com/ultralytics/yolov5 yolov5-current # clone
+git clone https://github.com/ultralytics/yolov5 yolov5-current
 cd yolov5-current
-pip install -r requirements.txt  # install
+pip install -r requirements.txt
+"""
 
+#
 # I got this error:
 #    
 # OSError: /home/user/anaconda3/envs/yolov5/lib/python3.10/site-packages/nvidia/cublas/lib/libcublas.so.11: undefined symbol: cublasLtGetStatusString, version libcublasLt.so.11
@@ -61,13 +74,14 @@ pip install -r requirements.txt  # install
 #
 # ...when I run train.py again, it reinstalls the missing CUDA components,
 # and everything is fine, but then the error comes back the *next* time I run it.
+#
 # So I pip uninstall again, and the circle of life continues.
+#
+
+
+## Training
 
 """
-
-# Train
-"""
-~/limit_gpu_power 150
 cd ~/git/yolov5-current
 
 # I usually have an older commit of yolov5 on my PYTHONPATH, remove it.
@@ -89,14 +103,18 @@ TRAINING_RUN_NAME=usgs-geese-yolov5x-nolinks-b${BATCH_SIZE}-img${IMAGE_SIZE}-e${
 python train.py --img ${IMAGE_SIZE} --batch ${BATCH_SIZE} --epochs ${EPOCHS} --weights yolov5x6.pt --device 0,1 --project usgs-geese --name ${TRAINING_RUN_NAME} --data ${DATA_YAML_FILE}
 """
 
-# Monitor training
+
+## Monitoring training
+
 """
 cd ~/git/yolov5-current
 conda activate yolov5
 tensorboard --logdir usgs-geese
 """
 
-# Resume training
+
+## Resuming training
+
 """
 cd ~/git/yolov5-current
 conda activate yolov5
@@ -133,8 +151,12 @@ training_run_names = [
 
 data_folder = os.path.expanduser('~/data/usgs-geese')
 image_size = 1280
+
+# Note to self: validation batch size appears to have no impact on mAP
+# (it shouldn't, but I verified that explicitly)
 batch_size_val = 8
-project_name = 'usgs-geese'
+
+project_name = os.path.expanduser('~/tmp/usgs-geese-val')
 data_file = os.path.join(data_folder,'dataset.yaml')
 augment = True
 
@@ -152,7 +174,7 @@ for training_run_name in training_run_names:
         assert os.path.isfile(model_file)
         
         model_short_name = os.path.basename(model_file).replace('.pt','')
-        cmd = 'python val.py --img {} --batch-size {} --weights {} --project {} --name {} --data {} --save-txt --save-json --save-conf'.format(
+        cmd = 'python val.py --img {} --batch-size {} --weights {} --project {} --name {} --data {} --save-txt --save-json --save-conf --exist-ok'.format(
             image_size,batch_size_val,model_file,project_name,model_short_name,data_file)        
         if augment:
             cmd += ' --augment'
@@ -294,6 +316,9 @@ pass
 
 #%% Convert YOLO val .json results to MD .json format
 
+# pip install jsonpickle humanfriendly tqdm skicit-learn
+
+import os
 from data_management import yolo_output_to_md_output
 
 import json
@@ -303,7 +328,7 @@ class_mapping_file = os.path.expanduser('~/data/usgs-geese/usgs-geese-md-class-m
 with open(class_mapping_file,'r') as f:
     category_id_to_name = json.load(f)
                         
-base_folder = '/home/user/git/yolov5-current/usgs-geese'
+base_folder = os.path.expanduser('~/tmp/usgs-geese-val')
 run_folders = os.listdir(base_folder)
 run_folders = [os.path.join(base_folder,s) for s in run_folders]
 run_folders = [s for s in run_folders if os.path.isdir(s)]
@@ -327,7 +352,7 @@ for prediction_file in prediction_files:
 
     detector_name = os.path.splitext(os.path.basename(prediction_file))[0].replace('_predictions','')
     
-    print('Converting {} to MD format'.format(prediction_file))
+    # print('Converting {} to MD format'.format(prediction_file))
     output_file = prediction_file.replace('.json','_md-format.json')
     assert output_file != prediction_file
     

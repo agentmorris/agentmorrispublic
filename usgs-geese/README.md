@@ -4,11 +4,13 @@
 
 The code in this folder trains and evaluates models to detect geese in aerial images, based on the <a href="https://www.usgs.gov/data/aerial-photo-imagery-fall-waterfowl-surveys-izembek-lagoon-alaska-2017-2019">Izembek Lagoon dataset</a>.
 
-There are around 100,000 images total, about 95% of which contain no geese.  Images are 8688 x 5792.  A typical image looks like this:
+There are around 100,000 images total, about 95% of which contain no geese.  Images are 8688 x 5792.  A typical ground truth image looks like this:
 
 <img src="sample_image.jpg">
 
-The annotations you can vaguely see as different colors correspond to different species of goose.  Most of this repo will operate on 1280x1280 patches that look like this:
+For anyone looking at this repo and getting excited about that image, making super-duper-clear that *that is a ground truth image*.  Not the results don't look good too, but this image isn't results, it's ground truth.
+
+The annotations you can vaguely see as different colors correspond to different species of goose.  Most of this folder operates on 1280x1280 patches that look like this:
 
 <img src="annotated_patch.png">
 
@@ -30,7 +32,11 @@ The annotations you can vaguely see as different colors correspond to different 
 
 #### usgs-geese-training.py
 
-Training happens at the YOLOv5 command line, but this script keeps track of the commands used for training and validation.
+* Train the model (this happens at the YOLOv5 CLI, but this script documents the commands)
+* Run the YOLOv5 validation scripts
+* Convert YOLOv5 val results to MD .json format
+* Use the MD visualization pipeline to visualize results
+* Use the MD inference pipeline to run the trained model
 
 #### usgs-geese-inference.py
 
