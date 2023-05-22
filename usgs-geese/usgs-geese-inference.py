@@ -28,8 +28,8 @@ from tqdm import tqdm
 import torch
 from torchvision import ops
 
-import path_utils
-from visualization import visualization_utils as visutils
+from md_utils import path_utils
+from md_visualization import visualization_utils as vis_utils
 from data_management.yolo_output_to_md_output import yolo_json_output_to_md_output
 
 # We will explicitly verify that images are actually this size
@@ -42,6 +42,8 @@ project_dir = os.path.expanduser('~/tmp/usgs-inference')
 project_symlink_dir = os.path.join(project_dir,'symlink_images')
 patch_folder_base = os.path.join(project_dir,'patches')
 chunk_cache_dir = os.path.join(project_dir,'chunk_cache')
+os.makedirs(chunk_cache_dir,exist_ok=True)
+
 md_formatted_results_dir = os.path.join(project_dir,'md_formatted_results')
 
 working_dir = os.path.expanduser('~/git/yolov5-current')
@@ -51,17 +53,28 @@ model_file = os.path.join(model_base,
 dataset_definition_file = os.path.expanduser('~/data/usgs-geese/dataset.yaml')  
 assert os.path.isfile(model_file)
 
-default_batch_size = 8
-default_conf_thres = '0.001'
+# Threshold used for including results in the json file during inference
+default_inference_conf_thres = '0.001'
+
+default_inference_batch_size = 8
 image_size = 1280
+
+# Right now, for debuggin, we run inference with a low confidence threshold, but after
+# inference, we strip out very-low-confidence detections
+post_inference_conf_thres = 0.025
 
 n_cores_patch_generation = 16
 parallelize_patch_generation_with_threads = True
 
+force_patch_generation = False
 overwrite_existing_patches = False
 overwrite_md_results_files = False
 
 devices = [0,1]
+
+# This isn't NMS in the usual sense of redundant model predictions; this is being
+# used to de-duplicate predictions from overlapping patches.
+nms_iou_threshold = 0.45
 
 os.chdir(working_dir)
 
@@ -190,7 +203,21 @@ def patch_info_to_patch_name(image_name,patch_x_min,patch_y_min):
 def extract_patches_for_image(image_fn,patch_folder,image_name_base=None,overwrite=True):
     """
     Extract patches from image_fn to separate image files in patch_folder.
-    Returns a list of patch information structs.
+    
+    Returns a dictionary that looks like:
+        
+        {
+             'image_fn':'/whatever/image/you/passed/in',
+             'patches':
+             [
+                 {
+                  'xmin':x0,'ymin':y0,'xmax':x1,'ymax':y1,
+                  'patch_fn':'/patch/folder/patch/image/name.jpg',
+                  'image_fn':'/whatever/image/you/passed/in'
+                  }
+             ]
+        }
+            
     """
     
     patch_jpeg_quality = 95    
@@ -204,7 +231,7 @@ def extract_patches_for_image(image_fn,patch_folder,image_name_base=None,overwri
     image_relative_path = os.path.relpath(image_fn,image_name_base)    
     image_name = relative_path_to_image_name(image_relative_path)
     
-    pil_im = visutils.open_image(image_fn)
+    pil_im = vis_utils.open_image(image_fn)
     assert pil_im.size[0] == expected_image_width
     assert pil_im.size[1] == expected_image_height
     
@@ -249,6 +276,7 @@ def extract_patches_for_image(image_fn,patch_folder,image_name_base=None,overwri
         patch_info['ymin'] = patch_y_min
         patch_info['ymax'] = patch_y_max
         patch_info['patch_fn'] = patch_image_fn
+        patch_info['image_fn'] = image_fn
         patches.append(patch_info)
     
     # ...for each patch
@@ -266,7 +294,10 @@ def generate_patches_for_image(image_fn_relative,patch_folder_base,input_folder_
     """
     Wrapper for extract_patches_for_image() that chooses a patch folder name based
     on the image name.
+    
+    See extract_patches_for_image for return format.
     """
+    
     image_fn = os.path.join(input_folder_base,image_fn_relative)    
     assert os.path.isfile(image_fn)        
     patch_folder = os.path.join(patch_folder_base,image_fn_relative)        
@@ -335,8 +366,8 @@ def create_yolo_dataset_file(dataset_file,symlink_dir,yolo_category_id_to_name):
 
 def run_yolo_model(project_dir,run_name,dataset_file,model_file,
                    execute=True,augment=True,device_string='0',
-                   batch_size=default_batch_size,
-                   conf_thres=default_conf_thres):
+                   batch_size=default_inference_batch_size,
+                   conf_thres=default_inference_conf_thres):
     """
     Invoke Python in a shell to run the model on a folder of images.
     """
@@ -375,19 +406,18 @@ def run_yolo_model(project_dir,run_name,dataset_file,model_file,
 
 def in_place_nms(md_results, iou_thres=0.45, verbose=True):
     """
-    Run torch.ops.nms in-place on MD-formatted detection results
+    Run torch.ops.nms in-place on MD-formatted detection results    
     """
     
     n_detections_before = 0
     n_detections_after = 0
     
-    # i_image = 5; im = md_results['images'][i_image]
-    # i_image = 1; im = md_results['images'][i_image]
-    for i_image,im in enumerate(md_results['images']):
+    # i_image = 18; im = md_results['images'][i_image]
+    for i_image,im in tqdm(enumerate(md_results['images']),total=len(md_results['images'])):
         
         if len(im['detections']) == 0:
             continue
-        
+    
         boxes = []
         scores = []
         
@@ -434,6 +464,7 @@ def in_place_nms(md_results, iou_thres=0.45, verbose=True):
 #%%
 
 # input_folder_base = '/media/user/My Passport/2017-2019/01_JPGs/2017/Replicate_2017-10-01/Cam1'
+# input_folder_base = '/media/user/My Passport/2022-10-09/cam3'
 def run_model_on_folder(input_folder_base):
     
     #%% Input validation
@@ -447,43 +478,63 @@ def run_model_on_folder(input_folder_base):
     images_absolute = path_utils.find_images(input_folder_base,recursive=True)
     images_relative = [os.path.relpath(fn,input_folder_base) for fn in images_absolute]    
     
-    print('Generating patches')
-        
-    if n_cores_patch_generation == 1:
-        all_image_patch_info = []
-        for image_fn_relative in tqdm(images_relative):
-            image_patch_info = generate_patches_for_image(image_fn_relative,patch_folder_base,
-                                                          input_folder_base)
-            all_image_patch_info.append(image_patch_info)
-    else:                
-        if parallelize_patch_generation_with_threads:
-            pool = ThreadPool(n_cores_patch_generation)
-            print('Generating patches on a pool of {} threads'.format(n_cores_patch_generation))
-        else:
-            pool = Pool(n_cores_patch_generation)
-            print('Generating patches on a pool of {} processes'.format(n_cores_patch_generation))
-
-        all_image_patch_info = list(tqdm(pool.imap(
-            partial(generate_patches_for_image,
-                    patch_folder_base=patch_folder_base,
-                    input_folder_base=input_folder_base,
-                    overwrite=overwrite_existing_patches), 
-            images_relative), total=len(images_relative)))
-        
-    all_patch_files = []
-    for image_patch_info in all_image_patch_info:
-        image_patch_files = [pi['patch_fn'] for pi in image_patch_info['patches']]
-        all_patch_files.extend(image_patch_files)
-        
-    total_patch_size_bytes = 0
-    for fn in tqdm(all_patch_files):
-        total_patch_size_bytes += os.path.getsize(fn)
-    total_patch_size_str = humanfriendly.format_size(total_patch_size_bytes)
+    patch_cache_file = os.path.join(chunk_cache_dir,
+                                    input_folder_base.replace('\\','/').replace('/','_') + '_patch_info.json')
     
-    print('Generated {} patches for {} images in folder {}, taking up {}'.format(
-        len(all_patch_files),len(all_image_patch_info),
-        input_folder_base,total_patch_size_str))
+    if force_patch_generation or (not os.path.isfile(patch_cache_file)):
+        
+        print('Generating patches for {}'.format(input_folder_base))
+            
+        if n_cores_patch_generation == 1:
+            all_image_patch_info = []
+            # image_fn_relative = images_relative[0]
+            for image_fn_relative in tqdm(images_relative):
+                image_patch_info = generate_patches_for_image(image_fn_relative,patch_folder_base,
+                                                              input_folder_base)
+                all_image_patch_info.append(image_patch_info)
+        else:                
+            if parallelize_patch_generation_with_threads:
+                pool = ThreadPool(n_cores_patch_generation)
+                print('Generating patches on a pool of {} threads'.format(n_cores_patch_generation))
+            else:
+                pool = Pool(n_cores_patch_generation)
+                print('Generating patches on a pool of {} processes'.format(n_cores_patch_generation))
+    
+            all_image_patch_info = list(tqdm(pool.imap(
+                partial(generate_patches_for_image,
+                        patch_folder_base=patch_folder_base,
+                        input_folder_base=input_folder_base,
+                        overwrite=overwrite_existing_patches), 
+                images_relative), total=len(images_relative)))
+            
+        all_patch_files = []
+        for image_patch_info in all_image_patch_info:
+            image_patch_files = [pi['patch_fn'] for pi in image_patch_info['patches']]
+            all_patch_files.extend(image_patch_files)
+            
+        total_patch_size_bytes = 0
+        for fn in tqdm(all_patch_files):
+            total_patch_size_bytes += os.path.getsize(fn)
+        total_patch_size_str = humanfriendly.format_size(total_patch_size_bytes)
+        
+        print('Generated {} patches for {} images in folder {}, taking up {}'.format(
+            len(all_patch_files),len(all_image_patch_info),
+            input_folder_base,total_patch_size_str))
 
+        with open(patch_cache_file,'w') as f:
+            json.dump(all_image_patch_info,f,indent=1)
+            
+        print('Wrote patch info to {}'.format(patch_cache_file))        
+        
+        del image_patch_info
+    
+    else:
+        
+        print('Loading cached patch information from {}'.format(patch_cache_file))
+        
+        with open(patch_cache_file,'r') as f:
+            all_image_patch_info = json.load(f)
+    
     
     #%% Generate symlink folder(s)
     
@@ -550,9 +601,8 @@ def run_model_on_folder(input_folder_base):
     
     #%% Save/load chunk state for debugging (because stuff crashes)
     
-    os.makedirs(chunk_cache_dir,exist_ok=True)
     chunk_cache_file = os.path.join(chunk_cache_dir,
-                                    input_folder_base.replace('\\','/').replace('/','_') + '.json')
+                                    input_folder_base.replace('\\','/').replace('/','_') + '_chunk_info.json')
     
     
     if False:
@@ -568,7 +618,7 @@ def run_model_on_folder(input_folder_base):
             chunk_info = json.load(f)
     
 
-    #%% Run the scripts
+    #%% Run inference
     
     # TODO, currently done outside of this scripts, because I was too lazy to parallelize the invocation here    
     
@@ -632,7 +682,7 @@ def run_model_on_folder(input_folder_base):
     # ...for each chunk
     
     
-    #%% Merge results files
+    #%% Merge results files from each chunk into one results file
     
     os.makedirs(md_formatted_results_dir,exist_ok=True)
     md_formatted_results_files_for_chunks = [chunk['md_formatted_results_file'] for chunk in chunk_info]
@@ -641,50 +691,274 @@ def run_model_on_folder(input_folder_base):
     
     from api.batch_processing.postprocessing import combine_api_outputs
     
-    combine_api_outputs.combine_api_output_files(md_formatted_results_files_for_chunks,
+    _ = combine_api_outputs.combine_api_output_files(md_formatted_results_files_for_chunks,
                                                  md_formatted_results_file_for_folder,
                                                  require_uniqueness=True)
+    assert os.path.isfile(md_formatted_results_file_for_folder)
     
+    
+    #%% Remove low-confidence detections
+    
+    md_formatted_results_file_for_folder_thresholded = md_formatted_results_file_for_folder.replace(
+        '.json','_threshold_{}.json'.format(post_inference_conf_thres))
+
+    
+    with open(md_formatted_results_file_for_folder,'r') as f:
+        d_before_thresholding = json.load(f)
+    
+    n_detections_before_thresholding = 0    
+    for im in d_before_thresholding['images']:
+        n_detections_before_thresholding += len(im['detections'])
+
+    from api.batch_processing.postprocessing.subset_json_detector_output import (
+        subset_json_detector_output, SubsetJsonDetectorOutputOptions)
+
+    options = SubsetJsonDetectorOutputOptions()
+    options.confidence_threshold = post_inference_conf_thres
+    options.overwrite_json_files = True
+    
+    d_after_thresholding = subset_json_detector_output(md_formatted_results_file_for_folder, 
+                                                       md_formatted_results_file_for_folder_thresholded, 
+                                                       options, d_before_thresholding)
+    
+    n_detections_after_thresholding = 0    
+    for im in d_after_thresholding['images']:
+        n_detections_after_thresholding += len(im['detections'])
+      
+    print('Thresholding reduced the total number of detections from {} to {}'.format(
+        n_detections_before_thresholding,n_detections_after_thresholding))
+    
+    del d_before_thresholding,d_after_thresholding
+
     
     #%% Preview results for patches
     
-    patch_results_file = md_formatted_results_file_for_folder
-            
-    from api.batch_processing.postprocessing.postprocess_batch_results import (
-        PostProcessingOptions, process_batch_results)
-    
-    postprocessing_output_folder = os.path.join(project_dir,'preview')
+    if False:
 
-    base_task_name = os.path.basename(patch_results_file)
-    
-    options = PostProcessingOptions()
-    options.image_base_dir = patch_folder_base
-    options.include_almost_detections = True
-    options.num_images_to_sample = 7500
-    options.confidence_threshold = 0.4
-    options.almost_detection_confidence_threshold = options.confidence_threshold - 0.025
-    options.ground_truth_json_file = None
-    options.separate_detections_by_category = True
-    # options.sample_seed = 0
-    
-    options.parallelize_rendering = True
-    options.parallelize_rendering_n_cores = 16
-    options.parallelize_rendering_with_threads = False
-    
-    output_base = os.path.join(postprocessing_output_folder,
-        base_task_name + '_{:.3f}'.format(options.confidence_threshold))
-    
-    os.makedirs(output_base, exist_ok=True)
-    print('Processing to {}'.format(output_base))
-    
-    options.api_output_file = patch_results_file
-    options.output_dir = output_base
-    ppresults = process_batch_results(options)
-    html_output_file = ppresults.output_html_file
-    
-    path_utils.open_file(html_output_file)
-    
+        #%%
         
+        patch_results_file = md_formatted_results_file_for_folder_thresholded
+                
+        from api.batch_processing.postprocessing.postprocess_batch_results import (
+            PostProcessingOptions, process_batch_results)
+        
+        postprocessing_output_folder = os.path.join(project_dir,'preview')
+    
+        base_task_name = os.path.basename(patch_results_file)
+        
+        options = PostProcessingOptions()
+        options.image_base_dir = patch_folder_base
+        options.include_almost_detections = True
+        options.num_images_to_sample = 7500
+        options.confidence_threshold = 0.4
+        options.almost_detection_confidence_threshold = options.confidence_threshold - 0.05
+        options.ground_truth_json_file = None
+        options.separate_detections_by_category = True
+        # options.sample_seed = 0
+        
+        options.parallelize_rendering = True
+        options.parallelize_rendering_n_cores = 16
+        options.parallelize_rendering_with_threads = False
+        
+        output_base = os.path.join(postprocessing_output_folder,
+            base_task_name + '_{:.3f}'.format(options.confidence_threshold))
+        
+        os.makedirs(output_base, exist_ok=True)
+        print('Processing to {}'.format(output_base))
+        
+        options.api_output_file = patch_results_file
+        options.output_dir = output_base
+        ppresults = process_batch_results(options)
+        html_output_file = ppresults.output_html_file
+        
+        path_utils.open_file(html_output_file)
+        
+    
+    #%% Perform NMS within each patch
+    
+    # This is just a debugging step for now; there's not really a reason to do this
+    # at the patch level when we have to do this at the image level anyway.
+    #
+    # The only thing we're removing at the patch level is the case where a box is assigned
+    # to multiple classes.
+    if False:
+        
+        print('Loading merged results file')
+        
+        with open(md_formatted_results_file_for_folder_thresholded,'r') as f:        
+            md_results = json.load(f)
+        
+        print('Eliminating redundant detections')
+        
+        in_place_nms(md_results,iou_thres=nms_iou_threshold)
+        
+        patch_results_after_nms_file = md_formatted_results_file_for_folder_thresholded.replace('.json',
+                                                                      '_nms.json')
+        assert patch_results_after_nms_file != patch_results_after_nms_file
+        
+        with open(patch_results_after_nms_file,'w') as f:
+            json.dump(md_results,f,indent=1)
+
+
+    #%% Combine all the patch results to an image-level results set
+        
+    patch_results_file = md_formatted_results_file_for_folder_thresholded
+    
+    with open(patch_results_file,'r') as f:
+        all_patch_results = json.load(f)
+    
+    # Map absolute paths to detections; we need this because we used absolute paths
+    # to map patches back to images.
+    #
+    # This contains patches for all images in the folder.
+    patch_fn_to_results = {}
+    for im in tqdm(all_patch_results['images']):
+        abs_fn = os.path.join(patch_folder_base,im['file'])
+        patch_fn_to_results[abs_fn] = im
+
+    md_results_image_level = {}
+    md_results_image_level['info'] = all_patch_results['info']
+    md_results_image_level['detection_categories'] = all_patch_results['detection_categories']
+    md_results_image_level['images'] = []
+    
+    image_fn_to_patch_info = { x['image_fn']:x for x in all_image_patch_info }
+    
+    # i_image = 0; image_fn_relative = images_relative[i_image]
+    for i_image,image_fn_relative in tqdm(enumerate(images_relative),total=len(images_relative)):
+        
+        image_fn = os.path.join(input_folder_base,image_fn_relative)
+        assert os.path.isfile(image_fn)
+                
+        output_im = {}
+        output_im['file'] = image_fn_relative
+        output_im['detections'] = []
+            
+        pil_im = vis_utils.open_image(image_fn)
+        assert pil_im.size[0] == expected_image_width
+        assert pil_im.size[1] == expected_image_height
+        
+        image_w = pil_im.size[0]
+        image_h = pil_im.size[1]
+        
+        image_patch_info = image_fn_to_patch_info[image_fn]
+        assert image_patch_info['patches'][0]['image_fn'] == image_fn
+        
+        # Patches just for this image
+        patch_fn_to_patch_info_this_image = {}
+        
+        for patch_info in image_patch_info['patches']:
+            patch_fn_to_patch_info_this_image[patch_info['patch_fn']] = patch_info
+                
+        # For each patch
+        # i_patch = 0; patch_fn = list(patch_fn_to_patch_info_this_image.keys())[i_patch]
+        for i_patch,patch_fn in enumerate(patch_fn_to_patch_info_this_image.keys()):
+            
+            patch_results = patch_fn_to_results[patch_fn]
+            patch_info = patch_fn_to_patch_info_this_image[patch_fn]
+            
+            # patch_results['file'] is a relative path, and a subset of patch_info['patch_fn']
+            assert patch_results['file'] in patch_info['patch_fn']
+            
+            patch_w = (patch_info['xmax'] - patch_info['xmin']) + 1
+            patch_h = (patch_info['ymax'] - patch_info['ymin']) + 1
+            assert patch_w == patch_size[0]
+            assert patch_h == patch_size[1]
+            
+            # det = patch_results['detections'][0]
+            for det in patch_results['detections']:
+            
+                bbox_patch_relative = det['bbox']
+                xmin_patch_relative = bbox_patch_relative[0]
+                ymin_patch_relative = bbox_patch_relative[1]
+                w_patch_relative = bbox_patch_relative[2]
+                h_patch_relative = bbox_patch_relative[3]
+                
+                # Convert from patch-relative normalized values to image-relative absolute values
+                w_pixels = w_patch_relative * patch_w
+                h_pixels = h_patch_relative * patch_h
+                xmin_patch_pixels = xmin_patch_relative * patch_w
+                ymin_patch_pixels = ymin_patch_relative * patch_h
+                xmin_image_pixels = patch_info['xmin'] + xmin_patch_pixels
+                ymin_image_pixels = patch_info['ymin'] + ymin_patch_pixels
+                
+                # ...and now to image-relative normalized values
+                w_image_normalized = w_pixels / image_w
+                h_image_normalized = h_pixels / image_h
+                xmin_image_normalized = xmin_image_pixels / image_w
+                ymin_image_normalized = ymin_image_pixels / image_h
+                
+                bbox_image_normalized = [xmin_image_normalized,
+                                         ymin_image_normalized,
+                                         w_image_normalized,
+                                         h_image_normalized]
+                
+                output_det = {}
+                output_det['bbox'] = bbox_image_normalized
+                output_det['conf'] = det['conf']
+                output_det['category'] = det['category']
+                
+                output_im['detections'].append(output_det)
+                
+            # ...for each detection
+            
+        # ...for each patch
+
+        md_results_image_level['images'].append(output_im)
+        
+    # ...for each image    
+        
+    md_results_image_level_fn = os.path.join(project_dir,'md_results_image_level.json')
+    print('Saving image-level results to {}'.format(md_results_image_level_fn))
+          
+    with open(md_results_image_level_fn,'w') as f:
+        json.dump(md_results_image_level,f,indent=1)
+
+
+    #%% Perform image-level NMS
+    
+    in_place_nms(md_results_image_level,iou_thres=nms_iou_threshold)
+    
+    md_results_image_level_nms_fn = os.path.join(project_dir,'md_results_image_level_nms.json')
+    with open(md_results_image_level_nms_fn,'w') as f:
+        json.dump(md_results_image_level,f,indent=1)
+
+
+    #%% Render boxes on oe of the original images
+
+    del image_fn
+    del i_image
+    
+    if False:
+        
+        #%%
+        
+        with open(md_results_image_level_nms_fn,'r') as f:
+            md_results_image_level = json.load(f)
+            
+        from md_visualization import visualization_utils as vis_utils
+        
+        i_image = 1000
+        output_image_file = os.path.join(project_dir,'test.jpg')
+        detections = md_results_image_level['images'][i_image]['detections']    
+        image_fn_relative = md_results_image_level['images'][i_image]['file']
+        image_fn = os.path.join(input_folder_base,image_fn_relative)
+        assert os.path.isfile(image_fn)
+        
+        detector_label_map = {}
+        for category_id in yolo_category_id_to_name:
+            detector_label_map[str(category_id)] = yolo_category_id_to_name[category_id]
+            
+        vis_utils.draw_bounding_boxes_on_file(input_file=image_fn,
+                              output_file=output_image_file,
+                              detections=detections,
+                              confidence_threshold=0.4,
+                              detector_label_map=detector_label_map, 
+                              thickness=1, 
+                              expansion=0)
+        
+        path_utils.open_file(output_image_file)
+        
+    
     #%% Clean up
 
 
@@ -708,141 +982,4 @@ if False:
     image_patch_info = extract_patches_for_image(image_fn,patch_folder,image_name_base)    
                
 
-    #%% Perform NMS within each image
-                
-    with open(md_formatted_results_file,'r') as f:        
-        md_results = json.load(f)
-    
-    in_place_nms(md_results)
-    
-    md_results_after_nms_file = md_formatted_results_file.replace('.json',
-                                                                  '_nms.json')
-    assert md_results_after_nms_file != md_formatted_results_file
-    
-    with open(md_results_after_nms_file,'w') as f:
-        json.dump(md_results,f,indent=1)
-                
-    
-    
-    #%% Combine all the patch results to an image-level results set
-        
-    patch_results_file = md_formatted_results_file
-    # patch_results_file = md_results_after_nms_file
-    
-    with open(patch_results_file,'r') as f:
-        all_patch_results = json.load(f)
-    
-    # Map absolute paths to detections
-    patch_fn_to_results = {}
-    for im in all_patch_results['images']:
-        abs_fn = os.path.join(patch_folder_base,im['file'])
-        patch_fn_to_results[abs_fn] = im
-                              
-    image_fn = os.path.join(input_folder_base,image_fn_relative)
-    assert os.path.isfile(image_fn)
-            
-    output_im = {}
-    output_im['file'] = image_fn_relative
-    output_im['detections'] = []
-        
-    pil_im = visutils.open_image(image_fn)
-    assert pil_im.size[0] == expected_image_width
-    assert pil_im.size[1] == expected_image_height
-    
-    image_w = pil_im.size[0]
-    image_h = pil_im.size[1]
-    
-    assert image_patch_info['image_fn'] == image_fn
-    
-    patch_fn_to_patch_info = {}
-    
-    for patch_info in image_patch_info['patches']:
-        patch_fn_to_patch_info[patch_info['patch_fn']] = patch_info
-    
-    assert len(patch_fn_to_patch_info) == len(patch_fn_to_results)
-    
-    # For each patch
-    # patch_fn = list(patch_fn_to_patch_info.keys())[0]
-    for patch_fn in patch_fn_to_patch_info.keys():
-        
-        patch_results = patch_fn_to_results[patch_fn]
-        patch_info = patch_fn_to_patch_info[patch_fn]
-        
-        patch_w = (patch_info['xmax'] - patch_info['xmin']) + 1
-        patch_h = (patch_info['ymax'] - patch_info['ymin']) + 1
-        assert patch_w == patch_size[0]
-        assert patch_h == patch_size[1]
-        
-        # det = patch_results['detections'][0]
-        for det in patch_results['detections']:
-        
-            bbox_patch_relative = det['bbox']
-            xmin_patch_relative = bbox_patch_relative[0]
-            ymin_patch_relative = bbox_patch_relative[1]
-            w_patch_relative = bbox_patch_relative[2]
-            h_patch_relative = bbox_patch_relative[3]
-            
-            # Convert from patch-relative normalized values to image-relative absolute values
-            w_pixels = w_patch_relative * patch_w
-            h_pixels = w_patch_relative * patch_h
-            xmin_patch_pixels = xmin_patch_relative * patch_w
-            ymin_patch_pixels = ymin_patch_relative * patch_h
-            xmin_image_pixels = patch_info['xmin'] + xmin_patch_pixels
-            ymin_image_pixels = patch_info['ymin'] + ymin_patch_pixels
-            
-            # ...and now to image-relative normalized values
-            w_image_normalized = w_pixels / image_w
-            h_image_normalized = h_pixels / image_h
-            xmin_image_normalized = xmin_image_pixels / image_w
-            ymin_image_normalized = ymin_image_pixels / image_h
-            
-            bbox_image_normalized = [xmin_image_normalized,
-                                     ymin_image_normalized,
-                                     w_image_normalized,
-                                     h_image_normalized]
-            
-            output_det = {}
-            output_det['bbox'] = bbox_image_normalized
-            output_det['conf'] = det['conf']
-            output_det['category'] = det['category']
-            
-            output_im['detections'].append(output_det)
-            
-        # ...for each detection
-        
-    # ...for each patch
-    
-    md_results_image_level = {}
-    md_results_image_level['info'] = all_patch_results['info']
-    md_results_image_level['detection_categories'] = all_patch_results['detection_categories']
-    md_results_image_level['images'] = [output_im]
-    
-    in_place_nms(md_results_image_level)
-    
-    md_results_image_level_fn = os.path.join(project_dir,'md_results_image_level.json')
-    with open(md_results_image_level_fn,'w') as f:
-        json.dump(md_results_image_level,f,indent=1)
-
-
-    #%% Render boxes on the original image
-
-    from visualization import visualization_utils as visutils
-    
-    output_image_file = os.path.join(project_dir,'test.jpg')
-    detections = md_results_image_level['images'][0]['detections']    
-    
-    detector_label_map = {}
-    for category_id in yolo_category_id_to_name:
-        detector_label_map[str(category_id)] = yolo_category_id_to_name[category_id]
-        
-    visutils.draw_bounding_boxes_on_file(input_file=image_fn,
-                          output_file=output_image_file,
-                          detections=detections,
-                          confidence_threshold=0.2,
-                          detector_label_map=detector_label_map, 
-                          thickness=1, 
-                          expansion=0)
-    
-    path_utils.open_file(output_image_file)
-    
     

@@ -22,7 +22,7 @@ import random
 from collections import defaultdict
 from tqdm import tqdm
 
-from visualization import visualization_utils as visutils
+from md_visualization import visualization_utils as visutils
 
 input_annotations_file = os.path.expanduser('~/data/usgs_geese.json')
 input_base_folder = '/media/user/My Passport/2017-2019'
@@ -39,7 +39,7 @@ else:
 yolo_all_dir = os.path.join(output_dir,'yolo_all')
 yolo_dataset_file = os.path.join(output_dir,'dataset.yaml')
 
-# This file will be compatible with the CameraTraps repo's inference scripts
+# This file will be compatible with the MegaDetector repo's inference scripts
 md_class_mapping_file = os.path.join(output_dir,'usgs-geese-md-class-mapping.json')
 
 # Just the train/val subsets

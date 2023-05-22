@@ -19,9 +19,9 @@
 
 * Adjust hyperparameters (increase augmentation, match MDv5 parameters)
 
-https://github.com/microsoft/CameraTraps/blob/main/detection/detector_training/experiments/megadetector_v5_yolo/hyp_mosaic.yml
+https://github.com/agentmorris/MegaDetector/blob/main/detection/detector_training/experiments/megadetector_v5_yolo/hyp_mosaic.yml
 
-https://github.com/microsoft/CameraTraps/tree/main/detection#training-with-yolov5
+https://github.com/agentmorris/MegaDetector/tree/main/detection#training-with-yolov5
 
 * Add hard negative patches, and/or mine for hard negative images
 
@@ -421,8 +421,8 @@ for prediction_file in md_format_prediction_files:
 #
 
 """
-export PYTHONPATH=/home/user/git/cameratraps/:/home/user/git/yolov5-current:/home/user/git/ai4eutils
-cd ~/git/cameratraps/detection/
+export PYTHONPATH=/home/user/git/MegaDetector
+cd ~/git/MegaDetector/detection/
 conda activate yolov5
 
 TRAINING_RUN_NAME="usgs-geese-yolov5x6-b8-img1280-e100"
@@ -443,7 +443,7 @@ python run_detector_batch.py ${MODEL_FILE} ${DATA_FOLDER}/yolo_train ${RESULTS_F
 """
 conda deactivate
 
-cd ~/git/cameratraps/api/batch_processing/postprocessing/
+cd ~/git/MegaDetector/api/batch_processing/postprocessing/
 
 TRAINING_RUN_NAME="usgs-geese-yolov5x6-b8-img1280-e100"
 DATA_FOLDER="/home/user/data/usgs-geese-mini-500"
