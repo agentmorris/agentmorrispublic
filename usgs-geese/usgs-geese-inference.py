@@ -9,7 +9,7 @@
 #
 # * Finish folder inference
 # * Run more chunks than devices, to support checkpointing
-# * Add timestamps to the folder name
+# * Include folder name in patch folders
 #
 
 #%% Constants and imports
@@ -40,9 +40,11 @@ patch_size = (1280,1280)
 
 project_dir = os.path.expanduser('~/tmp/usgs-inference')    
 project_symlink_dir = os.path.join(project_dir,'symlink_images')
-patch_folder_base = os.path.join(project_dir,'patches')
-chunk_cache_dir = os.path.join(project_dir,'chunk_cache')
-os.makedirs(chunk_cache_dir,exist_ok=True)
+project_dataset_file_dir = os.path.join(project_dir,'dataset_files')
+project_patch_dir = os.path.join(project_dir,'patches')
+project_inference_script_dir = os.path.join(project_dir,'inference_scripts')
+project_yolo_results_dir = os.path.join(project_dir,'yolo_results')
+project_chunk_cache_dir = os.path.join(project_dir,'chunk_cache')
 
 md_formatted_results_dir = os.path.join(project_dir,'md_formatted_results')
 
@@ -316,8 +318,8 @@ def create_symlink_folder_for_patches(patch_files,symlink_dir):
 
     def safe_create_link(link_exists,link_new):
         
-        if os.path.exists(link_new):
-            assert os.path.islink(link_new)
+        if os.path.exists(link_new) or os.path.islink(link_new):
+            assert os.path.islink(link_new), 'Oops, {} is a real file, not a link'.format(link_new)
             if not os.readlink(link_new) == link_exists:
                 os.remove(link_new)
                 os.symlink(link_exists,link_new)
@@ -472,15 +474,21 @@ def run_model_on_folder(input_folder_base):
     assert os.path.isdir(input_folder_base), \
         'Could not find input folder {}'.format(input_folder_base)
     
+    folder_name_clean = input_folder_base.replace('\\','/').replace('/','_').replace(' ','_')
+    if folder_name_clean.startswith('_'):
+        folder_name_clean = folder_name_clean[1:]
+    
     
     #%% Generate patches
     
     images_absolute = path_utils.find_images(input_folder_base,recursive=True)
     images_relative = [os.path.relpath(fn,input_folder_base) for fn in images_absolute]    
     
-    patch_cache_file = os.path.join(chunk_cache_dir,
-                                    input_folder_base.replace('\\','/').replace('/','_') + '_patch_info.json')
-    
+    os.makedirs(project_chunk_cache_dir,exist_ok=True)
+
+    patch_cache_file = os.path.join(project_chunk_cache_dir,folder_name_clean + '_patch_info.json')
+    patch_folder_for_folder = os.path.join(project_patch_dir,folder_name_clean)
+                                           
     if force_patch_generation or (not os.path.isfile(patch_cache_file)):
         
         print('Generating patches for {}'.format(input_folder_base))
@@ -489,7 +497,7 @@ def run_model_on_folder(input_folder_base):
             all_image_patch_info = []
             # image_fn_relative = images_relative[0]
             for image_fn_relative in tqdm(images_relative):
-                image_patch_info = generate_patches_for_image(image_fn_relative,patch_folder_base,
+                image_patch_info = generate_patches_for_image(image_fn_relative,patch_folder_for_folder,
                                                               input_folder_base)
                 all_image_patch_info.append(image_patch_info)
         else:                
@@ -502,7 +510,7 @@ def run_model_on_folder(input_folder_base):
     
             all_image_patch_info = list(tqdm(pool.imap(
                 partial(generate_patches_for_image,
-                        patch_folder_base=patch_folder_base,
+                        patch_folder_base=patch_folder_for_folder,
                         input_folder_base=input_folder_base,
                         overwrite=overwrite_existing_patches), 
                 images_relative), total=len(images_relative)))
@@ -536,7 +544,7 @@ def run_model_on_folder(input_folder_base):
             all_image_patch_info = json.load(f)
     
     
-    #%% Generate symlink folder(s)
+    #%% Split patches into chunks (one per GPU), and generate symlink folder(s)
     
     def split_list(L, n):
         k, m = divmod(len(L), n)
@@ -549,9 +557,11 @@ def run_model_on_folder(input_folder_base):
     
     chunk_info = []
     
+    folder_symlink_dir = os.path.join(project_symlink_dir,folder_name_clean)
+                                      
     for i_chunk,chunk_files in enumerate(patch_chunks):
     
-        chunk_symlink_dir = os.path.join(project_symlink_dir,'chunk_{}'.format(str(i_chunk).zfill(2)))
+        chunk_symlink_dir = os.path.join(folder_symlink_dir,'chunk_{}'.format(str(i_chunk).zfill(2)))
     
         print('Generating symlinks for chunk {} in folder {}'.format(
             i_chunk,chunk_symlink_dir))
@@ -569,26 +579,36 @@ def run_model_on_folder(input_folder_base):
     # ...for each chunk
 
     
-    #%% Generate .yaml file (to tell YOLO where the data is)
+    #%% Generate .yaml files (to tell YOLO where the data is)
+    
+    folder_dataset_file_dir = os.path.join(project_dataset_file_dir,folder_name_clean)
+    os.makedirs(folder_dataset_file_dir,exist_ok=True)
     
     for i_chunk,chunk in enumerate(chunk_info):
                 
-        chunk['dataset_file'] = os.path.join(project_dir,chunk['chunk_id'] + '_dataset.yaml')
+        chunk['dataset_file'] = os.path.join(folder_dataset_file_dir,chunk['chunk_id'] + '_dataset.yaml')
         print('Writing dataset file for chunk {} to {}'.format(i_chunk,chunk['dataset_file']))
         create_yolo_dataset_file(chunk['dataset_file'],chunk['symlink_dir'],yolo_category_id_to_name)
     
         
     #%% Prepare commands to run the model on symlink folder(s)
     
+    folder_inference_script_dir = os.path.join(project_inference_script_dir,folder_name_clean)
+    os.makedirs(folder_inference_script_dir,exist_ok=True)
+    
+    folder_yolo_results_dir = os.path.join(project_yolo_results_dir,folder_name_clean)
+    os.makedirs(folder_yolo_results_dir,exist_ok=True)
+    
     for i_chunk,chunk in enumerate(chunk_info):
         
         device_string = devices[i_chunk]
         
         chunk['run_name'] = 'inference-output-' + chunk['chunk_id']        
-        chunk['cmd'] = run_yolo_model(project_dir,chunk['run_name'],chunk['dataset_file'],
+        chunk['run_output_dir'] = os.path.join(folder_yolo_results_dir,chunk['run_name'])
+        chunk['cmd'] = run_yolo_model(folder_yolo_results_dir,chunk['run_name'],chunk['dataset_file'],
                                       model_file,execute=False,
                                       device_string=device_string)
-        chunk['script_name'] = os.path.join(project_dir,'run_chunk_{}_device_{}.sh'.format(
+        chunk['script_name'] = os.path.join(folder_inference_script_dir,'run_chunk_{}_device_{}.sh'.format(
             str(i_chunk).zfill(2),device_string))
         with open(chunk['script_name'],'w') as f:
             f.write(chunk['cmd'])
@@ -601,9 +621,8 @@ def run_model_on_folder(input_folder_base):
     
     #%% Save/load chunk state for debugging (because stuff crashes)
     
-    chunk_cache_file = os.path.join(chunk_cache_dir,
-                                    input_folder_base.replace('\\','/').replace('/','_') + '_chunk_info.json')
-    
+    chunk_cache_file = os.path.join(project_chunk_cache_dir,folder_name_clean + '_chunk_info.json')    
+    os.makedirs(project_chunk_cache_dir,exist_ok=True)
     
     if False:
         
@@ -622,18 +641,24 @@ def run_model_on_folder(input_folder_base):
     
     # TODO, currently done outside of this scripts, because I was too lazy to parallelize the invocation here    
     
-    
+    print('Inference commands:\n')
+    for chunk in chunk_info:
+        print('{}\n'.format(chunk['script_name']))
+              
+        
     #%% Read and convert patch results for each chunk
     
     # We're reading patch results just to validate that they were written sensibly; we don't use the loaded
     # results directly.  We'll convert them to MD format and use that version.
     
     model_short_name = os.path.basename(model_file).replace('.pt','')    
+    patch_folder_for_folder = os.path.join(project_patch_dir,folder_name_clean)
     
     # i_chunk = 0; chunk = chunk_info[i_chunk]
     for i_chunk,chunk in enumerate(chunk_info):
         
-        run_dir = os.path.join(project_dir,chunk['run_name'])
+        run_dir = chunk['run_output_dir']
+        assert os.path.isdir(run_dir)
         
         json_files = glob.glob(run_dir + '/*.json')
         json_files = [fn for fn in json_files if 'md_format' not in fn]
@@ -664,13 +689,16 @@ def run_model_on_folder(input_folder_base):
             # Convert patch results to MD output format
                 
             patch_id_to_relative_path = {}
+            
+            # i_patch = 0; patch_id = next(iter(chunk['patch_id_to_file'].keys()))
             for patch_id in chunk['patch_id_to_file'].keys():
                 fn = chunk['patch_id_to_file'][patch_id]
-                relative_fn = os.path.relpath(fn,patch_folder_base)
+                assert patch_folder_for_folder in fn
+                relative_fn = os.path.relpath(fn,patch_folder_for_folder)
                 patch_id_to_relative_path[patch_id] = relative_fn
                         
             yolo_json_output_to_md_output(yolo_json_file,
-                                          image_folder=patch_folder_base,
+                                          image_folder=patch_folder_for_folder,
                                           output_file=md_formatted_results_file,
                                           yolo_category_id_to_name=yolo_category_id_to_name,
                                           detector_name=model_short_name,
