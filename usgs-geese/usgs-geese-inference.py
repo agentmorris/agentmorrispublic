@@ -44,6 +44,7 @@ project_dataset_file_dir = os.path.join(project_dir,'dataset_files')
 project_patch_dir = os.path.join(project_dir,'patches')
 project_inference_script_dir = os.path.join(project_dir,'inference_scripts')
 project_yolo_results_dir = os.path.join(project_dir,'yolo_results')
+project_image_level_results_dir = os.path.join(project_dir,'image_level_results')
 project_chunk_cache_dir = os.path.join(project_dir,'chunk_cache')
 
 md_formatted_results_dir = os.path.join(project_dir,'md_formatted_results')
@@ -652,7 +653,6 @@ def run_model_on_folder(input_folder_base):
     # results directly.  We'll convert them to MD format and use that version.
     
     model_short_name = os.path.basename(model_file).replace('.pt','')    
-    patch_folder_for_folder = os.path.join(project_patch_dir,folder_name_clean)
     
     # i_chunk = 0; chunk = chunk_info[i_chunk]
     for i_chunk,chunk in enumerate(chunk_info):
@@ -715,7 +715,7 @@ def run_model_on_folder(input_folder_base):
     os.makedirs(md_formatted_results_dir,exist_ok=True)
     md_formatted_results_files_for_chunks = [chunk['md_formatted_results_file'] for chunk in chunk_info]
     md_formatted_results_file_for_folder = os.path.join(md_formatted_results_dir,
-                                    input_folder_base.replace('\\','/').replace('/','_') + '.json')
+                                    folder_name_clean + '.json')
     
     from api.batch_processing.postprocessing import combine_api_outputs
     
@@ -759,13 +759,41 @@ def run_model_on_folder(input_folder_base):
     del d_before_thresholding,d_after_thresholding
 
     
+    #%% Perform NMS within each patch
+    
+    # This is just a debugging step for now, for the patch-level preview; there's not really a reason to 
+    # do this at the patch level when we have to do this at the image level anyway.
+    #
+    # The only thing we're removing at the patch level is the case where a box is assigned
+    # to multiple classes.
+    if False:
+        
+        #%%
+        
+        print('Loading merged results file')
+        
+        with open(md_formatted_results_file_for_folder_thresholded,'r') as f:        
+            md_results = json.load(f)
+        
+        print('Eliminating redundant detections')
+        
+        in_place_nms(md_results,iou_thres=nms_iou_threshold)
+        
+        patch_results_after_nms_file = md_formatted_results_file_for_folder_thresholded.replace('.json',
+                                                                      '_patch-level_nms.json')
+        assert patch_results_after_nms_file != md_formatted_results_file_for_folder_thresholded
+        
+        with open(patch_results_after_nms_file,'w') as f:
+            json.dump(md_results,f,indent=1)
+
+
     #%% Preview results for patches
     
     if False:
 
         #%%
         
-        patch_results_file = md_formatted_results_file_for_folder_thresholded
+        patch_results_file = patch_results_after_nms_file
                 
         from api.batch_processing.postprocessing.postprocess_batch_results import (
             PostProcessingOptions, process_batch_results)
@@ -775,7 +803,7 @@ def run_model_on_folder(input_folder_base):
         base_task_name = os.path.basename(patch_results_file)
         
         options = PostProcessingOptions()
-        options.image_base_dir = patch_folder_base
+        options.image_base_dir = patch_folder_for_folder
         options.include_almost_detections = True
         options.num_images_to_sample = 7500
         options.confidence_threshold = 0.4
@@ -802,32 +830,6 @@ def run_model_on_folder(input_folder_base):
         path_utils.open_file(html_output_file)
         
     
-    #%% Perform NMS within each patch
-    
-    # This is just a debugging step for now; there's not really a reason to do this
-    # at the patch level when we have to do this at the image level anyway.
-    #
-    # The only thing we're removing at the patch level is the case where a box is assigned
-    # to multiple classes.
-    if False:
-        
-        print('Loading merged results file')
-        
-        with open(md_formatted_results_file_for_folder_thresholded,'r') as f:        
-            md_results = json.load(f)
-        
-        print('Eliminating redundant detections')
-        
-        in_place_nms(md_results,iou_thres=nms_iou_threshold)
-        
-        patch_results_after_nms_file = md_formatted_results_file_for_folder_thresholded.replace('.json',
-                                                                      '_nms.json')
-        assert patch_results_after_nms_file != patch_results_after_nms_file
-        
-        with open(patch_results_after_nms_file,'w') as f:
-            json.dump(md_results,f,indent=1)
-
-
     #%% Combine all the patch results to an image-level results set
         
     patch_results_file = md_formatted_results_file_for_folder_thresholded
@@ -841,7 +843,7 @@ def run_model_on_folder(input_folder_base):
     # This contains patches for all images in the folder.
     patch_fn_to_results = {}
     for im in tqdm(all_patch_results['images']):
-        abs_fn = os.path.join(patch_folder_base,im['file'])
+        abs_fn = os.path.join(patch_folder_for_folder,im['file'])
         patch_fn_to_results[abs_fn] = im
 
     md_results_image_level = {}
@@ -934,8 +936,11 @@ def run_model_on_folder(input_folder_base):
         md_results_image_level['images'].append(output_im)
         
     # ...for each image    
-        
-    md_results_image_level_fn = os.path.join(project_dir,'md_results_image_level.json')
+    
+    os.makedirs(project_image_level_results_dir,exist_ok=True)
+    
+    md_results_image_level_fn = os.path.join(project_image_level_results_dir,
+                                             folder_name_clean + '_md_results_image_level.json')
     print('Saving image-level results to {}'.format(md_results_image_level_fn))
           
     with open(md_results_image_level_fn,'w') as f:
@@ -946,18 +951,20 @@ def run_model_on_folder(input_folder_base):
     
     in_place_nms(md_results_image_level,iou_thres=nms_iou_threshold)
     
-    md_results_image_level_nms_fn = os.path.join(project_dir,'md_results_image_level_nms.json')
+    md_results_image_level_nms_fn = md_results_image_level_fn.replace('.json','_nms.json')
     with open(md_results_image_level_nms_fn,'w') as f:
         json.dump(md_results_image_level,f,indent=1)
 
 
-    #%% Render boxes on oe of the original images
+    #%% Render boxes on one of the original images
 
     del image_fn
     del i_image
     
     if False:
         
+        pass
+    
         #%%
         
         with open(md_results_image_level_nms_fn,'r') as f:
@@ -965,7 +972,7 @@ def run_model_on_folder(input_folder_base):
             
         from md_visualization import visualization_utils as vis_utils
         
-        i_image = 1000
+        i_image = 0
         output_image_file = os.path.join(project_dir,'test.jpg')
         detections = md_results_image_level['images'][i_image]['detections']    
         image_fn_relative = md_results_image_level['images'][i_image]['file']
