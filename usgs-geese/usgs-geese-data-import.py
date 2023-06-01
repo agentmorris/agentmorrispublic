@@ -1,5 +1,6 @@
+########
 #
-# usgs-data-review.py
+# usgs-geese-data-import.py
 #
 # * Checks internal consistency of the USGS brant survey data
 #
@@ -8,6 +9,7 @@
 # * Makes reasonable efforts to identify which images among the unnanotated
 #   majority are suitable as hard negative examples.
 #
+########
 
 #%% Imports and constants
 

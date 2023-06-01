@@ -1,5 +1,6 @@
+########
 #
-# train-usgs-goose-model.py
+# usgs-geese-training.py
 #
 # This file documents the model training process, starting from where usgs-geese-training-data-prep.py
 # leaves off.  Training happens at the yolov5 CLI, and the exact command line arguments are documented
@@ -12,6 +13,7 @@
 # * Use the MD visualization pipeline to visualize results
 # * Use the MD inference pipeline to run the trained model
 #
+########
 
 #%% TODO
 

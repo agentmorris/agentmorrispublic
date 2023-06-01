@@ -1,5 +1,6 @@
+########
 #
-# create-usgs-training-set.py
+# usgs-geese-training-data-prep.py
 #
 # Given the COCO-formatted data created by usgs-data-review.py, cut the source
 # data into patches, write those patches out as YOLO-formatted annotations, and
@@ -11,6 +12,18 @@
 # desired patch size, so geese near the right and bottom of each image will be 
 # sampled twice.
 #
+########
+
+#%% TODO
+
+"""
+
+* When I first ran this, I generated the train/val splits, but didn't write out the
+  corresponding list of images, and had to jump through some hoops to recover that
+  list from the patch file names.  If I ever run this again, write out the train/val
+  image splits!
+
+"""
 
 #%% Constants and imports
 
@@ -584,6 +597,9 @@ print('Found {} unique image IDs for {} patches'.format(
 all_image_ids = list(all_image_ids)
 
 n_val_image_ids = int(val_image_fraction*len(all_image_ids))
+
+# This call to random.seed() was added *after* the original train/val split.
+random.seed(0)
 val_image_ids = random.sample(all_image_ids,k=n_val_image_ids)
 
 

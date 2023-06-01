@@ -1,3 +1,4 @@
+########
 #
 # usgs-geese-inference.py
 #
@@ -11,6 +12,7 @@
 # * Run more chunks than devices, to support checkpointing
 # * Include folder name in patch folders
 #
+########
 
 #%% Constants and imports
 
@@ -793,6 +795,10 @@ def run_model_on_folder(input_folder_base):
 
         #%%
         
+        patch_results_after_nms_file = os.path.expanduser('~/tmp/usgs-inference/md_formatted_results/' + \
+          'media_user_My_Passport_2022-10-09_cam3_threshold_0.025_patch-level_nms.json')
+        patch_folder_for_folder = os.path.expanduser('~/tmp/usgs-inference/' + \
+          'patches/media_user_My_Passport_2022-10-09_cam3')
         patch_results_file = patch_results_after_nms_file
                 
         from api.batch_processing.postprocessing.postprocess_batch_results import (
@@ -801,33 +807,35 @@ def run_model_on_folder(input_folder_base):
         postprocessing_output_folder = os.path.join(project_dir,'preview')
     
         base_task_name = os.path.basename(patch_results_file)
-        
-        options = PostProcessingOptions()
-        options.image_base_dir = patch_folder_for_folder
-        options.include_almost_detections = True
-        options.num_images_to_sample = 7500
-        options.confidence_threshold = 0.4
-        options.almost_detection_confidence_threshold = options.confidence_threshold - 0.05
-        options.ground_truth_json_file = None
-        options.separate_detections_by_category = True
-        # options.sample_seed = 0
-        
-        options.parallelize_rendering = True
-        options.parallelize_rendering_n_cores = 16
-        options.parallelize_rendering_with_threads = False
-        
-        output_base = os.path.join(postprocessing_output_folder,
-            base_task_name + '_{:.3f}'.format(options.confidence_threshold))
-        
-        os.makedirs(output_base, exist_ok=True)
-        print('Processing to {}'.format(output_base))
-        
-        options.api_output_file = patch_results_file
-        options.output_dir = output_base
-        ppresults = process_batch_results(options)
-        html_output_file = ppresults.output_html_file
-        
-        path_utils.open_file(html_output_file)
+            
+        for confidence_threshold in [0.4,0.5,0.6,0.7,0.8]:
+            
+            options = PostProcessingOptions()
+            options.image_base_dir = patch_folder_for_folder
+            options.include_almost_detections = True
+            options.num_images_to_sample = 7500
+            options.confidence_threshold = confidence_threshold
+            options.almost_detection_confidence_threshold = options.confidence_threshold - 0.05
+            options.ground_truth_json_file = None
+            options.separate_detections_by_category = True
+            # options.sample_seed = 0
+            
+            options.parallelize_rendering = True
+            options.parallelize_rendering_n_cores = 16
+            options.parallelize_rendering_with_threads = False
+            
+            output_base = os.path.join(postprocessing_output_folder,
+                base_task_name + '_{:.3f}'.format(options.confidence_threshold))
+            
+            os.makedirs(output_base, exist_ok=True)
+            print('Processing to {}'.format(output_base))
+            
+            options.api_output_file = patch_results_file
+            options.output_dir = output_base
+            ppresults = process_batch_results(options)
+            html_output_file = ppresults.output_html_file
+            
+            path_utils.open_file(html_output_file)
         
     
     #%% Combine all the patch results to an image-level results set
@@ -967,9 +975,14 @@ def run_model_on_folder(input_folder_base):
     
         #%%
         
+        input_folder_base = '/media/user/My Passport/2022-10-09/cam3'
+        md_results_image_level_nms_fn = os.path.expanduser(
+            '~/tmp/usgs-inference/image_level_results/'+\
+            'media_user_My_Passport_2022-10-09_cam3_md_results_image_level_nms.json')
+        
         with open(md_results_image_level_nms_fn,'r') as f:
             md_results_image_level = json.load(f)
-            
+
         from md_visualization import visualization_utils as vis_utils
         
         i_image = 0
