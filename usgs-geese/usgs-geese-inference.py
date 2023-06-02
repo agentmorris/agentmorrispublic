@@ -8,9 +8,19 @@
 #
 # TODO:
 #
-# * Finish folder inference
-# * Run more chunks than devices, to support checkpointing
-# * Include folder name in patch folders
+# ** P0
+#
+# * Generate patch-level previews of image-level results
+# * Count above-threshold detections for a set of image results
+#
+# ** P1
+#
+# * Divide data into more chunks than devices, to support checkpointing
+# * Refactor folder inference to be able to run on arbitary lists of input images
+#
+# ** P2
+# 
+# * Assess the impact of using augmentation on both accuracy and speed
 #
 ########
 
@@ -20,6 +30,7 @@ import os
 import stat
 import json
 import glob
+import shutil
 import humanfriendly
 
 from multiprocessing.pool import ThreadPool
@@ -31,6 +42,7 @@ import torch
 from torchvision import ops
 
 from md_utils import path_utils
+from md_utils import process_utils
 from md_visualization import visualization_utils as vis_utils
 from data_management.yolo_output_to_md_output import yolo_json_output_to_md_output
 
@@ -40,7 +52,19 @@ expected_image_height = 5792
 
 patch_size = (1280,1280)
 
+# Absolute paths
 project_dir = os.path.expanduser('~/tmp/usgs-inference')    
+yolo_working_dir = os.path.expanduser('~/git/yolov5-current')
+model_base = os.path.expanduser('~/models/usgs-geese')
+model_file = os.path.join(model_base,
+                          'usgs-geese-yolov5x6-b8-img1280-e125-of-200-20230401-ss-best.pt')
+
+dataset_definition_file = os.path.expanduser('~/data/usgs-geese/dataset.yaml')  
+
+assert os.path.isfile(model_file) and os.path.isdir(yolo_working_dir) and \
+    os.path.isfile(dataset_definition_file)
+
+# Derived paths
 project_symlink_dir = os.path.join(project_dir,'symlink_images')
 project_dataset_file_dir = os.path.join(project_dir,'dataset_files')
 project_patch_dir = os.path.join(project_dir,'patches')
@@ -48,15 +72,8 @@ project_inference_script_dir = os.path.join(project_dir,'inference_scripts')
 project_yolo_results_dir = os.path.join(project_dir,'yolo_results')
 project_image_level_results_dir = os.path.join(project_dir,'image_level_results')
 project_chunk_cache_dir = os.path.join(project_dir,'chunk_cache')
+project_md_formatted_results_dir = os.path.join(project_dir,'md_formatted_results')
 
-md_formatted_results_dir = os.path.join(project_dir,'md_formatted_results')
-
-working_dir = os.path.expanduser('~/git/yolov5-current')
-model_base = os.path.expanduser('~/models/usgs-geese')
-model_file = os.path.join(model_base,
-                          'usgs-geese-yolov5x6-b8-img1280-e125-of-200-20230401-ss-best.pt')
-dataset_definition_file = os.path.expanduser('~/data/usgs-geese/dataset.yaml')  
-assert os.path.isfile(model_file)
 
 # Threshold used for including results in the json file during inference
 default_inference_conf_thres = '0.001'
@@ -77,11 +94,27 @@ overwrite_md_results_files = False
 
 devices = [0,1]
 
+patch_jpeg_quality = 95    
+
+default_patch_overlap = 0.1
+
 # This isn't NMS in the usual sense of redundant model predictions; this is being
 # used to de-duplicate predictions from overlapping patches.
 nms_iou_threshold = 0.45
 
-os.chdir(working_dir)
+# Performing per-patch NMS is just a debugging tool, for making patch-level previews.
+# There's not really a reason to  do this at the patch level when we have to do this at the
+# image level anyway.
+#
+# The only thing we're removing when we perform NMS at the patch level is the case where nearly-identical 
+# boxes are assigned to multiple classes.
+do_within_patch_nms = False
+
+# What things should we clean up at the end of the process for a folder?
+cleanup_targets = ['patch_cache_file','dataset_files','symlink_images','yolo_results','inference_scripts',
+                   'chunk_cache_file']
+cleanup_targets.extend(['patches','patch_level_results'])
+# cleanup_targets.extend(['image_level_results'])
 
 
 #%% Validate class names
@@ -132,7 +165,8 @@ def get_patch_boundaries(image_size,patch_size,patch_stride=None):
     """
     
     if patch_stride is None:
-        patch_stride = (round(patch_size[0]/2),round(patch_size[1]/2))
+        patch_stride = (round(patch_size[0]*(1.0-default_patch_overlap)),
+                        round(patch_size[1]*(1.0-default_patch_overlap)))
         
     image_width = image_size[0]
     image_height = image_size[1]
@@ -224,10 +258,7 @@ def extract_patches_for_image(image_fn,patch_folder,image_name_base=None,overwri
         }
             
     """
-    
-    patch_jpeg_quality = 95    
-    patch_stride = None
-    
+        
     os.makedirs(patch_folder,exist_ok=True)
     
     if image_name_base is None:
@@ -243,7 +274,7 @@ def extract_patches_for_image(image_fn,patch_folder,image_name_base=None,overwri
     image_width = pil_im.size[0]
     image_height = pil_im.size[1]
     image_size = (image_width,image_height)
-    patch_start_positions = get_patch_boundaries(image_size,patch_size,patch_stride)
+    patch_start_positions = get_patch_boundaries(image_size,patch_size,patch_stride=None)
     
     patches = []
     
@@ -374,7 +405,10 @@ def run_yolo_model(project_dir,run_name,dataset_file,model_file,
                    batch_size=default_inference_batch_size,
                    conf_thres=default_inference_conf_thres):
     """
-    Invoke Python in a shell to run the model on a folder of images.
+    Invoke Python in a shell to run the model on an existing YOLOv5-formatted dataset.
+    
+    If 'execute' if false, just prepares the list of commands to run the model, but
+    doesn't actually run it.
     """
     
     run_dir = os.path.join(project_dir,run_name)
@@ -394,8 +428,8 @@ def run_yolo_model(project_dir,run_name,dataset_file,model_file,
     
     if (execute):
         
-        initial_working_dir = os.getcwd()        
-        os.chdir(working_dir)
+        initial_working_dir = os.getcwd()
+        os.chdir(yolo_working_dir)
         
         from ct_utils import execute_command_and_print
         cmd_result = execute_command_and_print(cmd)
@@ -465,12 +499,13 @@ def in_place_nms(md_results, iou_thres=0.45, verbose=True):
         
 # ...in_place_nms()
 
-    
-#%%
 
-# input_folder_base = '/media/user/My Passport/2017-2019/01_JPGs/2017/Replicate_2017-10-01/Cam1'
-# input_folder_base = '/media/user/My Passport/2022-10-09/cam3'
-def run_model_on_folder(input_folder_base):
+#%% The main function: run the model recursively on  folder
+
+def run_model_on_folder(input_folder_base,recursive=True):
+    """
+    Run the goose detection model on all images in a folder
+    """
     
     #%% Input validation
     
@@ -482,13 +517,18 @@ def run_model_on_folder(input_folder_base):
         folder_name_clean = folder_name_clean[1:]
     
     
-    #%% Generate patches
+    #%% Enumerate images
     
-    images_absolute = path_utils.find_images(input_folder_base,recursive=True)
+    images_absolute = path_utils.find_images(input_folder_base,recursive=recursive)
     images_relative = [os.path.relpath(fn,input_folder_base) for fn in images_absolute]    
+    
+
+    #%% Generate patches
     
     os.makedirs(project_chunk_cache_dir,exist_ok=True)
 
+    # This is a .json file that includes metadata about our patches; this is only used during
+    # debugging, when we want to re-start from this point but don't want to re-generate patches
     patch_cache_file = os.path.join(project_chunk_cache_dir,folder_name_clean + '_patch_info.json')
     patch_folder_for_folder = os.path.join(project_patch_dir,folder_name_clean)
                                            
@@ -538,6 +578,7 @@ def run_model_on_folder(input_folder_base):
         print('Wrote patch info to {}'.format(patch_cache_file))        
         
         del image_patch_info
+        del all_patch_files
     
     else:
         
@@ -545,6 +586,18 @@ def run_model_on_folder(input_folder_base):
         
         with open(patch_cache_file,'r') as f:
             all_image_patch_info = json.load(f)
+    
+    # See extract_patches_for_image for the format of all_image_patch_info
+    all_patch_files = []
+    for image_patch_info in all_image_patch_info:
+        for patch_info in image_patch_info['patches']:
+            all_patch_files.append(patch_info['patch_fn'])
+            
+    # Double-check that we have the right number of patches (n_images * n_patches_per_image)
+    n_patches_per_image = len(get_patch_boundaries(
+        (expected_image_width,expected_image_height),
+        patch_size,patch_stride=None))
+    assert len(all_patch_files) == n_patches_per_image * len(images_relative)
     
     
     #%% Split patches into chunks (one per GPU), and generate symlink folder(s)
@@ -642,12 +695,50 @@ def run_model_on_folder(input_folder_base):
 
     #%% Run inference
     
-    # TODO, currently done outside of this scripts, because I was too lazy to parallelize the invocation here    
+    # Changes the current working directory, making no attempt to change it back.          
+    execute_inline = True    
     
     print('Inference commands:\n')
     for chunk in chunk_info:
-        print('{}\n'.format(chunk['script_name']))
-              
+        print('{}'.format(chunk['script_name']))
+    print('')
+    
+    if (execute_inline):
+        
+        chunk_commands = [chunk['script_name'] for chunk in chunk_info]
+        n_workers = len(devices)
+       
+        # Should we use threads (vs. processes) for parallelization?
+        use_threads = True
+       
+        def run_chunk(cmd):
+            os.environ['LD_LIBRARY_PATH']=''
+            os.chdir(yolo_working_dir)
+            return process_utils.execute_and_print(cmd,print_output=True)
+           
+        if n_workers == 1:  
+         
+          results = []
+          for i_command,command in enumerate(chunk_commands):    
+            results.append(run_chunk(command))
+         
+        else:
+         
+          if use_threads:
+            print('Starting parallel thread pool with {} workers'.format(n_workers))
+            pool = ThreadPool(n_workers)
+          else:
+            print('Starting parallel process pool with {} workers'.format(n_workers))
+            pool = Pool(n_workers)
+       
+          results = list(pool.map(run_chunk,chunk_commands))
+          
+          assert all([r['status'] == 0 for r in results]), 'Error running one or more inference processes'
+          
+    else:
+    
+        print('Bypassing inline execution')
+        
         
     #%% Read and convert patch results for each chunk
     
@@ -712,11 +803,11 @@ def run_model_on_folder(input_folder_base):
     # ...for each chunk
     
     
-    #%% Merge results files from each chunk into one results file
+    #%% Merge results files from each chunk into one (patch-level) results file for the folder
     
-    os.makedirs(md_formatted_results_dir,exist_ok=True)
+    os.makedirs(project_md_formatted_results_dir,exist_ok=True)
     md_formatted_results_files_for_chunks = [chunk['md_formatted_results_file'] for chunk in chunk_info]
-    md_formatted_results_file_for_folder = os.path.join(md_formatted_results_dir,
+    md_formatted_results_file_for_folder = os.path.join(project_md_formatted_results_dir,
                                     folder_name_clean + '.json')
     
     from api.batch_processing.postprocessing import combine_api_outputs
@@ -761,16 +852,9 @@ def run_model_on_folder(input_folder_base):
     del d_before_thresholding,d_after_thresholding
 
     
-    #%% Perform NMS within each patch
+    #%% Optionallly perform NMS within each patch
     
-    # This is just a debugging step for now, for the patch-level preview; there's not really a reason to 
-    # do this at the patch level when we have to do this at the image level anyway.
-    #
-    # The only thing we're removing at the patch level is the case where a box is assigned
-    # to multiple classes.
-    if False:
-        
-        #%%
+    if do_within_patch_nms:
         
         print('Loading merged results file')
         
@@ -788,54 +872,9 @@ def run_model_on_folder(input_folder_base):
         with open(patch_results_after_nms_file,'w') as f:
             json.dump(md_results,f,indent=1)
 
-
-    #%% Preview results for patches
-    
-    if False:
-
-        #%%
+    else:
         
-        patch_results_after_nms_file = os.path.expanduser('~/tmp/usgs-inference/md_formatted_results/' + \
-          'media_user_My_Passport_2022-10-09_cam3_threshold_0.025_patch-level_nms.json')
-        patch_folder_for_folder = os.path.expanduser('~/tmp/usgs-inference/' + \
-          'patches/media_user_My_Passport_2022-10-09_cam3')
-        patch_results_file = patch_results_after_nms_file
-                
-        from api.batch_processing.postprocessing.postprocess_batch_results import (
-            PostProcessingOptions, process_batch_results)
-        
-        postprocessing_output_folder = os.path.join(project_dir,'preview')
-    
-        base_task_name = os.path.basename(patch_results_file)
-            
-        for confidence_threshold in [0.4,0.5,0.6,0.7,0.8]:
-            
-            options = PostProcessingOptions()
-            options.image_base_dir = patch_folder_for_folder
-            options.include_almost_detections = True
-            options.num_images_to_sample = 7500
-            options.confidence_threshold = confidence_threshold
-            options.almost_detection_confidence_threshold = options.confidence_threshold - 0.05
-            options.ground_truth_json_file = None
-            options.separate_detections_by_category = True
-            # options.sample_seed = 0
-            
-            options.parallelize_rendering = True
-            options.parallelize_rendering_n_cores = 16
-            options.parallelize_rendering_with_threads = False
-            
-            output_base = os.path.join(postprocessing_output_folder,
-                base_task_name + '_{:.3f}'.format(options.confidence_threshold))
-            
-            os.makedirs(output_base, exist_ok=True)
-            print('Processing to {}'.format(output_base))
-            
-            options.api_output_file = patch_results_file
-            options.output_dir = output_base
-            ppresults = process_batch_results(options)
-            html_output_file = ppresults.output_html_file
-            
-            path_utils.open_file(html_output_file)
+        patch_results_after_nms_file = None
         
     
     #%% Combine all the patch results to an image-level results set
@@ -960,74 +999,251 @@ def run_model_on_folder(input_folder_base):
     in_place_nms(md_results_image_level,iou_thres=nms_iou_threshold)
     
     md_results_image_level_nms_fn = md_results_image_level_fn.replace('.json','_nms.json')
+    
+    print('Saving image-level results (after NMS) to {}'.format(md_results_image_level_nms_fn))
+    
     with open(md_results_image_level_nms_fn,'w') as f:
         json.dump(md_results_image_level,f,indent=1)
 
 
-    #%% Render boxes on one of the original images
-
-    del image_fn
-    del i_image
-    
-    if False:
-        
-        pass
-    
-        #%%
-        
-        input_folder_base = '/media/user/My Passport/2022-10-09/cam3'
-        md_results_image_level_nms_fn = os.path.expanduser(
-            '~/tmp/usgs-inference/image_level_results/'+\
-            'media_user_My_Passport_2022-10-09_cam3_md_results_image_level_nms.json')
-        
-        with open(md_results_image_level_nms_fn,'r') as f:
-            md_results_image_level = json.load(f)
-
-        from md_visualization import visualization_utils as vis_utils
-        
-        i_image = 0
-        output_image_file = os.path.join(project_dir,'test.jpg')
-        detections = md_results_image_level['images'][i_image]['detections']    
-        image_fn_relative = md_results_image_level['images'][i_image]['file']
-        image_fn = os.path.join(input_folder_base,image_fn_relative)
-        assert os.path.isfile(image_fn)
-        
-        detector_label_map = {}
-        for category_id in yolo_category_id_to_name:
-            detector_label_map[str(category_id)] = yolo_category_id_to_name[category_id]
-            
-        vis_utils.draw_bounding_boxes_on_file(input_file=image_fn,
-                              output_file=output_image_file,
-                              detections=detections,
-                              confidence_threshold=0.4,
-                              detector_label_map=detector_label_map, 
-                              thickness=1, 
-                              expansion=0)
-        
-        path_utils.open_file(output_image_file)
-        
-    
     #%% Clean up
 
+    """
+    For all the things we're supposed to be cleaning up, before we delete a bunch of stuff
+    we worked hard to generate, make sure the files we're deleting look like what we expect.    
+    """
+    
+    execute_cleanup = True
+    
+    def safe_delete(fn,verbose=True):
+        
+        if fn is None or len(fn) == 0:
+            return
+        
+        try:
+            if os.path.isfile(fn):
+                if verbose:
+                    print('Cleaning up file {}'.format(fn))
+                if execute_cleanup:
+                    os.remove(fn)
+            elif os.path.isdir(fn):
+                if verbose:
+                    print('Cleaning up folder {}'.format(fn))
+                if execute_cleanup:
+                    shutil.rmtree(fn)
+                    pass
+            else:
+                print('Skipping cleanup of {}, does not exist'.format(fn))
+        except Exception as e:
+            print('Error cleaning up {}: {}'.format(fn,str(e)))
+                
+    if 'patch_cache_file' in cleanup_targets:
+        safe_delete(patch_cache_file)
+    else:
+        print('Bypassing cleanup of patch cache file')
+    
+    if 'chunk_cache_file' in cleanup_targets:
+        safe_delete(chunk_cache_file)
+    else:
+        print('Bypassing cleanup of chunk cache file')
+        
+    if 'dataset_files' in cleanup_targets:
+        if os.path.isdir(folder_dataset_file_dir):
+            dataset_files = os.listdir(folder_dataset_file_dir)
+            assert all([fn.endswith('.yaml') for fn in dataset_files])
+            safe_delete(folder_dataset_file_dir)        
+    else:
+        print('Bypassing cleanup of dataset files')
+        
+    if 'patch_level_results' in cleanup_targets:
+        safe_delete(md_formatted_results_file_for_folder)
+        safe_delete(md_formatted_results_file_for_folder_thresholded)
+        safe_delete(patch_results_after_nms_file)
+    else:
+        print('Bypassing cleanup of patch-level results')
+        
+    if 'inference_scripts' in cleanup_targets:
+        if os.path.isdir(folder_inference_script_dir):
+            inference_scripts = os.listdir(folder_inference_script_dir)
+            assert all([fn.endswith('.sh') for fn in inference_scripts])
+            safe_delete(folder_inference_script_dir)
+    else:
+        print('Bypassing cleanup of inference scripts')
+    
+    if 'patches' in cleanup_targets:
+        if os.path.isdir(patch_folder_for_folder):
+            patches = os.listdir(patch_folder_for_folder)
+            patches = [os.path.join(patch_folder_for_folder,fn) for fn in patches]
+            
+            # Each of these a folder with a .JPG extension, so both of the following should be true
+            assert all([os.path.isdir(fn) for fn in patches])
+            assert all([path_utils.is_image_file(fn) for fn in patches])        
+            safe_delete(patch_folder_for_folder)
+    else:
+        print('Bypassing cleanup of patches')
+        
+    if 'symlink_images' in cleanup_targets:
+        if os.path.isdir(folder_symlink_dir):
+            # These are either folders called "chunk_00" or yolov5 cache files called "chunk_00.cache"
+            symlink_folders_and_cache_files = os.listdir(folder_symlink_dir)
+            assert all([fn.startswith('chunk') for fn in symlink_folders_and_cache_files])
+            safe_delete(folder_symlink_dir)
+    else:
+        print('Bypassing cleanup of symlink folder')
+        
+    if 'yolo_results' in cleanup_targets:
+        if os.path.isdir(folder_yolo_results_dir):
+            yolo_results_folders = os.listdir(folder_yolo_results_dir)
+            assert all([os.path.isdir(os.path.join(folder_yolo_results_dir,fn)) for fn in yolo_results_folders])
+            assert all([fn.startswith('inference-output') for fn in yolo_results_folders])
+            safe_delete(folder_yolo_results_dir)
+    else:
+        print('Bypassing cleanup of YOLO-formatted results')              
+    
+    # Reserving this for future use, but right now it would be silly to delete this
+    if 'image_level_results' in cleanup_targets:
+        safe_delete(md_results_image_level_fn)
+    else:
+        print('Bypassing cleanup of image-level results')
+    
+    
+    #%% Prepare return values
+    
+    to_return = {}
+    to_return['md_formatted_results_file_for_folder_thresholded'] = \
+        md_formatted_results_file_for_folder_thresholded
+    to_return['md_results_image_level_fn'] = \
+        md_results_image_level_fn
+    to_return['md_results_image_level_nms_fn'] = \
+        md_results_image_level_nms_fn
+    
+    #%%
+    
+    return to_return
+    
+# ...run_model_on_folder()
 
-#%% Interactive driver
+
+#%% Scrap, interactive driver
 
 if False:
     
-    pass
+    #%% Interactive driver
+    
+    # input_folder_base = '/media/user/My Passport/2017-2019/01_JPGs/2017/Replicate_2017-10-01/Cam1'
+    # input_folder_base = '/media/user/My Passport/2022-10-09/cam3'
+    input_folder_base = '/home/user/data/usgs-test-folder'; recursive=True
+    
+    results = run_model_on_folder(input_folder_base,recursive=True)
+    
+    
+    #%% Time estimates
+    
+    # Time to process all patches for an image on a single GPU
+    seconds_per_image = 40
+    n_workers = 2
+    seconds_per_image /= n_workers
+    
+    drive_base = '/media/user/My Passport'
+    
+    estimate_time_for_old_data = True
+    
+    if estimate_time_for_old_data:
+        base_folder = os.path.join(drive_base,'2017-2019')
+        image_folder = os.path.join(base_folder,'01_JPGs')
+        image_folder_name = image_folder
+        images_absolute = path_utils.find_images(image_folder,recursive=True)
+    else:
+        images_absolute = []
+        image_folder_name = '2022 images'
+        root_filenames = os.listdir(drive_base)
+        for fn in root_filenames:
+            if fn.startswith('2022'):
+                dirname = os.path.join(drive_base,fn)
+                if os.path.isdir(dirname):
+                    images_absolute.extend(path_utils.find_images(dirname,recursive=True))        
+    
+    total_time_seconds = seconds_per_image * len(images_absolute)
+    
+    print('Expected time for {} ({} images): {}'.format(
+        image_folder_name,len(images_absolute),humanfriendly.format_timespan(total_time_seconds)))
+    
+    
+    #%% Unused variable suppression
+    
+    patch_results_after_nms_file = None
+    patch_folder_for_folder = None
+    
+    
+    #%% Preview results for patches at a varity of confidence thresholds
+    
+    patch_results_file = patch_results_after_nms_file
+            
+    from api.batch_processing.postprocessing.postprocess_batch_results import (
+        PostProcessingOptions, process_batch_results)
+    
+    postprocessing_output_folder = os.path.join(project_dir,'preview')
 
-    #%% Generate patches for one image
+    base_task_name = os.path.basename(patch_results_file)
+        
+    for confidence_threshold in [0.4,0.5,0.6,0.7,0.8]:
+        
+        options = PostProcessingOptions()
+        options.image_base_dir = patch_folder_for_folder
+        options.include_almost_detections = True
+        options.num_images_to_sample = 7500
+        options.confidence_threshold = confidence_threshold
+        options.almost_detection_confidence_threshold = options.confidence_threshold - 0.05
+        options.ground_truth_json_file = None
+        options.separate_detections_by_category = True
+        # options.sample_seed = 0
+        
+        options.parallelize_rendering = True
+        options.parallelize_rendering_n_cores = 16
+        options.parallelize_rendering_with_threads = False
+        
+        output_base = os.path.join(postprocessing_output_folder,
+            base_task_name + '_{:.3f}'.format(options.confidence_threshold))
+        
+        os.makedirs(output_base, exist_ok=True)
+        print('Processing to {}'.format(output_base))
+        
+        options.api_output_file = patch_results_file
+        options.output_dir = output_base
+        ppresults = process_batch_results(options)
+        html_output_file = ppresults.output_html_file
+        
+        path_utils.open_file(html_output_file)
     
-    input_folder_base = '/media/user/My Passport/2017-2019/01_JPGs'
-    image_fn_relative = '2018/Replicate_2018-10-20/CAM2/CAM21601.JPG'
-    image_name_base = input_folder_base 
+
+    #%% Render boxes on one of the original images
     
-    image_fn = os.path.join(input_folder_base,image_fn_relative)    
+    input_folder_base = '/media/user/My Passport/2022-10-09/cam3'
+    md_results_image_level_nms_fn = os.path.expanduser(
+        '~/tmp/usgs-inference/image_level_results/'+\
+        'media_user_My_Passport_2022-10-09_cam3_md_results_image_level_nms.json')
+    
+    with open(md_results_image_level_nms_fn,'r') as f:
+        md_results_image_level = json.load(f)
+
+    i_image = 0
+    output_image_file = os.path.join(project_dir,'test.jpg')
+    detections = md_results_image_level['images'][i_image]['detections']    
+    image_fn_relative = md_results_image_level['images'][i_image]['file']
+    image_fn = os.path.join(input_folder_base,image_fn_relative)
     assert os.path.isfile(image_fn)
     
-    patch_folder = os.path.join(patch_folder_base,image_fn_relative)
+    detector_label_map = {}
+    for category_id in yolo_category_id_to_name:
+        detector_label_map[str(category_id)] = yolo_category_id_to_name[category_id]
+        
+    vis_utils.draw_bounding_boxes_on_file(input_file=image_fn,
+                          output_file=output_image_file,
+                          detections=detections,
+                          confidence_threshold=0.4,
+                          detector_label_map=detector_label_map, 
+                          thickness=1, 
+                          expansion=0)
     
-    image_patch_info = extract_patches_for_image(image_fn,patch_folder,image_name_base)    
-               
-
+    path_utils.open_file(output_image_file)
     
