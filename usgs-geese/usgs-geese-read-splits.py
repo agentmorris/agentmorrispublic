@@ -24,12 +24,12 @@ training_folder_train = os.path.join(training_folder_base,'yolo_train')
 assert all([os.path.isdir(fn) for fn in (training_folder_train,training_folder_val)])
 
 image_folder_base = '/media/user/My Passport/2017-2019/01_JPGs'
-
 assert os.path.isdir(image_folder_base)
 assert image_folder_base[-1] != '/'
 
 output_folder_base = os.path.expanduser('~/data/usgs-geese')
-
+train_images_list_file = os.path.join(output_folder_base,'train_images.json')
+val_images_list_file = os.path.join(output_folder_base,'val_images.json')
 
 #%% Read train and val patch names
 
@@ -64,7 +64,6 @@ image_files_relative_set = set(image_files_relative)
 #     
 # 2017/Replicate_2017-09-30/Cam1/293A0019.JPG
 #
-
 
 def yolo_txt_file_to_image_file(fn):
     
@@ -126,8 +125,8 @@ for i_fn,fn in enumerate(val_image_files):
 
 import json
 
-with open(os.path.join(output_folder_base,'train_images.json'),'w') as f:
+with open(train_images_list_file,'w') as f:
     json.dump(train_image_files,f,indent=1)
     
-with open(os.path.join(output_folder_base,'val_images.json'),'w') as f:
+with open(val_images_list_file,'w') as f:
     json.dump(val_image_files,f,indent=1)    

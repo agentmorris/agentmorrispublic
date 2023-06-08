@@ -8,7 +8,7 @@ There are around 100,000 images total, about 95% of which contain no geese.  Ima
 
 <img src="sample_image.jpg">
 
-For anyone looking at this repo and getting excited about that image, making super-duper-clear that *that is a ground truth image*.  Not the results don't look good too, but this image isn't results, it's ground truth.
+For anyone looking at this repo and getting excited about that image, let's be super-duper-clear that *that is a ground truth image*.  Not the results don't look good too, but this image isn't results, it's ground truth.
 
 The annotations you can vaguely see as different colors correspond to different species of goose.  Most of this folder operates on 1280x1280 patches that look like this:
 
@@ -47,3 +47,11 @@ These are listed in roughly the order in which you would use them.
     * Split the image into overlapping patches
     * Run inference on each patch
     * Resolve redundant detections
+    * Convert YOLOv5 output to .json (in MegaDetector format)
+
+#### usgs-geese-postprocessing.py
+
+* Do stuff with inference results:
+
+    * Generate patch-level previews from image-level model results
+    * Generate estimated image-level bird counts from image-level model results

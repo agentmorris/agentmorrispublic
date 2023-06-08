@@ -10,8 +10,7 @@
 #
 # ** P0
 #
-# * Generate patch-level previews of image-level results
-# * Count above-threshold detections for a set of image results
+# * None, all P0's are now in usgs-geese-postprocessing.py
 #
 # ** P1
 #
@@ -45,6 +44,7 @@ from md_utils import path_utils
 from md_utils import process_utils
 from md_visualization import visualization_utils as vis_utils
 from data_management.yolo_output_to_md_output import yolo_json_output_to_md_output
+from api.batch_processing.postprocessing import combine_api_outputs
 
 # We will explicitly verify that images are actually this size
 expected_image_width = 8688
@@ -176,6 +176,7 @@ def get_patch_boundaries(image_size,patch_size,patch_stride=None):
         Add one row to our list of patch start positions, i.e.
         loop over all columns.
         """
+        
         x_start = 0; x_end = x_start + patch_size[0] - 1
         
         while(True):
@@ -227,6 +228,10 @@ def get_patch_boundaries(image_size,patch_size,patch_stride=None):
 
 
 def relative_path_to_image_name(rp):
+    """
+    Given a full path name, replace slashes and backslashes with underscores, so we can
+    use the result as a filename.
+    """
     
     image_name = rp.lower().replace('\\','/').replace('/','_')
     return image_name
@@ -239,6 +244,61 @@ def patch_info_to_patch_name(image_name,patch_x_min,patch_y_min):
     return patch_name
 
 
+def extract_patch_from_image(im,patch_xy,
+                             patch_image_fn=None,patch_folder=None,image_name=None,overwrite=True):
+    """
+    Extracts a patch from the provided image, writing the patch out to patch_image_fn.  im
+    can be a string or a PIL image.
+    
+    patch_xy is a length-2 tuple specifying the upper-left corner of the patch.
+    
+    image_name and patch_folder are only required if patch_image_fn is None.
+    
+    Returns a dictionary with fields xmin,xmax,ymin,ymax,patch_fn.
+    """
+    
+    if isinstance(im,str):
+        pil_im = vis_utils.open_image(im)
+    else:
+        pil_im = im
+        
+    patch_x_min = patch_xy[0]
+    patch_y_min = patch_xy[1]
+    patch_x_max = patch_x_min + patch_size[0] - 1
+    patch_y_max = patch_y_min + patch_size[1] - 1
+
+    # PIL represents coordinates in a way that is very hard for me to get my head
+    # around, such that even though the "right" and "bottom" arguments to the crop()
+    # function are inclusive... well, they're not really.
+    #
+    # https://pillow.readthedocs.io/en/stable/handbook/concepts.html#coordinate-system
+    #
+    # So we add 1 to the max values.
+    patch_im = pil_im.crop((patch_x_min,patch_y_min,patch_x_max+1,patch_y_max+1))
+    assert patch_im.size[0] == patch_size[0]
+    assert patch_im.size[1] == patch_size[1]
+
+    if patch_image_fn is None:
+        assert patch_folder is not None,\
+            "If you don't supply a patch filename to extract_patch_from_image, you need to supply a folder name"
+        patch_name = patch_info_to_patch_name(image_name,patch_x_min,patch_y_min)
+        patch_image_fn = os.path.join(patch_folder,patch_name + '.jpg')
+    
+    if os.path.isfile(patch_image_fn) and (not overwrite):
+        pass
+    else:        
+        patch_im.save(patch_image_fn,quality=patch_jpeg_quality)
+    
+    patch_info = {}
+    patch_info['xmin'] = patch_x_min
+    patch_info['xmax'] = patch_x_max
+    patch_info['ymin'] = patch_y_min
+    patch_info['ymax'] = patch_y_max
+    patch_info['patch_fn'] = patch_image_fn
+    
+    return patch_info
+
+                             
 def extract_patches_for_image(image_fn,patch_folder,image_name_base=None,overwrite=True):
     """
     Extract patches from image_fn to separate image files in patch_folder.
@@ -279,39 +339,11 @@ def extract_patches_for_image(image_fn,patch_folder,image_name_base=None,overwri
     patches = []
     
     # i_patch = 0; patch_xy = patch_start_positions[i_patch]
-    for i_patch,patch_xy in enumerate(patch_start_positions):
-        
-        patch_x_min = patch_xy[0]
-        patch_y_min = patch_xy[1]
-        patch_x_max = patch_x_min + patch_size[0] - 1
-        patch_y_max = patch_y_min + patch_size[1] - 1
-    
-        # PIL represents coordinates in a way that is very hard for me to get my head
-        # around, such that even though the "right" and "bottom" arguments to the crop()
-        # function are inclusive... well, they're not really.
-        #
-        # https://pillow.readthedocs.io/en/stable/handbook/concepts.html#coordinate-system
-        #
-        # So we add 1 to the max values.
-        patch_im = pil_im.crop((patch_x_min,patch_y_min,patch_x_max+1,patch_y_max+1))
-        assert patch_im.size[0] == patch_size[0]
-        assert patch_im.size[1] == patch_size[1]
-
-        patch_name = patch_info_to_patch_name(image_name,patch_x_min,patch_y_min)
-        patch_image_fn = os.path.join(patch_folder,patch_name + '.jpg')
-        
-        if os.path.isfile(patch_image_fn) and (not overwrite):
-            # print('Skipping image write to {}'.format(patch_image_fn))
-            pass
-        else:        
-            patch_im.save(patch_image_fn,quality=patch_jpeg_quality)
-        
-        patch_info = {}
-        patch_info['xmin'] = patch_x_min
-        patch_info['xmax'] = patch_x_max
-        patch_info['ymin'] = patch_y_min
-        patch_info['ymax'] = patch_y_max
-        patch_info['patch_fn'] = patch_image_fn
+    for i_patch,patch_xy in enumerate(patch_start_positions):        
+        patch_info = extract_patch_from_image(
+            pil_im,patch_xy,
+            patch_image_fn=None,patch_folder=patch_folder,
+            image_name=image_name,overwrite=overwrite)
         patch_info['image_fn'] = image_fn
         patches.append(patch_info)
     
@@ -507,7 +539,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
     Run the goose detection model on all images in a folder
     """
     
-    #%% Input validation
+    ##%% Input validation
     
     assert os.path.isdir(input_folder_base), \
         'Could not find input folder {}'.format(input_folder_base)
@@ -517,13 +549,13 @@ def run_model_on_folder(input_folder_base,recursive=True):
         folder_name_clean = folder_name_clean[1:]
     
     
-    #%% Enumerate images
+    ##%% Enumerate images
     
     images_absolute = path_utils.find_images(input_folder_base,recursive=recursive)
     images_relative = [os.path.relpath(fn,input_folder_base) for fn in images_absolute]    
     
 
-    #%% Generate patches
+    ##%% Generate patches
     
     os.makedirs(project_chunk_cache_dir,exist_ok=True)
 
@@ -600,7 +632,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
     assert len(all_patch_files) == n_patches_per_image * len(images_relative)
     
     
-    #%% Split patches into chunks (one per GPU), and generate symlink folder(s)
+    ##%% Split patches into chunks (one per GPU), and generate symlink folder(s)
     
     def split_list(L, n):
         k, m = divmod(len(L), n)
@@ -635,7 +667,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
     # ...for each chunk
 
     
-    #%% Generate .yaml files (to tell YOLO where the data is)
+    ##%% Generate .yaml files (to tell YOLO where the data is)
     
     folder_dataset_file_dir = os.path.join(project_dataset_file_dir,folder_name_clean)
     os.makedirs(folder_dataset_file_dir,exist_ok=True)
@@ -647,7 +679,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
         create_yolo_dataset_file(chunk['dataset_file'],chunk['symlink_dir'],yolo_category_id_to_name)
     
         
-    #%% Prepare commands to run the model on symlink folder(s)
+    ##%% Prepare commands to run the model on symlink folder(s)
     
     folder_inference_script_dir = os.path.join(project_inference_script_dir,folder_name_clean)
     os.makedirs(folder_inference_script_dir,exist_ok=True)
@@ -675,7 +707,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
     # ...for each chunk
     
     
-    #%% Save/load chunk state for debugging (because stuff crashes)
+    ##%% Save/load chunk state for debugging (because stuff crashes)
     
     chunk_cache_file = os.path.join(project_chunk_cache_dir,folder_name_clean + '_chunk_info.json')    
     os.makedirs(project_chunk_cache_dir,exist_ok=True)
@@ -693,7 +725,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
             chunk_info = json.load(f)
     
 
-    #%% Run inference
+    ##%% Run inference
     
     # Changes the current working directory, making no attempt to change it back.          
     execute_inline = True    
@@ -740,7 +772,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
         print('Bypassing inline execution')
         
         
-    #%% Read and convert patch results for each chunk
+    ##%% Read and convert patch results for each chunk
     
     # We're reading patch results just to validate that they were written sensibly; we don't use the loaded
     # results directly.  We'll convert them to MD format and use that version.
@@ -803,14 +835,12 @@ def run_model_on_folder(input_folder_base,recursive=True):
     # ...for each chunk
     
     
-    #%% Merge results files from each chunk into one (patch-level) results file for the folder
+    ##%% Merge results files from each chunk into one (patch-level) results file for the folder
     
     os.makedirs(project_md_formatted_results_dir,exist_ok=True)
     md_formatted_results_files_for_chunks = [chunk['md_formatted_results_file'] for chunk in chunk_info]
     md_formatted_results_file_for_folder = os.path.join(project_md_formatted_results_dir,
-                                    folder_name_clean + '.json')
-    
-    from api.batch_processing.postprocessing import combine_api_outputs
+                                    folder_name_clean + '.json')    
     
     _ = combine_api_outputs.combine_api_output_files(md_formatted_results_files_for_chunks,
                                                  md_formatted_results_file_for_folder,
@@ -818,7 +848,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
     assert os.path.isfile(md_formatted_results_file_for_folder)
     
     
-    #%% Remove low-confidence detections
+    ##%% Remove low-confidence detections
     
     md_formatted_results_file_for_folder_thresholded = md_formatted_results_file_for_folder.replace(
         '.json','_threshold_{}.json'.format(post_inference_conf_thres))
@@ -852,7 +882,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
     del d_before_thresholding,d_after_thresholding
 
     
-    #%% Optionallly perform NMS within each patch
+    ##%% Optionallly perform NMS within each patch
     
     if do_within_patch_nms:
         
@@ -877,7 +907,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
         patch_results_after_nms_file = None
         
     
-    #%% Combine all the patch results to an image-level results set
+    ##%% Combine all the patch results to an image-level results set
         
     patch_results_file = md_formatted_results_file_for_folder_thresholded
     
@@ -994,7 +1024,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
         json.dump(md_results_image_level,f,indent=1)
 
 
-    #%% Perform image-level NMS
+    ##%% Perform image-level NMS
     
     in_place_nms(md_results_image_level,iou_thres=nms_iou_threshold)
     
@@ -1006,7 +1036,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
         json.dump(md_results_image_level,f,indent=1)
 
 
-    #%% Clean up
+    ##%% Clean up
 
     """
     For all the things we're supposed to be cleaning up, before we delete a bunch of stuff
@@ -1072,12 +1102,15 @@ def run_model_on_folder(input_folder_base,recursive=True):
     
     if 'patches' in cleanup_targets:
         if os.path.isdir(patch_folder_for_folder):
-            patches = os.listdir(patch_folder_for_folder)
-            patches = [os.path.join(patch_folder_for_folder,fn) for fn in patches]
             
-            # Each of these a folder with a .JPG extension, so both of the following should be true
-            assert all([os.path.isdir(fn) for fn in patches])
-            assert all([path_utils.is_image_file(fn) for fn in patches])        
+            # TODO: leaf-node folders should end in JPG, and all files should be .jpg
+            if False:
+                patches = os.listdir(patch_folder_for_folder)
+                patches = [os.path.join(patch_folder_for_folder,fn) for fn in patches]
+                
+                # Each of these a folder with a .JPG extension, so both of the following should be true
+                assert all([os.path.isdir(fn) for fn in patches])
+                assert all([path_utils.is_image_file(fn) for fn in patches])        
             safe_delete(patch_folder_for_folder)
     else:
         print('Bypassing cleanup of patches')
@@ -1107,7 +1140,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
         print('Bypassing cleanup of image-level results')
     
     
-    #%% Prepare return values
+    ##%% Prepare return values
     
     to_return = {}
     to_return['md_formatted_results_file_for_folder_thresholded'] = \
@@ -1117,7 +1150,7 @@ def run_model_on_folder(input_folder_base,recursive=True):
     to_return['md_results_image_level_nms_fn'] = \
         md_results_image_level_nms_fn
     
-    #%%
+    ##%%
     
     return to_return
     
@@ -1132,7 +1165,11 @@ if False:
     
     # input_folder_base = '/media/user/My Passport/2017-2019/01_JPGs/2017/Replicate_2017-10-01/Cam1'
     # input_folder_base = '/media/user/My Passport/2022-10-09/cam3'
-    input_folder_base = '/home/user/data/usgs-test-folder'; recursive=True
+    # input_folder_base = '/home/user/data/usgs-test-folder'
+    
+    # input_folder_base = '/media/user/My Passport/2022-10-11'
+    # input_folder_base = '/media/user/My Passport/2022-10-09'
+    input_folder_base = '/home/user/data/usgs-geese/eval_images'
     
     results = run_model_on_folder(input_folder_base,recursive=True)
     
@@ -1140,13 +1177,13 @@ if False:
     #%% Time estimates
     
     # Time to process all patches for an image on a single GPU
-    seconds_per_image = 40
+    seconds_per_image = 25
     n_workers = 2
     seconds_per_image /= n_workers
     
     drive_base = '/media/user/My Passport'
     
-    estimate_time_for_old_data = True
+    estimate_time_for_old_data = False
     
     if estimate_time_for_old_data:
         base_folder = os.path.join(drive_base,'2017-2019')
@@ -1175,7 +1212,7 @@ if False:
     patch_folder_for_folder = None
     
     
-    #%% Preview results for patches at a varity of confidence thresholds
+    #%% Preview results for patches at a variety of confidence thresholds
     
     patch_results_file = patch_results_after_nms_file
             
