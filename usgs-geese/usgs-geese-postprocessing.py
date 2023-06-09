@@ -59,8 +59,6 @@ def patch_level_preview(image_level_results_file,image_folder_base,preview_folde
     * Generate the preview page, including counts for each patch
     """
     
-    #%%
-    
     if preview_confidence_thresholds is None:
         preview_confidence_thresholds = default_preview_confidence_thresholds
         
@@ -212,8 +210,6 @@ def patch_level_preview(image_level_results_file,image_folder_base,preview_folde
         
     # ...for every sampled patch
     
-    #%%
-    
     # Write out a .json file with the patch-level results
     patch_level_results_file = os.path.join(preview_folder,'patch_level_results.json')
     with open(patch_level_results_file,'w') as f:
@@ -228,6 +224,8 @@ def patch_level_preview(image_level_results_file,image_folder_base,preview_folde
     
     base_task_name = os.path.basename(image_level_results_file)
         
+    html_files = []
+    
     for confidence_threshold in preview_confidence_thresholds:
         
         options = PostProcessingOptions()
@@ -255,11 +253,12 @@ def patch_level_preview(image_level_results_file,image_folder_base,preview_folde
         ppresults = process_batch_results(options)
         html_output_file = ppresults.output_html_file
         
-        path_utils.open_file(html_output_file)
+        # path_utils.open_file(html_output_file)
+        html_files.append(html_output_file)
     
     # ...for each confidence threshold
 
-    #%%
+    return html_files
     
 # ...def patch_level_preview()
     
@@ -270,6 +269,7 @@ def image_level_counting(image_level_results_file):
     * Count the number of occurrences in each class above a few different thresholds
     * Write the resulting counts to .csv
     """
+    
     pass
 
 
@@ -279,14 +279,36 @@ if False:
     
     #%%
     
-    image_level_results_file = os.path.expanduser('~/tmp/usgs-inference/image_level_results/home_user_data_usgs-geese_eval_images_md_results_image_level_nms.json')
-    
-    image_folder_base = os.path.expanduser('~/data/usgs-geese/eval_images')
-    
+    n_patches = 2000
+    image_level_results_base = os.path.expanduser('~/tmp/usgs-inference/image_level_results')
+    image_level_results_filenames = os.listdir(image_level_results_base)
     preview_folder_base = os.path.expanduser('~/tmp/usgs-inference/preview')
-    preview_folder = os.path.join(preview_folder_base,
-                                  os.path.splitext(os.path.basename(image_level_results_file))[0])
     
-    
+    # image_level_results_filenames = [fn for fn in image_level_results_filenames if 'nms' in fn]
 
+    html_files = []
     
+    # fn = image_level_results_filenames[2]
+    for image_level_results_file in image_level_results_filenames:
+        if 'eval' in image_level_results_file:
+            image_folder_base = os.path.expanduser('~/data/usgs-geese/eval_images')
+        else:
+            # 'media_user_My_Passport_2022-10-09_md_results_image_level.json'
+            image_folder_base = '/' + '/'.join(image_level_results_file.replace('My_Passport','My Passport').\
+                                         split('_')[0:4])
+        
+        assert os.path.isdir(image_folder_base)
+    
+        preview_folder = os.path.join(preview_folder_base,
+                                      os.path.splitext(os.path.basename(image_level_results_file))[0])
+                
+        image_level_results_file_absolute = os.path.join(image_level_results_base,
+                                                         image_level_results_file)
+        image_html_files = patch_level_preview(image_level_results_file_absolute,image_folder_base,preview_folder,
+                                n_patches=n_patches,preview_confidence_thresholds=None)
+        html_files.extend(image_html_files)
+    
+    # ...for each results file
+    
+    for fn in html_files:
+        path_utils.open_file(fn)
