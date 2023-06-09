@@ -15,6 +15,7 @@
 import os
 import json
 import random
+import pandas as pd
 
 from tqdm import tqdm
 
@@ -25,6 +26,7 @@ from md_visualization import visualization_utils as vis_utils
 from md_utils import path_utils
 
 default_preview_confidence_thresholds = [0.4,0.5,0.6,0.7,0.8]
+default_counting_confidence_thresholds = [0.4,0.5,0.6,0.7,0.8]
 
 
 #%% Support functions
@@ -261,8 +263,10 @@ def patch_level_preview(image_level_results_file,image_folder_base,preview_folde
     return html_files
     
 # ...def patch_level_preview()
-    
-def image_level_counting(image_level_results_file):
+
+
+def image_level_counting(image_level_results_file,output_file=None,overwrite=False,
+                         counting_confidence_thresholds=None,image_name_prefix=''):
     """
     Given an image-level results file:
         
@@ -270,16 +274,103 @@ def image_level_counting(image_level_results_file):
     * Write the resulting counts to .csv
     """
     
-    pass
+    if counting_confidence_thresholds is None:
+        counting_confidence_thresholds = default_counting_confidence_thresholds
+    
+    if output_file is None:
+        output_file = image_level_results_file + '_counts.csv'
 
+    if os.path.isfile(output_file) and not overwrite:
+        raise ValueError('Output file {} exists and overwrite=False'.format(output_file))
+        
+    with open(image_level_results_file,'r') as f:
+        image_level_results = json.load(f)
+        
+    print('Loaded image-level results for {} images'.format(
+        len(image_level_results['images'])))
+    
+    # Make sure images are unique
+    image_filenames = [im['file'] for im in image_level_results['images']]
+    assert len(image_filenames) == len(set(image_filenames))
+    
+    category_names = image_level_results['detection_categories'].values()
+    category_names = [s.lower() for s in category_names]
+    category_id_to_name = {}
+    for category_id in image_level_results['detection_categories']:
+        category_id_to_name[category_id] = \
+            image_level_results['detection_categories'][category_id].lower()
+            
+    # This will be a list of dicts with fields
+    #
+    # image_path_local (str)
+    # image_path_original (str)
+    # confidence_threshold
+    # E.g.: 'count_brant', 'count_other', 'count_gull', 'count_canada', 'count_emperor'
+    results = []
+    
+    # im = image_level_results['images'][0]
+    for im in tqdm(image_level_results['images']):
+        
+        image_path_local = im['file']
+        
+        if image_name_prefix == '**eval**':
+            # For the eval set, filenames look like
+            # 'val-images/2019_Replicate_2019-10-11_Cam3_CAM39080.JPG'            
+            prefix = '2017-2019/01_JPGs/'
+            fn = os.path.basename(image_path_local)
+            fn = fn.replace('Replicate_','Replicate*').replace('Out_lagoon','Out*lagoon')
+            fn = fn.replace('_','/')
+            fn = fn.replace('*','_')
+            image_path_original = prefix + fn
+            
+        else:
+            image_path_original = image_name_prefix + image_path_local
+        
+        assert os.path.isfile(os.path.join('/media/user/My Passport',image_path_original))
+        
+        for confidence_threshold in counting_confidence_thresholds:
+            
+            category_id_to_count = {}
+            for cat_id in image_level_results['detection_categories'].keys():
+                category_id_to_count[cat_id] = 0
+            
+            # det = im['detections'][0]
+            for det in im['detections']:
+                
+                if det['conf'] >= confidence_threshold:                
+                    category_id_to_count[det['category']] = \
+                        category_id_to_count[det['category']] + 1
+            
+            # ...for each detection
+            
+            im_results = {}
+            im_results['image_path_local'] = image_path_local
+            im_results['image_path_original'] = image_path_original
+            im_results['confidence_threshold'] = confidence_threshold
+            
+            for category_id in category_id_to_count:
+                im_results['count_' + category_id_to_name[category_id]] = \
+                    category_id_to_count[category_id]
+        
+            results.append(im_results)
+            
+        # ...for each confidence threhsold        
+        
+    # ...for each image
+    
+    # Convert to a dataframe
+    df = pd.DataFrame.from_dict(results)
+    df.to_csv(output_file,header=True,index=False)
+    
 
 #%% Interactive driver
 
 if False:
     
-    #%%
+    #%% Preview
     
     n_patches = 2000
+    preview_confidence_thresholds = None
     image_level_results_base = os.path.expanduser('~/tmp/usgs-inference/image_level_results')
     image_level_results_filenames = os.listdir(image_level_results_base)
     preview_folder_base = os.path.expanduser('~/tmp/usgs-inference/preview')
@@ -290,6 +381,7 @@ if False:
     
     # fn = image_level_results_filenames[2]
     for image_level_results_file in image_level_results_filenames:
+        
         if 'eval' in image_level_results_file:
             image_folder_base = os.path.expanduser('~/data/usgs-geese/eval_images')
         else:
@@ -305,10 +397,41 @@ if False:
         image_level_results_file_absolute = os.path.join(image_level_results_base,
                                                          image_level_results_file)
         image_html_files = patch_level_preview(image_level_results_file_absolute,image_folder_base,preview_folder,
-                                n_patches=n_patches,preview_confidence_thresholds=None)
+                                n_patches=n_patches,preview_confidence_thresholds=preview_confidence_thresholds)
         html_files.extend(image_html_files)
     
     # ...for each results file
     
     for fn in html_files:
         path_utils.open_file(fn)
+
+    
+    #%% Counting
+    
+    output_file = None
+    overwrite = True
+    counting_confidence_thresholds = None
+    image_level_results_base = os.path.expanduser('~/tmp/usgs-inference/image_level_results')
+    image_level_results_filenames = os.listdir(image_level_results_base)
+    image_level_results_filenames = [fn for fn in image_level_results_filenames if \
+                                     fn.endswith('.json')]
+
+    # image_level_results_file_relative = image_level_results_filenames[0]
+    for image_level_results_file_relative in image_level_results_filenames:
+        
+        if 'eval' in image_level_results_file_relative:
+            image_name_prefix = '**eval**'
+        else:
+            image_name_prefix = os.path.basename(image_level_results_file_relative).\
+                replace('My_Passport','My Passport').\
+                split('_')[3] + '/'
+            assert image_name_prefix.startswith('2022') and len(image_name_prefix) == 11
+    
+        image_level_results_file = os.path.join(image_level_results_base,
+                                                image_level_results_file_relative)
+        
+        image_level_counting(image_level_results_file,output_file=None,overwrite=True,
+                                 counting_confidence_thresholds=None,image_name_prefix=image_name_prefix)
+    
+    # ...for each results file
+                             
