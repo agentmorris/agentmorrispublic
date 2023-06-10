@@ -1157,11 +1157,13 @@ def run_model_on_folder(input_folder_base,recursive=True):
 # ...run_model_on_folder()
 
 
-#%% Scrap, interactive driver
+#%% Interactive driver
 
 if False:
     
-    #%% Interactive driver
+    pass
+
+    #%%
     
     # input_folder_base = '/media/user/My Passport/2017-2019/01_JPGs/2017/Replicate_2017-10-01/Cam1'
     # input_folder_base = '/media/user/My Passport/2022-10-09/cam3'
@@ -1169,10 +1171,20 @@ if False:
     
     # input_folder_base = '/media/user/My Passport/2022-10-11'
     # input_folder_base = '/media/user/My Passport/2022-10-09'
-    input_folder_base = '/home/user/data/usgs-geese/eval_images'
+    input_folder_base = '/media/user/My Passport/2022-10-12'
+    # input_folder_base = '/media/user/My Passport/2022-10-16'
+    # input_folder_base = '/media/user/My Passport/2022-10-17'
+    
+    # input_folder_base = '/home/user/data/usgs-geese/eval_images'
     
     results = run_model_on_folder(input_folder_base,recursive=True)
     
+
+#%% Scrap
+
+if False:
+
+    pass
     
     #%% Time estimates
     

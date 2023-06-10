@@ -340,4 +340,7 @@ Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite imag
   
 ## Datasets added recently that we haven't had a chance to dig into yet
 
+* Koger B, Deshpande A, Kerby JT, Graving JM, Costelloe BR, Couzin ID. [Quantifying the movement, behaviour and environmental context of group‐living animals using drones and computer vision](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2656.13904). Journal of Animal Ecology. 2023 Mar 21.
+
 * Miao Z, Fara LJ, Fronczak D, Landolt KL, Bragger A, Koneff MD, Lubinski B, Robinson LR, Yates S, 2023, [Images and annotations to automate the classification of avian species](https://www.sciencebase.gov/catalog/item/63bf21cdd34e92aad3cdac5a).  U.S. Geological Survey data release.
+
