@@ -12,5 +12,7 @@ Take this list with a grain of salt, I don't update it regularly.
 * [drone-datasets.md](drone-datasets.md): a list of datasets with annotated aerial/drone/satellite imagery for wildlife surveys.
 * [tree-ring-test.py](tree-ring-test.py): test driver for the [TRG-ImageProcessing](https://github.com/Gregor-Mendel-Institute/TRG-ImageProcessing/) pipeline for detecting tree rings in tree slices.
 
+# Things that "graduated" from this repo
 
+* [Bird detector for the USGS Izembek goose survey](https://github.com/agentmorris/usgs-geese)
 
