@@ -1,4 +1,6 @@
 #
+# gdal_convert_nan_to_nodata.py
+#
 # For a folder of .tif files, converting NaN values to a specified NODATA value, and writing
 # that as the NODATA value in metadata for each file.
 #
