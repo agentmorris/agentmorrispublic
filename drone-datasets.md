@@ -39,6 +39,7 @@ Eikelboom JA, Wind J, van de Ven E, Kenana LM, Schroder B, de Knegt HJ, van Lang
 * Image information: 561 RGB images
 * Annotation information: 4305 boxes
 * Typical animal size in pixels: 50
+* License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-eikelboom-savanna.py">preview-eikelboom-savanna.py</a>
   
   
@@ -58,6 +59,7 @@ Hu Q, Smith J, Woldt W, Tang Z. UAV-derived waterfowl thermal imagery dataset. M
 * Image information: 541 thermal images (unannotated RGB images included as a visual reference)
 * Annotation information: 8976 boxes
 * Typical animal size in pixels: 7
+* License: CC BY 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-hu-thermal.py">preview-hu-thermal.py</a>
   
   
@@ -77,6 +79,7 @@ Hodgson JC, Mott R, Baylis SM, Pham TT, Wotherspoon S, Kilpatrick AD, Raja Segar
 * Image information: 40 RGB images
 * Annotation information: 1560 counts
 * Typical animal size in pixels: variable
+* License: CC0
   
   
 <img src="https://raw.githubusercontent.com/KalindiFonda/bAIo/main/aerial-drone-data-preview/drone_count_seabird_colony_60m_sample.jpg" width=700>
@@ -95,6 +98,7 @@ Qian Y, Humphries G, Trathan P, Lowther A, Donovan C.  Counting animals in aeria
 * Image information: 753 RGB images (orthorectified)
 * Annotation information: 137365 points
 * Typical animal size in pixels: 30
+* License: CC0 
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-qian-penguins.py">preview-qian-penguins.py</a>
   
   
@@ -114,6 +118,7 @@ Gray PC, Fleishman AB, Klein DJ, McKown MW, Bezy VS, Lohmann KJ, Johnston DW. A 
 * Image information: 1059 NIR images (false color NIR rendered to RGB)
 * Annotation information: 1902 points
 * Typical animal size in pixels: 10
+* License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-gray-turtles.py">preview-gray-turtles.py</a>
   
   
@@ -133,6 +138,7 @@ Naude J, Joubert D. The Aerial Elephant Dataset: A New Public Benchmark for Aeri
 * Image information: 2074 RGB images
 * Annotation information: 15581 points
 * Typical animal size in pixels: 75
+* License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-aerial-elephants.py">preview-aerial-elephants.py</a>
   
   
@@ -152,6 +158,7 @@ Weinstein BG, Garner L, Saccomanno VR, Steinkraus A, Ortega A, Brush K, Yenni G,
 * Image information: 23765 RGB images
 * Annotation information: 386638 boxes
 * Typical animal size in pixels: 35
+* License: CC BY 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weinstein-birds.py">preview-weinstein-birds.py</a>
   
   
@@ -171,6 +178,7 @@ Weiser EL, Flint PL, Marks DK, Shults BS, Wilson HM, Thompson SJ, Fischer JB. Ae
 * Image information: 110667 RGB images
 * Annotation information: 631349 points
 * Typical animal size in pixels: 50
+* License: unspecified, but public domain implied (USGS source)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl.py">preview-weiser-waterfowl.py</a>
   
   
@@ -190,6 +198,7 @@ Hayes MC, Gray PC, Harris G, Sedgwick WC, Crawford VD, Chazal N, Crofts S, Johns
 * Image information: 3947 RGB images
 * Annotation information: 44966 boxes
 * Typical animal size in pixels: 300
+* License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-hayes-seabirds.py">preview-hayes-seabirds.py</a>
   
   
@@ -209,6 +218,7 @@ Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection a
 * Image information: 663 RGB images
 * Annotation information: 1919 boxes
 * Typical animal size in pixels: 90
+* License: unspecified
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-shao-cattle.py">preview-shao-cattle.py</a>
   
   
@@ -226,6 +236,7 @@ Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection a
 * Image information: 948 RGB images
 * Annotation information: 948 counts
 * Typical animal size in pixels: 75
+* License: unspecified (public domain implied, NOAA source)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-steller-sea-lion-count.py">preview-steller-sea-lion-count.py</a>
   
   
@@ -243,6 +254,7 @@ Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection a
 * Image information: 11468 RGB images
 * Annotation information: 4544 individual IDs
 * Typical animal size in pixels: 1500
+* License: unspecified (public domain implied, NOAA source)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-right-whale-recognition.py">preview-right-whale-recognition.py</a>
   
   
@@ -262,6 +274,7 @@ Alaska Fisheries Science Center, 2021: A Dataset for Machine Learning Algorithm 
 * Image information: 44185 RGB+IR images (rGB and IR are different resolutions, but registered well, and annotations for every animal are provided for both images)
 * Annotation information: 14311 boxes
 * Typical animal size in pixels: 55
+* License: CDLA-permissive
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-noaa-arctic-seals.py">preview-noaa-arctic-seals.py</a>
   
   
@@ -281,6 +294,7 @@ Kellenberger B, Veen T, Folmer E, Tuia D. 21,000 birds in 4.5 h: efficient large
 * Image information: single aerial orthomosaic RGB images
 * Annotation information: 21516 points
 * Typical animal size in pixels: 30
+* License: CDLA-permissive
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-aerial-seabirds-west-africa.py">preview-aerial-seabirds-west-africa.py</a>
   
   
@@ -300,6 +314,7 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
 * Image information: 61994 frames from 48 videos thermal images
 * Annotation information: 166221 boxes
 * Typical animal size in pixels: 35
+* License: CDLA-permissive
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-conservation-drones.py">preview-conservation-drones.py</a>
   
   
@@ -318,6 +333,7 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
 * Image information: 88000 RGB images
 * Annotation information:  individual ID
 * Typical animal size in pixels: 1000
+* License: CC0
   
   
 <img src="https://raw.githubusercontent.com/KalindiFonda/bAIo/main/aerial-drone-data-preview/mugger_crocodiles_31_2_sample.jpg" width=700>
@@ -336,6 +352,7 @@ Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite imag
 * Image information: 633 RGB images (150x150 chips)
 * Annotation information:  boxes
 * Typical animal size in pixels: 50
+* License: variable
     
   
 ## Datasets added recently that we haven't had a chance to dig into yet
