@@ -345,7 +345,7 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
   
 Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite image dataset of whales for training machine learning models. Scientific Data. 2022 May 27;9(1):245.
 
-* 10 MB, downloadable via http from By request (<a href="https://www.nature.com/articles/s41597-022-01377-4#Sec8">download link</a>)
+* 10 MB, downloadable via http from by request (<a href="https://www.nature.com/articles/s41597-022-01377-4#Sec8">download link</a>)
 * Metadata in csv, shapefile format
 * Categories: southern right whale, humpback whale, fin whale, grey whale
 * Vehicle type: satellite
