@@ -9,7 +9,6 @@ from sportsipy.nfl.teams import Teams
 
 #%% Constants
 
-year = 2009
 sleep_time_per_request = 15
 output_folder = r'g:\temp\nfl-game-ranks'
 
@@ -26,6 +25,8 @@ for t in teams:
     
 #%% Retrieve schedules    
 
+# ...or load from cache
+
 team_abbreviation_to_schedule = {}
 team_abbreviation_to_name = {}
 
@@ -36,6 +37,7 @@ for i_team,t in tqdm(enumerate(teams),total=len(teams)):
     team_abbreviation_to_name[abbr] = t.name
     if i_team != (len(teams) - 1):
         time.sleep(sleep_time_per_request)
+
 
 
 #%% Retrieve box scores and schedule details
@@ -78,7 +80,6 @@ os.makedirs(output_folder,exist_ok=True)
 output_file = os.path.join(output_folder,'sportsipy_results.pickle')
 
 sportsipy_results = {}
-
 sportsipy_results['team_abbreviation_to_schedule'] = team_abbreviation_to_schedule
 sportsipy_results['team_abbreviation_to_name'] = team_abbreviation_to_name
 sportsipy_results['team_abbreviation_to_game_details'] = team_abbreviation_to_game_details
@@ -90,6 +91,12 @@ with open(output_file,'wb') as f:
 
 #%% Deserialize results
 
-with open(output_file,'rb') as f:
-    sportsipy_results = pickle.load(f)
+serialized_result_files = os.listdir(output_folder)
+serialized_result_files = [fn for fn in serialized_result_files if fn.endswith('.pickle')]
+serialized_result_files = [os.path.join(fn) for fn in serialized_result_files]
+
+for fn in serialized_result_files:
+    with open(fn,'rb') as f:
+        d = pickle.load(f)
+    
 
