@@ -18,8 +18,8 @@ import numpy as np
 from collections import defaultdict
 from tqdm import tqdm
 
-from visualization import visualization_utils as visutils
-import path_utils
+from md_visualization import visualization_utils as visutils
+from md_utils import path_utils
 
 base_folder = r'c:\drone-data\11 - hayes'
 output_file_annotated = r'g:\temp\hayes_seabirds_sample_image_annotated.jpg'

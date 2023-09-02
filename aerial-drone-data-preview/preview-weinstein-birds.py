@@ -18,8 +18,8 @@ import numpy as np
 from collections import defaultdict
 from tqdm import tqdm
 
-from visualization import visualization_utils as visutils
-import path_utils
+from md_visualization import visualization_utils as visutils
+from md_utils import path_utils
 
 base_folder = r'c:\drone-data\09 - weinstein'
 output_file_annotated = r'g:\temp\weinstein_birds_sample_image_annotated.jpg'

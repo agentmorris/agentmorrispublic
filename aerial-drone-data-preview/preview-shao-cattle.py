@@ -14,8 +14,8 @@ import shutil
 import numpy as np
 import glob
 
-from visualization import visualization_utils as visutils
-import path_utils
+from md_visualization import visualization_utils as visutils
+from md_utils import path_utils
 
 base_folder = r"c:\drone-data\12 - shao"
 assert os.path.isdir(base_folder)

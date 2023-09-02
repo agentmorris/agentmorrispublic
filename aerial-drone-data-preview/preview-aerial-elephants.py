@@ -16,8 +16,8 @@ import shutil
 from collections import defaultdict
 from PIL import ImageDraw
 
-import path_utils
-from visualization import visualization_utils as visutils
+from md_utils import path_utils
+from md_visualization import visualization_utils as visutils
 
 base_folder = r'c:\drone-data\08 - naude\AED'
 

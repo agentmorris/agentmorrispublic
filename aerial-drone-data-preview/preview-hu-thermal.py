@@ -13,8 +13,8 @@ import pandas as pd
 import os
 import shutil
 
-from visualization import visualization_utils as visutils
-import path_utils
+from md_visualization import visualization_utils as visutils
+from md_utils import path_utils
 
 base_folder = r'c:\drone-data\03 - hu'
 annotation_file = r'00_UAV-derived Thermal Waterfowl Dataset\00_UAV-derived Waterfowl Thermal Imagery Dataset\01_Thermal Images and Ground Truth (used for detector training and testing)\02_Groundtruth Label for Positive Images\Bounding Box Label.csv'

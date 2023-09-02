@@ -41,8 +41,7 @@ Eikelboom JA, Wind J, van de Ven E, Kenana LM, Schroder B, de Knegt HJ, van Lang
 * Typical animal size in pixels: 50
 * License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-eikelboom-savanna.py">preview-eikelboom-savanna.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/eikelboom_savanna_sample_image_annotated.jpg" width=700>
   
   
@@ -61,8 +60,7 @@ Hu Q, Smith J, Woldt W, Tang Z. UAV-derived waterfowl thermal imagery dataset. M
 * Typical animal size in pixels: 7
 * License: CC BY 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-hu-thermal.py">preview-hu-thermal.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/hu_thermal_sample_image_annotated.jpg" width=700>
   
   
@@ -80,8 +78,7 @@ Hodgson JC, Mott R, Baylis SM, Pham TT, Wotherspoon S, Kilpatrick AD, Raja Segar
 * Annotation information: 1560 counts
 * Typical animal size in pixels: variable
 * License: CC0
-  
-  
+
 <img src="https://raw.githubusercontent.com/KalindiFonda/bAIo/main/aerial-drone-data-preview/drone_count_seabird_colony_60m_sample.jpg" width=700>
   
   
@@ -100,8 +97,7 @@ Qian Y, Humphries G, Trathan P, Lowther A, Donovan C.  Counting animals in aeria
 * Typical animal size in pixels: 30
 * License: CC0 
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-qian-penguins.py">preview-qian-penguins.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/qian_penguins_sample_image_annotated.jpg" width=700>
   
   
@@ -120,8 +116,7 @@ Gray PC, Fleishman AB, Klein DJ, McKown MW, Bezy VS, Lohmann KJ, Johnston DW. A 
 * Typical animal size in pixels: 10
 * License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-gray-turtles.py">preview-gray-turtles.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/gray_turtles_sample_image_annotated.jpg" width=700>
   
   
@@ -140,8 +135,7 @@ Naude J, Joubert D. The Aerial Elephant Dataset: A New Public Benchmark for Aeri
 * Typical animal size in pixels: 75
 * License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-aerial-elephants.py">preview-aerial-elephants.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/aerial_elephants_sample_image_annotated.jpg" width=700>
   
   
@@ -160,8 +154,7 @@ Weinstein BG, Garner L, Saccomanno VR, Steinkraus A, Ortega A, Brush K, Yenni G,
 * Typical animal size in pixels: 35
 * License: CC BY 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weinstein-birds.py">preview-weinstein-birds.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/weinstein_birds_sample_image_annotated.jpg" width=700>
   
   
@@ -180,8 +173,7 @@ Weiser EL, Flint PL, Marks DK, Shults BS, Wilson HM, Thompson SJ, Fischer JB. Ae
 * Typical animal size in pixels: 50
 * License: unspecified, but public domain implied (USGS source)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl.py">preview-weiser-waterfowl.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/weiser_waterfowl_sample_image_annotated.jpg" width=700>
   
   
@@ -200,8 +192,7 @@ Hayes MC, Gray PC, Harris G, Sedgwick WC, Crawford VD, Chazal N, Crofts S, Johns
 * Typical animal size in pixels: 300
 * License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-hayes-seabirds.py">preview-hayes-seabirds.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/hayes_seabirds_sample_image_annotated.jpg" width=700>
   
   
@@ -220,8 +211,7 @@ Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection a
 * Typical animal size in pixels: 90
 * License: unspecified
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-shao-cattle.py">preview-shao-cattle.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/shao_cattle_sample_image_annotated.jpg" width=700>
   
   
@@ -238,8 +228,7 @@ Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection a
 * Typical animal size in pixels: 75
 * License: unspecified (public domain implied, NOAA source)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-steller-sea-lion-count.py">preview-steller-sea-lion-count.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/steller_sea_lion_count_sample_image.jpg" width=700>
   
   
@@ -256,8 +245,7 @@ Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection a
 * Typical animal size in pixels: 1500
 * License: unspecified (public domain implied, NOAA source)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-right-whale-recognition.py">preview-right-whale-recognition.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/right_whale_recognition_sample_image.jpg" width=700>
   
   
@@ -276,8 +264,7 @@ Alaska Fisheries Science Center, 2021: A Dataset for Machine Learning Algorithm 
 * Typical animal size in pixels: 55
 * License: CDLA-permissive
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-noaa-arctic-seals.py">preview-noaa-arctic-seals.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/noaa_arctic_seals_sample_image_annotated.jpg" width=700>
   
   
@@ -296,8 +283,7 @@ Kellenberger B, Veen T, Folmer E, Tuia D. 21,000 birds in 4.5 h: efficient large
 * Typical animal size in pixels: 30
 * License: CDLA-permissive
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-aerial-seabirds-west-africa.py">preview-aerial-seabirds-west-africa.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/aerial_seabirds_west_africa_sample_image_annotated.jpg" width=700>
   
   
@@ -316,11 +302,66 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
 * Typical animal size in pixels: 35
 * License: CDLA-permissive
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-conservation-drones.py">preview-conservation-drones.py</a>
-  
-  
+
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/conservation_drones_sample_image_annotated.jpg" width=700>
-  
-  
+
+
+### Large-scale, Semi-Automatic Inference of Animal Behavior from Monocular Videos
+
+Oblique aerial videos of zebras with 162931 bounding boxes and behavioral labels (standing, grazing, etc.).
+
+Price E, Khandelwal PC, Rubenstein DI, Ahmad A. A Framework for Fast, Large-scale, Semi-Automatic Inference of Animal Behavior from Monocular Videos. bioRxiv. 2023:2023-07.
+
+* 96GB, downloadable via http from Keeper (<a href="https://keeper.mpdl.mpg.de/d/a9822e000aff4b5391e1/">download link</a>)
+* Metadata in json format (Labelme standard)
+* Categories: zebra, person, vehicle
+* Vehicle type: plane
+* Image information: 30,6026 video frames (~4k resolution)
+* Annotation information: 162931 boxes (4387 fully manual, 158544 semi-automated) with behavior labels
+* Typical animal size in pixels: 134
+* License: unspecified
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-price-zebras.py">preview-price-zebras.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/price_zebras_sample_image_annotated.jpg" width=700>
+
+
+### Quantifying the movement, behaviour and environmental context of group-living animals using drones and computer vision
+
+Drone images of ungulates and geladas with 40532 bounding boxes.
+
+Koger B, Deshpande A, Kerby JT, Graving JM, Costelloe BR, Couzin ID. [Quantifying the movement, behaviour and environmental context of group-living animals using drones and computer vision](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2656.13904). Journal of Animal Ecology. 2023 Mar 21.
+
+* 65GB, downloadable via http from Edmond (<a href="https://edmond.mpdl.mpg.de/dataset.xhtml?persistentId=doi:10.17617/3.EMRZGH">download link</a>)
+* Metadata in json format (COCO standard)
+* Categories: zebra, gazelle, waterbuck, buffalo, other, gelada, human
+* Vehicle type: drone
+* Image information: 1982 drone images
+* Annotation information: 40532 boxes
+* Typical animal size in pixels: 56
+* License: CC0
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-koger-drones.py">preview-koger-drones.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/koger_drones_sample_image_annotated.jpg" width=700>
+
+
+### USGS avian classification
+
+Cropped patches from aerial images with avian species labels.
+
+Miao Z, Fara LJ, Fronczak D, Landolt KL, Bragger A, Koneff MD, Lubinski B, Robinson LR, Yates S, 2023, [Images and annotations to automate the classification of avian species](https://www.sciencebase.gov/catalog/item/63bf21cdd34e92aad3cdac5a).  U.S. Geological Survey data release.
+
+* 175MB, downloadable via http from ScienceBase (<a href="https://www.sciencebase.gov/catalog/item/63bf21cdd34e92aad3cdac5a">download link</a>)
+* Metadata in text format (filename, class)
+* Categories: Common Eider, King Eider, Long-tailed Duck, Black Scoter, White-winged Scoter, Surf Scoter, Gull, Bufflehead
+* Vehicle type: plane
+* Image information: 10917 cropped patches
+* Annotation information: class labels for each patch
+* Typical animal size in pixels: 25
+* License: unspecified
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/miao-avian_sample_image_annotated.jpg">
+
+
 ## Datasets available by request
 
 ### Identification of free-ranging mugger crocodiles by applying deep learning methods on UAV imagery
@@ -334,11 +375,10 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
 * Annotation information:  individual ID
 * Typical animal size in pixels: 1000
 * License: CC0
-  
-  
+
 <img src="https://raw.githubusercontent.com/KalindiFonda/bAIo/main/aerial-drone-data-preview/mugger_crocodiles_31_2_sample.jpg" width=700>
-  
-  
+
+
 ### Whales from Space
 
 633 satellite image chips with boxes on whales
@@ -355,9 +395,3 @@ Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite imag
 * License: variable
     
   
-## Datasets added recently that we haven't had a chance to dig into yet
-
-* Koger B, Deshpande A, Kerby JT, Graving JM, Costelloe BR, Couzin ID. [Quantifying the movement, behaviour and environmental context of group‐living animals using drones and computer vision](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2656.13904). Journal of Animal Ecology. 2023 Mar 21.
-
-* Miao Z, Fara LJ, Fronczak D, Landolt KL, Bragger A, Koneff MD, Lubinski B, Robinson LR, Yates S, 2023, [Images and annotations to automate the classification of avian species](https://www.sciencebase.gov/catalog/item/63bf21cdd34e92aad3cdac5a).  U.S. Geological Survey data release.
-

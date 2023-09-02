@@ -14,8 +14,8 @@ import operator
 import os
 import shutil
 
-import path_utils
-from visualization import visualization_utils as visutils
+from md_utils import path_utils
+from md_visualization import visualization_utils as visutils
 
 base_folder = r'c:\drone-data\02 - eikelboom'
 

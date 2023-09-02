@@ -19,8 +19,8 @@ from collections import defaultdict
 from tqdm import tqdm
 from PIL import ImageDraw
 
-from visualization import visualization_utils as visutils
-import path_utils
+from md_visualization import visualization_utils as visutils
+from md_utils import path_utils
 
 base_folder = r'C:\drone-data\10 - izembek'
 
