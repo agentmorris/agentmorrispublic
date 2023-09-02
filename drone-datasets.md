@@ -357,7 +357,7 @@ Miao Z, Fara LJ, Fronczak D, Landolt KL, Bragger A, Koneff MD, Lubinski B, Robin
 * Image information: 10917 cropped patches
 * Annotation information: class labels for each patch
 * Typical animal size in pixels: 25
-* License: unspecified
+* License: unspecified (public domain implied, USGS source)
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/miao-avian_sample_image_annotated.png" width="500">
 
