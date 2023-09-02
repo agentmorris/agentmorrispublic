@@ -359,7 +359,7 @@ Miao Z, Fara LJ, Fronczak D, Landolt KL, Bragger A, Koneff MD, Lubinski B, Robin
 * Typical animal size in pixels: 25
 * License: unspecified
 
-<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/miao-avian_sample_image_annotated.jpg">
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/miao-avian_sample_image_annotated.png">
 
 
 ## Datasets available by request
