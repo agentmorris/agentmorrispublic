@@ -344,6 +344,9 @@ Koger B, Deshpande A, Kerby JT, Graving JM, Costelloe BR, Couzin ID. [Quantifyin
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/koger_drones_sample_image_annotated.jpg" width=700>
 
 
+<!-- Error in annotations, temporarily commenting out -->
+
+<!--
 ### USGS avian classification
 
 Cropped patches from aerial images with avian species labels.
@@ -360,6 +363,7 @@ Miao Z, Fara LJ, Fronczak D, Landolt KL, Bragger A, Koneff MD, Lubinski B, Robin
 * License: unspecified (public domain implied, USGS source)
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/miao-avian_sample_image_annotated.png" width="500">
+-->
 
 
 ## Datasets available by request
