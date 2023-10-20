@@ -355,7 +355,7 @@ Kabra K, Xiong A, Li W, Luo M, Lu W, Yu T, Yu J, Singh D, Garcia R, Tang M, Arno
 * Categories: <a href="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabra_birds_categories.txt">list of categories</a>
 * Vehicle type: drone
 * Image information: 200 drone images
-* Annotation information: 23078 boxes
+* Annotation information: 23078 boxes, species and age (juvenile/adult) information for each box
 * Typical animal size in pixels: 88.9
 * License: unspecified
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-kabra-birds.py">preview-kabra-birds.py</a>
