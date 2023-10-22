@@ -165,6 +165,7 @@ Weinstein BG, Garner L, Saccomanno VR, Steinkraus A, Ortega A, Brush K, Yenni G,
 Weiser EL, Flint PL, Marks DK, Shults BS, Wilson HM, Thompson SJ, Fischer JB. Aerial photo imagery from fall waterfowl surveys, Izembek Lagoon, Alaska, 2017-2019: U.S. Geological Survey data release. 2022.
 
 * 1.82 TB, downloadable via http from USGS (<a href="https://alaska.usgs.gov/products/data.php?dataid=484">download link</a>)
+* A slightly-more-curated but technically-incomplete version of this dataset (many of the blank images hve been removed) is [hosted on LILA](https://lila.science/datasets/izembek-lagoon-waterfowl/).
 * Metadata in csv, json format (CountThings standard)
 * Categories: brant goose, emperor goose, canada goose, gull, other
 * Vehicle type: plane
@@ -172,9 +173,9 @@ Weiser EL, Flint PL, Marks DK, Shults BS, Wilson HM, Thompson SJ, Fischer JB. Ae
 * Annotation information: 631349 points
 * Typical animal size in pixels: 50
 * License: unspecified, but public domain implied (USGS source)
-* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl.py">preview-weiser-waterfowl.py</a>
+* Code to render sample annotated image from the original dataset: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl.py">preview-weiser-waterfowl.py</a>
+* Code to render sample annotated image from the LILA dataset: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl-lila.py">preview-weiser-waterfowl-lila.py</a>
 
-A slightly-more-curated but technically-incomplete version of this dataset (many of the blank images hve been removed) is [hosted on LILA](https://lila.science/datasets/izembek-lagoon-waterfowl/).
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/weiser_waterfowl_sample_image_annotated.jpg" width=700>
   

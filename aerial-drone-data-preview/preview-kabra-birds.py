@@ -77,6 +77,14 @@ for s in category_name_to_id.keys():
     print(s)
 
 
+#%% Print category names
+
+category_names = class_id_to_category_names.values()
+for names in category_names:
+    for s in names:
+        print(s)
+        
+
 #%% Find an image with a bunch of annotations
 
 image_name_to_count = {}
@@ -127,6 +135,7 @@ for ann in image_annotations:
     if category_name not in category_name_to_id:
         next_category_id += 1
         category_id = next_category_id
+        category_name_to_id[category_name] = category_id
     else:
         category_id = category_name_to_id[category_name]
     det['category'] = category_id
@@ -141,8 +150,13 @@ for ann in image_annotations:
     det['bbox'] = box    
     detection_formatted_boxes.append(det)
     
+category_id_to_name = {}
+for category_name in category_name_to_id.keys():
+    category_id = category_name_to_id[category_name]
+    category_id_to_name[category_id] = category_name
+    
 visutils.draw_bounding_boxes_on_file(image_full_path, output_file_annotated, detection_formatted_boxes,       
-                                     confidence_threshold=0.0,detector_label_map=None,
+                                     confidence_threshold=0.0,detector_label_map=category_id_to_name,
                                      thickness=10,expansion=0)
 
 shutil.copyfile(image_full_path,output_file_unannotated)    
