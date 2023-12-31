@@ -48,7 +48,7 @@ I am making a very loose effort to include last-updated dates for each of these.
 When possible, the first link for each line item should get you pretty close to the model weights.
 
 * [AI for the Ocean Fish and Squid Detector](https://zenodo.org/records/7430331) (YOLOv5s, trained on 5600 images in the Eastern Pacific) (2022, [code](https://github.com/heinsense2/AIO_CaseStudy))
-* [MegaFishDetector](https://github.com/warplab/megafishdetector/blob/main/MODEL_ZOO.md) (YOLOv5 models (5s, 5l, 5m) trained on a single fish class from a variety of datasets) (2023, [code](https://github.com/warplab/megafishdetector))
+* [MegaFishDetector](https://github.com/warplab/megafishdetector/blob/main/MODEL_ZOO.md) (YOLOv5 models (5s, 5l, 5m) for binary fish detection, trained on a variety of datasets) (2023, [code](https://github.com/warplab/megafishdetector))
 * [Fishial.AI fish detector](https://github.com/fishial/fish-identification?tab=readme-ov-file#models) (Mask-RCNN segmentation model and a ResNet-18 classifier for 289 classses, PyTorch) (2022, [code](https://github.com/fishial/fish-identification), [project home](https://www.fishial.ai))
 * [KakaduFishAI](https://zenodo.org/records/7250921/files/202210-KakaduFishAI-CompactModel.zip?download=1) (TF object detection model for ~20 Australian species trained via Custom Vision) (2022, [data](https://zenodo.org/record/7250921#.Y_w4tMJBzl0), [code](https://github.com/ajansenn/KakaduFishAI)) 
 * [NOAA Puget Sound Nearshore Fish detector](https://github.com/agentmorris/noaa-fish/releases) (2023, YOLOv5x6  trained on fish and crustaceans in the NE Pacific) ([code](https://github.com/agentmorris/noaa-fish), [data](https://lila.science/datasets/noaa-puget-sound-nearshore-fish))
