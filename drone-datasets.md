@@ -5,7 +5,8 @@
 * <a href="#overview">Overview</a>
 * <a href="#publicly-available-datasets">Publicly available datasets</a>
 * <a href="#datasets-available-by-request">Datasets available by request</a>
-* <a href="#datasets-added-recently-that-we-havent-had-a-chance-to-dig-into-yet">Datasets added recently that we haven't had a chance to dig into yet</a>
+* <a href="#publicly-available-models-for-wildlife-detection-in-droneaerial-images">Publicly-available models for wildlife detection in drone/aerial images</a>
+<!-- * <a href="#datasets-added-recently-that-we-havent-had-a-chance-to-dig-into-yet">Datasets added recently that we haven't had a chance to dig into yet</a> -->
 
 ## Overview
 
@@ -23,6 +24,8 @@ This list was curated by the following folks, after this list got started as a t
 * <a href="https://www.linkedin.com/in/edbayes/">Ed Bayes</a>
 
 Email <a href="mailto:agentmorris+dronedatasets@gmail.com">Dan</a> if anything seems off, or if you know of datasets we're missing.
+
+As a bonus, this page is also a temporary holding place for a list of <i><a href="#publicly-available-models-for-wildlife-detection-in-droneaerial-images">models</a></i> for wildlife detection in aerial/drone imagery.
 
 ## Publicly available datasets
 
@@ -419,3 +422,30 @@ Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite imag
 * License: variable
     
   
+## Publicly-available models for wildlife detection in drone/aerial images
+
+This section lists ML models one can download and run locally on drone/aerial images of wildlife (or use in cloud-based systems).  This section does not include models that exist in online platforms but can't be downloaded locally.
+
+My hope is that this section can grow into a more structured database of models with sample code... if you want to help with that, <a href="mailto:agentmorris+dronesurvey@gmail.com">email me</a>.
+
+I am making a very loose effort to include last-updated dates for each of these.  Those dates are meant to very loosely capture repo activity, so that if you go looking for a detector for ecosystem X, you can start with more active sources.  But I'm not digging that deep; if someone trained a detector in 2016 that is totally obsolete, but they corrected a bunch of typos in their repo in 2023, they will successfully trick my algorithm for determining the last-updated date.
+
+When possible, the first link for each line item should get you pretty close to the model weights.
+
+* [Global model of bird detection](https://github.com/weecology/BirdDetector/releases) (2021, [code](https://github.com/weecology/BirdDetector), [data](https://zenodo.org/records/5033174), [paper](https://www.biorxiv.org/content/10.1101/2021.08.05.455311v2.full)) (RetinaNet on ResNet50 in PyTorch)<br/><br/>This also comes with a family of fine-tuned versions for specific ecosystems:
+
+  * [Hayes](https://zenodo.org/records/5033174/files/hayes_finetune.pt?download=1)
+  * [McKellar](https://zenodo.org/records/5033174/files/mckellar_finetune.pt?download=1)
+  * [Michigan](https://zenodo.org/records/5033174/files/michigan_finetune.pt?download=1)
+  * [Monash](https://zenodo.org/records/5033174/files/monash_finetune.pt?download=1)
+  * [Neill](https://zenodo.org/records/5033174/files/neill_finetune.pt?download=1)
+  * [New Mexico](https://zenodo.org/records/5033174/files/newmexico_finetune.pt?download=1)
+  * [Palmyra](https://zenodo.org/records/5033174/files/palmyra_finetune.pt?download=1)
+  * [Penguins](https://zenodo.org/records/5033174/files/penguins_finetune.pt?download=1)
+  * [Pfeifer](https://zenodo.org/records/5033174/files/pfeifer_finetune.pt?download=1)
+  * [Seabird Watch](https://zenodo.org/records/5033174/files/seabirdwatch_finetune.pt?download=1)
+  * [Terns](https://zenodo.org/records/5033174/files/terns_finetune.pt?download=1)
+  * [USGS](https://zenodo.org/records/5033174/files/USGS_finetune.pt?download=1)
+
+* [Izembek goose detector](https://github.com/agentmorris/usgs-geese/releases) (2022, [code](https://github.com/agentmorris/usgs-geese), [data](https://lila.science/datasets/izembek-lagoon-waterfowl)) (YOLOv5, detects birds in Izembek Lagoon in Alaska, particularly brant geese, in aerial imagery)
+
