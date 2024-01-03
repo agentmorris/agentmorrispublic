@@ -433,17 +433,5 @@ I am making a very loose effort to include last-updated dates for each of these.
 When possible, the first link for each line item should get you pretty close to the model weights.
 
 * [Global model of bird detection](https://github.com/weecology/BirdDetector/releases) (2021, [code](https://github.com/weecology/BirdDetector), [data](https://zenodo.org/records/5033174), [paper](https://www.biorxiv.org/content/10.1101/2021.08.05.455311v2.full)) (RetinaNet on ResNet50 in PyTorch) (downloadable directly, but recommended use is via the [DeepForest package](https://deepforest.readthedocs.io/en/latest/prebuilt.html#bird-detection))
-<!-- * [Hayes](https://zenodo.org/records/5033174/files/hayes_finetune.pt?download=1) -->
-<!-- * [McKellar](https://zenodo.org/records/5033174/files/mckellar_finetune.pt?download=1) -->
-<!-- * [Michigan](https://zenodo.org/records/5033174/files/michigan_finetune.pt?download=1) -->
-<!-- * [Monash](https://zenodo.org/records/5033174/files/monash_finetune.pt?download=1) -->
-<!-- * [Neill](https://zenodo.org/records/5033174/files/neill_finetune.pt?download=1) -->
-<!-- * [New Mexico](https://zenodo.org/records/5033174/files/newmexico_finetune.pt?download=1) -->
-<!-- * [Palmyra](https://zenodo.org/records/5033174/files/palmyra_finetune.pt?download=1) -->
-<!-- * [Penguins](https://zenodo.org/records/5033174/files/penguins_finetune.pt?download=1) -->
-<!-- * [Pfeifer](https://zenodo.org/records/5033174/files/pfeifer_finetune.pt?download=1) -->
-<!-- * [Seabird Watch](https://zenodo.org/records/5033174/files/seabirdwatch_finetune.pt?download=1) -->
-<!-- * [Terns](https://zenodo.org/records/5033174/files/terns_finetune.pt?download=1) -->
-<!-- * [USGS](https://zenodo.org/records/5033174/files/USGS_finetune.pt?download=1) -->
 * [Izembek goose detector](https://github.com/agentmorris/usgs-geese/releases) (2022, [code](https://github.com/agentmorris/usgs-geese), [data](https://lila.science/datasets/izembek-lagoon-waterfowl)) (YOLOv5, detects birds in Izembek Lagoon in Alaska, particularly brant geese, in aerial imagery)
 
