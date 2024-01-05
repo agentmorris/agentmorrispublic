@@ -36,17 +36,16 @@ python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU')
 import os
 import pandas as pd
 import numpy as np
+
+from tqdm import tqdm
+
 import torch
 import tensorflow as tf
 
 # Just testing installation, this is not imported directly
-#
-# pip install opensoundscape
 import opensoundscape # noqa
 
 # Just testing installation, this is not imported directly
-#
-# pip install tensorflow tensorflow_hub
 import tensorflow_hub # noqa
 
 data_folder = r'G:\temp\perch-stuff\audiomoth\audiomoth'
@@ -58,7 +57,7 @@ assert os.path.isdir(data_folder)
 model = torch.hub.load('kitzeslab/bioacoustics-model-zoo', 'Perch')
 
 
-#%% Enumerate wave files
+#%% Enumerate .wav files
 
 wav_files = os.listdir(data_folder)
 wav_files = [fn for fn in wav_files if fn.lower().endswith('.wav')]
@@ -67,7 +66,7 @@ wav_files = [os.path.join(data_folder,fn) for fn in wav_files]
 print('Enumerated {} data files'.format(len(wav_files)))
 
 
-#%% Run inference
+#%% Run inference, write results for each .wav file to .csv
 
 print("GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
@@ -100,17 +99,21 @@ for i_file,fn in enumerate(csv_files):
 
     df = pd.read_csv(fn)
     
-    # Convert from log-p to p
-    for c in df.columns:
-        if c not in metadata_columns:
-            df[c] = df[c].apply(np.exp)
-            
-    threshold = 0.1
+    # The scores don't appear to be log-probabilities, but for this simple test,
+    # it doesn't really matter what they are, I'll just normalize by min/max.
+    df_numeric = df.drop(columns=metadata_columns)
+    max_val = np.max(df_numeric.max())
+    min_val = np.min(df_numeric.min())
     
+    df_numeric = (df_numeric - min_val) / (max_val - min_val)
+            
+    threshold = 0.95
+    
+    # This is wildly inefficienct, but I'm not after efficiency here, I just want
+    # some detections.
     # row = df.iloc[0]
-    for i_row,row in df.iterrows():
-        for c in df.columns:
-            if c not in metadata_columns:
-                if row[c] > threshold:
-                    t = row['start_time']
-                    print('{} at {} ({})'.format(c,t,row[c]))
+    for i_row,row in tqdm(df_numeric.iterrows(),total=len(df_numeric)):
+        for c in df_numeric.columns:
+            if row[c] >= threshold:
+                t = df.iloc[i_row]['start_time']
+                print('{} at {} ({})'.format(c,t,row[c]))
