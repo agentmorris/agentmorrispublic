@@ -380,7 +380,7 @@ Kholiavchenko M, Kline J, Ramirez M, Stevens S, Sheets A, Babu R, Banerji N, Cam
 * Vehicle type: drone
 * Image information: 130366 videos each following a single individual, provided as ~1.1M JPGs
 * Annotation information: behavior labels for individual frames
-* Typical animal size in pixels: 120
+* Typical animal size in pixels: 100
 * License: unspecified
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-kabr-behavior.py">preview-kabr-behavior.py</a>
 
