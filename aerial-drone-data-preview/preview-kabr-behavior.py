@@ -112,6 +112,6 @@ from PIL import Image, ImageDraw, ImageFont
 
 im = Image.open(image_fn_abs)
 im_draw = ImageDraw.Draw(im)
-font = ImageFont.truetype('FreeMono.ttf', 25)
+font = ImageFont.truetype('arial.ttf', 20)
 im_draw.text((10,10), image_string, fill=(255,255,255), font=font)
 im.save(output_file_annotated)
