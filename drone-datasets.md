@@ -5,8 +5,8 @@
 * <a href="#overview">Overview</a>
 * <a href="#publicly-available-datasets">Publicly available datasets</a>
 * <a href="#datasets-available-by-request">Datasets available by request</a>
+* <a href="#datasets-added-recently-that-we-havent-had-a-chance-to-dig-into-yet">Datasets added recently that we haven't had a chance to dig into yet</a>
 * <a href="#publicly-available-models-for-wildlife-detection-in-droneaerial-images">Publicly-available models for wildlife detection in drone/aerial images</a>
-<!-- * <a href="#datasets-added-recently-that-we-havent-had-a-chance-to-dig-into-yet">Datasets added recently that we haven't had a chance to dig into yet</a> -->
 
 ## Overview
 
@@ -367,6 +367,26 @@ Kabra K, Xiong A, Li W, Luo M, Lu W, Yu T, Yu J, Singh D, Garcia R, Tang M, Arno
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabra_birds_sample_image_annotated.jpg" width=700>
 
+
+### KABR: In-Situ Dataset for Kenyan Animal Behavior Recognition from Drone Videos
+
+10 hours of UAV video from Kenyan savanna, with behavior labels.
+
+Kholiavchenko M, Kline J, Ramirez M, Stevens S, Sheets A, Babu R, Banerji N, Campolongo E, Thompson M, Van Tiel N, Miliko J. KABR: In-Situ Dataset for Kenyan Animal Behavior Recognition From Drone Videos. Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision 2024.
+
+* 54GB, downloadable via http from Google Drive (<a href="https://dirtmaxim.github.io/kabr">download link</a>)
+* Metadata in space-delimited table format
+* Categories: (walk, graze, browse, head up, auto-groom, trot, run, occluded) for (giraffe, zebra)
+* Vehicle type: drone
+* Image information: 130366 videos each following a single individual, provided as ~1.1M JPGs
+* Annotation information: behavior labels for individual frames
+* Typical animal size in pixels: 120
+* License: unspecified
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-kabr-behavior.py">preview-kabr-behavior.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabr_sample_image_annotated.jpg">
+
+
 <!-- Error in annotations, temporarily commenting out -->
 
 <!--
@@ -422,6 +442,11 @@ Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite imag
 * License: variable
     
   
+<!--
+## Datasets added recently that we haven't had a chance to dig into yet
+-->
+
+
 ## Publicly-available models for wildlife detection in drone/aerial images
 
 This section lists ML models one can download and run locally on drone/aerial images of wildlife (or use in cloud-based systems).  This section does not include models that exist in online platforms but can't be downloaded locally.
