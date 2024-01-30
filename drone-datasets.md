@@ -387,6 +387,23 @@ Kholiavchenko M, Kline J, Ramirez M, Stevens S, Sheets A, Babu R, Banerji N, Cam
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabr_sample_image_annotated.jpg">
 
 
+### WAID: Wildlife Aerial Images from Drone
+
+Mou C, Liu T, Zhu C, Cui X. Waid: A large-scale dataset for wildlife detection with drones. Applied Sciences. 2023 Sep 17;13(18):10397.IEEE/CVF Winter Conference on Applications of Computer Vision 2024.
+
+* 1.5GB, downloadable from GitHub (as in, literally from GitHub) (<a href="https://github.com/xiaohuicui/WAID/tree/main/WAID">download link</a>)
+* Metadata in YOLO format
+* Categories: sheep, cattle, seal, camel, kiang, zebra (some images also include un-annotated birds)
+* Vehicle type: drone
+* Image information: 14,366 images, typically 640x640
+* Annotation information: boxes
+* Typical animal size in pixels: 166
+* License: unspecified
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-waid-drones.py">preview-waid-drones.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/waid_sample_image_annotated.jpg">
+
+
 <!-- Error in annotations, temporarily commenting out -->
 
 <!--

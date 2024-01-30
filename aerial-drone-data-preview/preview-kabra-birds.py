@@ -28,7 +28,6 @@ output_file_unannotated = r'g:\temp\kabra_birds_sample_image_unannotated.png'
 
 #%% Read and summarize annotations
 
-relative_filename_to_annotations = defaultdict(list)
 n_annotations = 0
 category_name_to_id = {}
 
