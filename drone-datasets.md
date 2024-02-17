@@ -404,6 +404,23 @@ Mou C, Liu T, Zhu C, Cui X. Waid: A large-scale dataset for wildlife detection w
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/waid_sample_image_annotated.jpg">
 
 
+### UAS Imagery of Migratory Waterfowl at New Mexico Wildlife Refuges
+
+Converse RC, Lippitt CD, Sesnie SE, Harris GM, Butler MG, Stewart DR. Observer variability in manual-visual interpretation of UAS imagery of wildlife, with insights for deep learning applications.  In review.
+
+* 322MB, downloadable from LILA (<a href="https://lila.science/datasets/uas-imagery-of-migratory-waterfowl-at-new-mexico-wildlife-refuges">download link</a>)
+* Metadata in COCO .json format
+* Categories: canada coose, sandhill crane, mallard, northern pintail, american wigeon, teal, gadwall, northern shoveler, other
+* Vehicle type: drone
+* Image information: 12 images if ~5kx4k, 356 images of 684x521
+* Annotation information: boxes
+* Typical animal size in pixels: 50
+* License: CC-BY-NC 4.0
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-nm-waterfowl.py">preview-nm-waterfowl.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/nm_waterfowl_sample_image_annotated.png">
+
+
 <!-- Error in annotations, temporarily commenting out -->
 
 <!--
