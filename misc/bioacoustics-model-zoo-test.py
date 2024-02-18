@@ -110,7 +110,7 @@ for i_file,fn in enumerate(csv_files):
     
     df_numeric = (df_numeric - min_val) / (max_val - min_val)
             
-    threshold = 0.5
+    threshold = 0.95
     
     # This is wildly inefficienct, but I'm not after efficiency here, I just want
     # some detections.
