@@ -48,33 +48,36 @@ import opensoundscape # noqa
 # Just testing installation, this is not imported directly
 import tensorflow_hub # noqa
 
-data_folder = r'G:\temp\perch-stuff\audiomoth\audiomoth'
+# data_folder = r'G:\temp\perch-stuff\audiomoth\audiomoth'
+data_folder = r'G:\temp\audio'
 assert os.path.isdir(data_folder)
 
 
 #%% Create model
 
-model = torch.hub.load('kitzeslab/bioacoustics-model-zoo', 'Perch')
+model = torch.hub.load('kitzeslab/bioacoustics-model-zoo', 'Perch', trust_repo=True)
 
 
 #%% Enumerate .wav files
 
-wav_files = os.listdir(data_folder)
-wav_files = [fn for fn in wav_files if fn.lower().endswith('.wav')]
-wav_files = [os.path.join(data_folder,fn) for fn in wav_files]
+audio_files = os.listdir(data_folder)
+audio_files = [fn for fn in audio_files if (fn.lower().endswith('.wav')) or (fn.lower().endswith('.mp3'))]
+audio_files = [os.path.join(data_folder,fn) for fn in audio_files]
 
-print('Enumerated {} data files'.format(len(wav_files)))
+print('Enumerated {} data files:'.format(len(audio_files)))
+for fn in audio_files:
+    print(fn)
 
 
 #%% Run inference, write results for each .wav file to .csv
 
 print("GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
-# i_file = 0; fn = wav_files[i_file]
-for i_file,fn in enumerate(wav_files):
+# i_file = 0; fn = audio_files[i_file]
+for i_file,fn in enumerate(audio_files):
     
-    print('Running inference for file {} of {}: {}'.format(
-        i_file,len(wav_files),fn))
+    print('\n*** Running inference for file {} of {}: {} ***\n'.format(
+        i_file,len(audio_files),fn))
     predictions = model.predict([fn]) 
     output_file = os.path.splitext(fn)[0] + '.csv'
     print('Writing results to {}'.format(output_file))
@@ -85,7 +88,7 @@ for i_file,fn in enumerate(wav_files):
 #%% Find detections above a threshold
 
 csv_files = os.listdir(data_folder)
-csv_files = [fn for fn in csv_files if fn.lower().endswith('.csv')]
+csv_files = [fn for fn in csv_files if fn.lower().endswith('.csv') and 'BirdNET' not in fn]
 csv_files = [os.path.join(data_folder,fn) for fn in csv_files]
 
 print('Enumerated {} csv files'.format(len(csv_files)))
@@ -107,7 +110,7 @@ for i_file,fn in enumerate(csv_files):
     
     df_numeric = (df_numeric - min_val) / (max_val - min_val)
             
-    threshold = 0.95
+    threshold = 0.5
     
     # This is wildly inefficienct, but I'm not after efficiency here, I just want
     # some detections.
