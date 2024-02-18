@@ -90,7 +90,7 @@ for input_folder_name in input_folder_mapping.keys():
     for dpi in dpi_values:
 
         output_folder = os.path.join(output_base,input_folder_name + '_dpi_' + str(dpi))
-            
+
         # fn = images[0]
         for fn in images:
             image_id = input_folder_name + '_' + \
@@ -102,9 +102,14 @@ for input_folder_name in input_folder_mapping.keys():
             image_id_to_output_folder[image_id] = output_folder
             image_id_to_original_image[image_id] = fn
             
+            cmd = 'echo Processing image {} from folder {}'.format(fn,input_folder_name)
+            commands.append(cmd)
+            
             cmd = 'python postprocessingCracksRings.py --weightRing "{}" --input "{}" --output_folder "{}" --print_detections=yes --dpi={} --run_ID="{}"'.format(
                 model_fn,fn,output_folder,dpi,image_id)
             commands.append(cmd)
+            
+            commands.append('')
 
 with open(output_script,'w') as f:
     for cmd in commands:
@@ -113,8 +118,6 @@ with open(output_script,'w') as f:
         
 st = os.stat(output_script)
 os.chmod(output_script, st.st_mode | stat.S_IEXEC)
-
-print('Running the model {} times'.format(len(commands)))
 
 
 #%% Run the script
@@ -128,6 +131,19 @@ cd  cd ~/git/TRG-ImageProcessing/CoreProcessingPipelineScripts/CNN/Mask_RCNN/pos
 ~/tmp/tree-ring-results/run_tree_ring_analysis.sh
 """
 
+# Debugging notes:
+    
+"""
+export QT_DEBUG_PLUGINS=1
+
+# Did not help
+sudo apt-get install --reinstall libxcb-xinerama0
+
+# Fixed the issue
+sudo apt install libegl1 
+"""
+
+
 #%% Remove empty folders
 
 # find /home/user/tmp/tree-ring-results -empty -type d -delete
@@ -136,11 +152,18 @@ cd  cd ~/git/TRG-ImageProcessing/CoreProcessingPipelineScripts/CNN/Mask_RCNN/pos
 #%% Copy images to a single folder
 
 import shutil
+from tqdm import tqdm
+from md_visualization.visualization_utils import resize_image
+
 output_image_folder = os.path.join(output_base,'output-images')
+output_image_folder_resized = os.path.join(output_base,'output-images-resized')
 os.makedirs(output_image_folder,exist_ok=True)
+os.makedirs(output_image_folder_resized,exist_ok=True)
+
+include_original_images = False
 
 # fn = list(fn_to_output_folder.keys())[0]
-for image_id in image_id_to_output_folder:
+for image_id in tqdm(image_id_to_output_folder):
     output_folder = image_id_to_output_folder[image_id]
     image_id = os.path.basename(output_folder)
     output_images = path_utils.find_images(output_folder,recursive=True)
@@ -151,6 +174,11 @@ for image_id in image_id_to_output_folder:
     else:
         output_fn = os.path.join(output_image_folder,image_id + '.png')
         shutil.copyfile(output_images[0],output_fn)
-        output_original_fn = os.path.join(output_image_folder,image_id + '.original.tif')
-        shutil.copyfile(image_id_to_original_image[image_id],output_original_fn)
+        if include_original_images:
+            output_original_fn = os.path.join(output_image_folder,image_id + '.original.tif')
+            # shutil.copyfile(image_id_to_original_image[image_id],output_original_fn)
+        output_fn_resized = os.path.join(output_image_folder_resized,image_id + '-resized.jpg')
+        resize_image(output_images[0],target_width=4000,target_height=-1,
+                     output_file=output_fn_resized,quality=90)
+        
         
