@@ -413,7 +413,7 @@ Converse RC, Lippitt CD, Sesnie SE, Harris GM, Butler MG, Stewart DR. Observer v
 * Categories: canada coose, sandhill crane, mallard, northern pintail, american wigeon, teal, gadwall, northern shoveler, other
 * Vehicle type: drone
 * Image information: 12 images if ~5kx4k, 356 images of 684x521
-* Annotation information: boxes
+* Annotation information: 2243 consensus boxes
 * Typical animal size in pixels: 50
 * License: CC-BY-NC 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-nm-waterfowl.py">preview-nm-waterfowl.py</a>
