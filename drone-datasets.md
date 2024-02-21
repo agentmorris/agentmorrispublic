@@ -435,7 +435,7 @@ Delplanque A, Foucher S, Lejeune P, Linchant J, Théau J. Multispecies detection
 * License: CC-BY-NC-SA 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-delplanque-mammals.py">preview-delplanque-mammals.py</a>
 
-<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/delplanque_mammals_sample_image_annotated.jpg">
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/delplanque_mammals_sample_image_annotated.jpg" width=700>
 
 
 <!-- Error in annotations, temporarily commenting out -->
