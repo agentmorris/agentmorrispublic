@@ -1,6 +1,6 @@
 #
 # Code to render sample images and annotations in the "UAS Imagery of Migratory Waterfowl"
-# datasetL:
+# dataset:
 #
 # https://lila.science/datasets/uas-imagery-of-migratory-waterfowl-at-new-mexico-wildlife-refuges/
 #

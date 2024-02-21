@@ -410,7 +410,7 @@ Converse RC, Lippitt CD, Sesnie SE, Harris GM, Butler MG, Stewart DR. Observer v
 
 * 322MB, downloadable from LILA (<a href="https://lila.science/datasets/uas-imagery-of-migratory-waterfowl-at-new-mexico-wildlife-refuges">download link</a>)
 * Metadata in COCO .json format
-* Categories: canada coose, sandhill crane, mallard, northern pintail, american wigeon, teal, gadwall, northern shoveler, other
+* Categories: canada goose, sandhill crane, mallard, northern pintail, american wigeon, teal, gadwall, northern shoveler, other
 * Vehicle type: drone
 * Image information: 12 images if ~5kx4k, 356 images of 684x521
 * Annotation information: 2243 consensus boxes
@@ -419,6 +419,23 @@ Converse RC, Lippitt CD, Sesnie SE, Harris GM, Butler MG, Stewart DR. Observer v
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-nm-waterfowl.py">preview-nm-waterfowl.py</a>
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/nm_waterfowl_sample_image_annotated.png">
+
+
+### Multispecies detection and identification of African mammals
+
+Delplanque A, Foucher S, Lejeune P, Linchant J, Théau J. Multispecies detection and identification of African mammals in aerial imagery using convolutional neural networks. Remote Sensing in Ecology and Conservation. 2022 Apr;8(2):166-79.
+
+* 12GB, downloadable from Liege University Dataverse (<a href="https://dataverse.uliege.be/file.xhtml?fileId=11098&version=1.0">download link</a>)
+* Metadata in COCO .json format
+* Categories: alcelaphinae, buffalo, kob, warthog, waterbuck, elephant
+* Vehicle type: plane
+* Image information: 1297 images, each 6000x4000
+* Annotation information: 10,239 boxes
+* Typical animal size in pixels: 47
+* License: CC-BY-NC-SA 4.0
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-delplanque-mammals.py">preview-delplanque-mammals.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/delplanque-mammals_sample_image_annotated.png">
 
 
 <!-- Error in annotations, temporarily commenting out -->
