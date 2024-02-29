@@ -105,7 +105,7 @@ for s in category_name_to_id.keys():
 #%% Find an image with a bunch of annotations
 
 required_token = None
-prohibited_tokens = None ['test']
+prohibited_tokens = None # ['test']
 abs_filename_to_annotations_selected = {}
 
 # fn = list(abs_filename_to_annotations.keys())[1000]; print(fn)
@@ -142,9 +142,9 @@ print('Found {} annotations for image {}'.format(
     len(image_annotations),image_full_path))
 
 
-#%% Render all annotations for one image file
+##%% Render all annotations for one image file
 
-pil_im = visutils.open_image(image_full_path)
+pil_im = visutils.open_image(image_full_path, ignore_exif_rotation=True)
 image_w = pil_im.size[0]
 image_h = pil_im.size[1]
 
@@ -192,7 +192,7 @@ category_id_to_name = {v: k for k, v in category_name_to_id.items()}
 
 visutils.draw_bounding_boxes_on_file(image_full_path, output_file_annotated, detection_formatted_boxes,       
                                      confidence_threshold=0.0,detector_label_map=category_id_to_name,
-                                     thickness=8,expansion=1, colormap=['red'])
+                                     thickness=8,expansion=1, colormap=['red'], ignore_exif_rotation=True)
 
 shutil.copyfile(image_full_path,output_file_unannotated)    
 path_utils.open_file(output_file_annotated)
