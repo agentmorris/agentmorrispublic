@@ -354,7 +354,7 @@ Koger B, Deshpande A, Kerby JT, Graving JM, Costelloe BR, Couzin ID. [Quantifyin
 
 Kabra K, Xiong A, Li W, Luo M, Lu W, Yu T, Yu J, Singh D, Garcia R, Tang M, Arnold H. [Deep object detection for waterbird monitoring using aerial imagery](https://ieeexplore.ieee.org/document/10069986). In 2022 21st IEEE International Conference on Machine Learning and Applications (ICMLA) 2022 Dec 12 (pp. 455-460). IEEE.
 
-* 3.7TB, downloadable from Google Drive (<a href="https://drive.google.com/file/d/1hoP1ev8Npj5m0MZWZU7LpjU9c8JYYoFe/view?usp=share_link">download link</a>)
+* 3.7TB, downloadable from Google Drive (<a href="https://drive.google.com/file/d/1hoP1ev8Npj5m0MZWZU7LpjU9c8JYYoFe/view?usp=share_link">download link</a>) (<a href="https://huggingface.co/datasets/imageomics/KABR">Hugging Face link</a>)
 * Metadata in .csv format
 * Categories: <a href="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabra_birds_categories.txt">list of categories</a>
 * Vehicle type: drone
