@@ -354,7 +354,7 @@ Koger B, Deshpande A, Kerby JT, Graving JM, Costelloe BR, Couzin ID. [Quantifyin
 
 Kabra K, Xiong A, Li W, Luo M, Lu W, Yu T, Yu J, Singh D, Garcia R, Tang M, Arnold H. [Deep object detection for waterbird monitoring using aerial imagery](https://ieeexplore.ieee.org/document/10069986). In 2022 21st IEEE International Conference on Machine Learning and Applications (ICMLA) 2022 Dec 12 (pp. 455-460). IEEE.
 
-* 3.7TB, downloadable from Google Drive (<a href="https://drive.google.com/file/d/1hoP1ev8Npj5m0MZWZU7LpjU9c8JYYoFe/view?usp=share_link">download link</a>) (<a href="https://huggingface.co/datasets/imageomics/KABR">Hugging Face link</a>)
+* 3.7TB, downloadable from Google Drive (<a href="https://drive.google.com/file/d/1hoP1ev8Npj5m0MZWZU7LpjU9c8JYYoFe/view?usp=share_link">download link</a>)
 * Metadata in .csv format
 * Categories: <a href="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabra_birds_categories.txt">list of categories</a>
 * Vehicle type: drone
@@ -374,7 +374,7 @@ Kabra K, Xiong A, Li W, Luo M, Lu W, Yu T, Yu J, Singh D, Garcia R, Tang M, Arno
 
 Kholiavchenko M, Kline J, Ramirez M, Stevens S, Sheets A, Babu R, Banerji N, Campolongo E, Thompson M, Van Tiel N, Miliko J. KABR: In-Situ Dataset for Kenyan Animal Behavior Recognition From Drone Videos. Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision 2024.
 
-* 54GB, downloadable via http from Google Drive (<a href="https://dirtmaxim.github.io/kabr">download link</a>)
+* 54GB, downloadable via http from Google Drive (<a href="https://dirtmaxim.github.io/kabr">download link</a>)  (<a href="https://huggingface.co/datasets/imageomics/KABR">Hugging Face link</a>)
 * Metadata in space-delimited table format
 * Categories: (walk, graze, browse, head up, auto-groom, trot, run, occluded) for (giraffe, zebra)
 * Vehicle type: drone
