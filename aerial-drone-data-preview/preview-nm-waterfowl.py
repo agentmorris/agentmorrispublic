@@ -1,6 +1,6 @@
 #
 # Code to render sample images and annotations in the "UAS Imagery of Migratory Waterfowl"
-# datasetL:
+# dataset:
 #
 # https://lila.science/datasets/uas-imagery-of-migratory-waterfowl-at-new-mexico-wildlife-refuges/
 #
@@ -25,22 +25,22 @@ from md_utils import path_utils
 annotation_files = {
     'crowdsourced':
         {'raw':"crowdsourced/20240209_dronesforducks_zooniverse_raw.json",
-         'consensus':"crowdsourced/20240209_dronesforducks_zooniverse_refined.json"},
+         'consensus':"crowdsourced/20240220_dronesforducks_zooniverse_refined.json"},
     'expert':
         {'raw':"experts/20230331_dronesforducks_raw_experts.json",
          'consensus':"experts/20230331_dronesforducks_expert_refined.json"}
 }
 
-base_folder = r'C:\temp\uas-imagery-of-migratory-waterfowl'
+base_folder = r'g:\temp\uas-imagery-of-migratory-waterfowl'
 
 for annotator_pool in ('crowdsourced','expert'):
     for annotation_type in ('raw','consensus'):
         filename = os.path.join(base_folder,annotation_files[annotator_pool][annotation_type])
-        assert os.path.isfile(filename)
+        assert os.path.isfile(filename), 'Could not find file {}'.format(filename)
 
 
-output_file_annotated = r'c:\temp\nm_waterfowl_sample_image_annotated.jpg'
-output_file_unannotated = r'c:\temp\nm_waterfowl_sample_image_unannotated.jpg'
+output_file_annotated = r'g:\temp\nm_waterfowl_sample_image_annotated.jpg'
+output_file_unannotated = r'g:\temp\nm_waterfowl_sample_image_unannotated.jpg'
 
 
 #%% Read and summarize annotations
