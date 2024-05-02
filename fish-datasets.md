@@ -1,5 +1,11 @@
 # Datasets with annotated fish in marine/freshwater imagery/video
 
+## Also see
+
+* [Filippo Varini](https://www.linkedin.com/in/filippo-varini/?originalSubdomain=uk) has [picked up where this page leaves off](https://github.com/filippovarini/filippo_public/blob/master/fish-datasets.md); if you are looking for a comprehensive list of fish datasets with sample code, start there.  Now that Filippo's list exists, the page you're looking at now is almost obsolete, other than the <a href="#publicly-available-models-for-fish-detection">list of models</a>.
+* Though there's almost no detail there, I still try to keep [LILA's list of marine image datasets](<https://lila.science/otherdatasets#images-marine-fish>
+) up to date.
+
 ## TOC
 
 * <a href="#overview">Overview</a>
