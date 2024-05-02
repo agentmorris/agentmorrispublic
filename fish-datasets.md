@@ -47,6 +47,7 @@ I am making a very loose effort to include last-updated dates for each of these.
 
 When possible, the first link for each line item should get you pretty close to the model weights.
 
+* [SharkTrack](https://github.com/filippovarini/sharktrack) (YOLOv8n detector and multi-frame tracker for sharks)
 * [AI for the Ocean Fish and Squid Detector](https://zenodo.org/records/7430331) (YOLOv5s, trained on 5600 images in the Eastern Pacific) (2022, [code](https://github.com/heinsense2/AIO_CaseStudy))
 * [MegaFishDetector](https://github.com/warplab/megafishdetector/blob/main/MODEL_ZOO.md) (YOLOv5 models (5s, 5l, 5m) for binary fish detection, trained on a variety of datasets) (2023, [code](https://github.com/warplab/megafishdetector))
 * [Fishial.AI fish detector](https://github.com/fishial/fish-identification?tab=readme-ov-file#models) (Mask-RCNN segmentation model and a ResNet-18 classifier for 289 classses, PyTorch) (2022, [code](https://github.com/fishial/fish-identification), [project home](https://www.fishial.ai))
