@@ -7,6 +7,7 @@
 * <a href="#datasets-available-by-request">Datasets available by request</a>
 * <a href="#datasets-added-recently-that-we-havent-had-a-chance-to-dig-into-yet">Datasets added recently that we haven't had a chance to dig into yet</a>
 * <a href="#publicly-available-models-for-wildlife-detection-in-droneaerial-images">Publicly-available models for wildlife detection in drone/aerial images</a>
+* <a href="#platformssystems-for-wildlife-detection-in-droneaerial-images">Platforms/systems for wildlife detection in drone/aerial images</a>
 
 ## Overview
 
@@ -513,3 +514,9 @@ When possible, the first link for each line item should get you pretty close to 
 * [Izembek goose detector](https://github.com/agentmorris/usgs-geese/releases) (2023, [code](https://github.com/agentmorris/usgs-geese), [data](https://lila.science/datasets/izembek-lagoon-waterfowl)) (YOLOv5, detects birds in Izembek Lagoon in Alaska, particularly brant geese, in aerial imagery)
 * [Esri Tern Detector](https://www.arcgis.com/home/item.html?id=4019a53c914947aea9621ba226ec8861) (2023, [data](https://lila.science/datasets/aerial-seabirds-west-africa)) (Mask-RCNN, trained in PyTorch, distributed as an Esri dlpk file (which is a zipped .pth file)
 * [Esri Arctic Seal Detector](https://www.arcgis.com/home/item.html?id=bb05ab8f3b7c4ec79eca613c9273ef6f) (2023, [data](https://lila.science/datasets/noaa-arctic-seals-2019)) (Mask-RCNN, trained in PyTorch, distributed as an Esri dlpk file (which is a zipped .pth file)
+
+## Platforms/systems for wildlife detection in drone/aerial images
+
+* [Scout](https://www.wildme.org/scout.html) ([code](https://github.com/WildMeOrg/scout)) ("Scout is an open hardware and open source software solution designed by Wild Me to support the analysis of large volumes of data obtained from aerial surveys of wildlife")
+* [Elephant Survey System](https://wildeyeconservation.org/elephant-survey-system/) ([code (I think)](https://github.com/WildEyeConservation/Detweb/)) ("The Elephant Survey System (or ESS for short) is a suite of open source software and hardware that can be used in aerial surveys of elephants.")
+* [AIDE](https://github.com/microsoft/aerial_wildlife_detection) ("AIDE is two things in one: a tool for manually annotating images and a tool for training and running machine (deep) learning models. Those two things are coupled in an active learning loop: the human annotates a few images, the system trains a model, that model is used to make predictions and to select more images for the human to annotate, etc.")
