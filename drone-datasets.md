@@ -15,14 +15,7 @@ This is a list of datasets with annotated aerial/drone/satellite imagery for wil
 
 Everything listed here is also either listed on LILA's <a href="https://lila.science/otherdatasets">list of other conservation datasets</a> or is on <a href="https://lila.science">LILA</a>.
 
-This list was curated by the following folks, after this list got started as a thread on the AI for Conservation Slack:
-
-* <a href="https://dmorris.net">Dan Morris</a>
-* <a href="https://www.linkedin.com/in/zhongqi-miao-17a50084/">Zhongqi Miao</a>
-* <a href="https://www.linkedin.com/in/kalindifonda">Kalindi Fonda</a>
-* <a href="https://www.linkedin.com/in/aakash-gupta-5ky">Aakash Gupta</a>
-* <a href="https://www.linkedin.com/in/jveitchmichaelis/">Josh Veitch-Michaelis</a>
-* <a href="https://www.linkedin.com/in/edbayes/">Ed Bayes</a>
+This list is maintained by <a href="https://dmorris.net">Dan Morris</a>, but it began life as a thread on the AI for Conservation Slack, and was initially assembled with help from <a href="https://www.linkedin.com/in/zhongqi-miao-17a50084/">Zhongqi Miao</a>, <a href="https://www.linkedin.com/in/kalindifonda">Kalindi Fonda</a>, <a href="https://www.linkedin.com/in/aakash-gupta-5ky">Aakash Gupta</a>, <a href="https://www.linkedin.com/in/jveitchmichaelis/">Josh Veitch-Michaelis</a>, and <a href="https://www.linkedin.com/in/edbayes/">Ed Bayes</a>.
 
 Email <a href="mailto:agentmorris+dronedatasets@gmail.com">Dan</a> if anything seems off, or if you know of datasets we're missing.
 
@@ -517,6 +510,65 @@ When possible, the first link for each line item should get you pretty close to 
 
 ## Platforms/systems for wildlife detection in drone/aerial images
 
-* [Scout](https://www.wildme.org/scout.html) ([code](https://github.com/WildMeOrg/scout)) ("Scout is an open hardware and open source software solution designed by Wild Me to support the analysis of large volumes of data obtained from aerial surveys of wildlife")
-* [Elephant Survey System](https://wildeyeconservation.org/elephant-survey-system/) ([code (I think)](https://github.com/WildEyeConservation/Detweb/)) ("The Elephant Survey System (or ESS for short) is a suite of open source software and hardware that can be used in aerial surveys of elephants.")
-* [AIDE](https://github.com/microsoft/aerial_wildlife_detection) ("AIDE is two things in one: a tool for manually annotating images and a tool for training and running machine (deep) learning models. Those two things are coupled in an active learning loop: the human annotates a few images, the system trains a model, that model is used to make predictions and to select more images for the human to annotate, etc.")
+### Platforms that are specifically related to wildlife
+
+#### Scout
+
+"Scout is an open hardware and open source software solution designed by Wild Me to support the analysis of large volumes of data obtained from aerial surveys of wildlife."
+
+* [home](https://www.wildme.org/scout.html)
+* [code](https://github.com/WildMeOrg/scout)
+* [docs](https://docs.wildme.org/product-docs/en/scout/)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="media/scout-screenshot.png" width="600">
+
+#### Elephant Survey System
+
+"The Elephant Survey System (or ESS for short) is a suite of open source software and hardware that can be used in aerial surveys of elephants."
+
+* [home](https://wildeyeconservation.org/elephant-survey-system/)
+* [white papers](https://wildeyeconservation.org/ess-documentation/)
+
+<!-- * [code](https://github.com/WildEyeConservation/Detweb/) -->
+
+#### AIDE
+
+"AIDE is two things in one: a tool for manually annotating images and a tool for training and running machine (deep) learning models. Those two things are coupled in an active learning loop: the human annotates a few images, the system trains a model, that model is used to make predictions and to select more images for the human to annotate, etc."
+
+* [home](https://github.com/microsoft/aerial_wildlife_detection)
+* [code](https://github.com/microsoft/aerial_wildlife_detection) (the same link as "home", but bulleted lists with only one item are unsatisfying)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="media/aide-screenshot.jpg" width="600">
+
+### Platforms that aren't specifically related to wildlife, but that people use for wildlife stuff
+
+#### Label Studio
+
+Label Studio (LS) is a general-purpose platform for data annotation (not just images, all kinds of data).  Broadly, it comes in [two flavors](https://labelstud.io/guide/label_studio_compare): LS Enterprise is a hosted (not free) service with lots of features to manage your annotation workforce; LS Community is a containerized version with largely the same front-end, but fewer annotator management and ML features.  Both are flexible and templated, to the point of maybe being a little too complicated to use for wildlife survey applications out of the box, but if this community rallies around specific templates and workflows, it may be The Right Thing.
+
+* [home](https://labelstud.io/)
+* [code](https://github.com/HumanSignal/label-studio)
+* [blog post](https://github.com/weecology/LabelStudio_BlogPost/blob/main/blogpost.ipynb) from [Ben Weinstein](https://benweinstein.weebly.com/) about using using LS for wildlife annotation
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="media/labelstudio-screenshot.png" width="600">
+
+#### BisQue
+
+BisQue stands for "Bio-Image Semantic Query User Environment", and its mostly a cloud-based collaborative annotation platform for microscopy and biomedical images, so you might wonder why it's included here... at the end of the day, it's a platform for image annotation, with support for georeferenced images, and at least two people have mentioned using it for wildlife images, so, it counts.
+
+* [home](https://bioimage.ucsb.edu/bisque)
+* [code](https://github.com/UCSB-VRL/bisqueUCSB)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="media/bisque-screenshot.png" width="600">
+
+#### Zooniverse
+
+Not directly machine-learning-related, but it seems relevant in the sense that it's a good way to collect training data, and lots of the same folks who might use ML-accelerated annotation are likely to also leverage citizen scientists.
+
+* [home](https://zooniverse.org/)
+* [code](https://github.com/zooniverse)
+* ["Aerial Wildlife Surveys in Africa" project](https://www.zooniverse.org/projects/simbamangu/aerial-wildlife-surveys-in-africa/)
+* ["Penguins from Above" project](https://www.zooniverse.org/projects/tawakitom/penguins-from-above)
+* ["Drones for Ducks" project](https://www.zooniverse.org/projects/rowan-aspire/drones-for-ducks)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="media/zooniverse-screenshot.png" width="600">
