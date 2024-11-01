@@ -8,6 +8,7 @@
 * <a href="#datasets-added-recently-that-we-havent-had-a-chance-to-dig-into-yet">Datasets added recently that we haven't had a chance to dig into yet</a>
 * <a href="#publicly-available-models-for-wildlife-detection-in-droneaerial-images">Publicly-available models for wildlife detection in drone/aerial images</a>
 * <a href="#platformssystems-for-wildlife-detection-in-droneaerial-images">Platforms/systems for wildlife detection in drone/aerial images</a>
+* <a href="#oss-repos-about-wildlife-detection-in-droneaerial-images">OSS repos about wildlife detection in drone/aerial images</a>
 
 ## Overview
 
@@ -572,3 +573,20 @@ Not directly machine-learning-related, but it seems relevant in the sense that i
 * ["Drones for Ducks" project](https://www.zooniverse.org/projects/rowan-aspire/drones-for-ducks)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="media/zooniverse-screenshot.png" width="600">
+
+## OSS repos about wildlife detection in drone/aerial images
+
+* POLO (modified YOLOv8 that trains on point labels)<br/>[github.com/gigumay/POLO](https://github.com/gigumay/POLO)
+* DeepForest (tools for object detection in aerial images, esp trees and birds)<br/>[github.com/weecology/DeepForest](https://github.com/weecology/DeepForest)
+* AIDE (interactive platform for labeling and training aerial wildlife image ML)<br/>[github.com/microsoft/aerial_wildlife_detection](https://github.com/microsoft/aerial_wildlife_detection)
+* HerdNet (training and inference for ungulate detection in aerial images)<br/>[github.com/Alexandre-Delplanque/HerdNet](https://github.com/Alexandre-Delplanque/HerdNet)
+* UAV Thermal Wildlife Detection (training detection models on the BIRDSAI dataset)<br/>[github.com/tiffanyyk/UAV-Thermal-IR-Wildlife-Object-Detection](https://github.com/tiffanyyk/UAV-Thermal-IR-Wildlife-Object-Detection)
+* HealthyCountryAI (training and inference for UAV wildlife detection in Australia)<br/>[github.com/microsoft/HealthyCountryAI](https://github.com/microsoft/HealthyCountryAI)
+* Scout (AI tools for aerial wildlife detection)<br/>[github.com/WildMeOrg/scout](https://github.com/WildMeOrg/scout)
+* Global model of bird detection<br/>[github.com/weecology/BirdDetector](https://github.com/weecology/BirdDetector)
+* Izembek goose detector<br/>[github.com/agentmorris/usgs-geese](https://github.com/agentmorris/usgs-geese)
+
+
+### OSS repos about drone/aerial wildlife datasets
+
+* WAID (Wildlife Aerial Images from Done)<br/>[github.com/xiaohuicui/WAID](https://github.com/xiaohuicui/WAID)
