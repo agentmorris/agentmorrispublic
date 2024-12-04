@@ -589,4 +589,4 @@ Not directly machine-learning-related, but it seems relevant in the sense that i
 
 ### OSS repos about drone/aerial wildlife datasets
 
-* WAID (Wildlife Aerial Images from Done)<br/>[github.com/xiaohuicui/WAID](https://github.com/xiaohuicui/WAID)
+* WAID (Wildlife Aerial Images from Drone)<br/>[github.com/xiaohuicui/WAID](https://github.com/xiaohuicui/WAID)
