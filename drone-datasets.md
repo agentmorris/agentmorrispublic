@@ -505,6 +505,7 @@ When possible, the first link for each line item should get you pretty close to 
 
 * [HerdNet](https://github.com/Alexandre-Delplanque/HerdNet) (2022, [code](https://github.com/Alexandre-Delplanque/HerdNet), [data](https://dataverse.uliege.be/dataset.xhtml?persistentId=doi:10.58119/ULG/MIRUU5)) (custom detector for African mammals in aerial imagery)
 * [Global model of bird detection](https://github.com/weecology/BirdDetector/releases) (2021, [code](https://github.com/weecology/BirdDetector), [data](https://zenodo.org/records/5033174), [paper](https://www.biorxiv.org/content/10.1101/2021.08.05.455311v2.full)) (RetinaNet on ResNet50 in PyTorch) (downloadable directly, but recommended use is via the [DeepForest package](https://deepforest.readthedocs.io/en/latest/prebuilt.html#bird-detection))
+* [DeepForest's Livestock Detection Model](https://deepforest.readthedocs.io/en/v1.4.1/user_guide/02_prebuilt.html#livestock-detectors-model) (2024) (single-class detector for cows, sheep, and other large mammals in agricultural settings)
 * [Izembek goose detector](https://github.com/agentmorris/usgs-geese/releases) (2023, [code](https://github.com/agentmorris/usgs-geese), [data](https://lila.science/datasets/izembek-lagoon-waterfowl)) (YOLOv5, detects birds in Izembek Lagoon in Alaska, particularly brant geese, in aerial imagery)
 * [Esri Tern Detector](https://www.arcgis.com/home/item.html?id=4019a53c914947aea9621ba226ec8861) (2023, [data](https://lila.science/datasets/aerial-seabirds-west-africa)) (Mask-RCNN, trained in PyTorch, distributed as an Esri dlpk file (which is a zipped .pth file)
 * [Esri Arctic Seal Detector](https://www.arcgis.com/home/item.html?id=bb05ab8f3b7c4ec79eca613c9273ef6f) (2023, [data](https://lila.science/datasets/noaa-arctic-seals-2019)) (Mask-RCNN, trained in PyTorch, distributed as an Esri dlpk file (which is a zipped .pth file)
@@ -589,4 +590,4 @@ Not directly machine-learning-related, but it seems relevant in the sense that i
 
 ### OSS repos about drone/aerial wildlife datasets
 
-* WAID (Wildlife Aerial Images from Done)<br/>[github.com/xiaohuicui/WAID](https://github.com/xiaohuicui/WAID)
+* WAID (Wildlife Aerial Images from Drone)<br/>[github.com/xiaohuicui/WAID](https://github.com/xiaohuicui/WAID)
