@@ -435,7 +435,7 @@ Delplanque A, Foucher S, Lejeune P, Linchant J, Théau J. Multispecies detection
 
 ### SAVMAP (UAV images of Namibian wildlife)
 
-Reinhard F, Parkan M, Produit T, Betschart S, Bacchilega B, Hauptfleisch ML, Meier P, Joost S, Tuia D. Near real-time ultrahigh-resolution imaging from unmanned aerial vehicles for sustainable land use management and biodiversity conservation in semi-arid savanna under regional and global change (SAVMAP). Zenodo. Available online at http://dx. doi. org/10.5281/zenodo. 2015 Dec 10;16445.
+Reinhard F, Parkan M, Produit T, Betschart S, Bacchilega B, Hauptfleisch ML, Meier P, Joost S, Tuia D. Near real-time ultrahigh-resolution imaging from unmanned aerial vehicles for sustainable land use management and biodiversity conservation in semi-arid savanna under regional and global change (SAVMAP). Zenodo.
 
 * 3GB, downloadable from <a href="https://zenodo.org/records/1204408">Zenodo</a> or <a href="https://huggingface.co/datasets/fadel841/savmap">Hugging Face</a>
 * Metadata in .geojson format
