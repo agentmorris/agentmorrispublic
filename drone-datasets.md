@@ -433,6 +433,22 @@ Delplanque A, Foucher S, Lejeune P, Linchant J, Théau J. Multispecies detection
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/delplanque_mammals_sample_image_annotated.jpg" width=700>
 
 
+### SAVMAP (UAV images of Namibian wildlife)
+
+Reinhard F, Parkan M, Produit T, Betschart S, Bacchilega B, Hauptfleisch ML, Meier P, Joost S, Tuia D. Near real-time ultrahigh-resolution imaging from unmanned aerial vehicles for sustainable land use management and biodiversity conservation in semi-arid savanna under regional and global change (SAVMAP). Zenodo. Available online at http://dx. doi. org/10.5281/zenodo. 2015 Dec 10;16445.
+
+* 3GB, downloadable from <a href="https://zenodo.org/records/1204408">Zenodo</a> or <a href="https://huggingface.co/datasets/fadel841/savmap">Hugging Face</a>
+* Metadata in .geojson format
+* Categories: animal
+* Vehicle type: UAV
+* Image information: 659 images, each 4000x3000
+* Annotation information: ~7.5k polygons, though those really approximate boxes, and there are a smaller number of unique annotations. But O(thousands).
+* Typical animal size in pixels: <100
+* License: AFL-3.0
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-savmap.py">preview-savmap.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/savmap_thumb.jpg" width=700>
+
 <!-- Error in annotations, temporarily commenting out -->
 
 <!--
