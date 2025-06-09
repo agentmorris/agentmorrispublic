@@ -1,5 +1,10 @@
 # Datasets with annotated wildlife in drone/aerial images
 
+Permalink to this page:
+
+<http://lila.science/aerialdata>
+
+
 ## TOC
 
 * <a href="#overview">Overview</a>

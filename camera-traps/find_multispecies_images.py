@@ -82,6 +82,6 @@ for p in image_paths_to_download:
     url_to_target_file[url] = output_file
 
 
-#%% Downlopad
+#%% Download
 
 parallel_download_urls(url_to_target_file)
