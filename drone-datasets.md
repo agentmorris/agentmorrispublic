@@ -179,7 +179,6 @@ Weiser EL, Flint PL, Marks DK, Shults BS, Wilson HM, Thompson SJ, Fischer JB. Ae
 * Code to render sample annotated image from the original dataset: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl.py">preview-weiser-waterfowl.py</a>
 * Code to render sample annotated image from the LILA dataset: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl-lila.py">preview-weiser-waterfowl-lila.py</a>
 
-
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/weiser_waterfowl_sample_image_annotated.jpg" width=700>
   
   
@@ -312,13 +311,14 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/conservation_drones_sample_image_annotated.jpg" width=700>
 
 
-### Large-scale, Semi-Automatic Inference of Animal Behavior from Monocular Videos
+### DAZZLE: Drone-Acquired Zebra Data for Large-scale Ecology Research
 
 Oblique aerial videos of zebras with 162931 bounding boxes and behavioral labels (standing, grazing, etc.).
 
 Price E, Khandelwal PC, Rubenstein DI, Ahmad A. A Framework for Fast, Large-scale, Semi-Automatic Inference of Animal Behavior from Monocular Videos. bioRxiv. 2023:2023-07.
 
 * 96GB, downloadable via http from Keeper (<a href="https://keeper.mpdl.mpg.de/d/a9822e000aff4b5391e1/">download link</a>)
+* More information available on the [dataset home page](https://www.aamirahmad.de/datasets/dazzle/)
 * Metadata in json format (Labelme standard)
 * Categories: zebra, person, vehicle
 * Vehicle type: plane
