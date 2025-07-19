@@ -547,14 +547,18 @@ When possible, the first link for each line item should get you pretty close to 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="media/scout-screenshot.png" width="600">
 
-#### Elephant Survey System
+#### SurveyScope
 
-"The Elephant Survey System (or ESS for short) is a suite of open source software and hardware that can be used in aerial surveys of elephants."
+"SurveyScope is a powerful web application that leverages the latest artificial intelligence (AI) to assist in the annotation of aerial-census data."
 
-* [home](https://wildeyeconservation.org/elephant-survey-system/)
-* [white papers](https://wildeyeconservation.org/ess-documentation/)
+* [home](https://wildeyeconservation.org/surveyscope/)
+* [code](https://github.com/WildEyeConservation/Detweb/)
 
-<!-- * [code](https://github.com/WildEyeConservation/Detweb/) -->
+#### WISDAM
+
+"WISDAM is a free, downloadable application designed for researchers (or community groups) conducting wildlife imagery surveys from either piloted aircraft or drones."
+
+* [home](https://www.wisdamapp.org/about/)
 
 #### AIDE
 
