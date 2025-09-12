@@ -554,6 +554,12 @@ When possible, the first link for each line item should get you pretty close to 
 * [home](https://wildeyeconservation.org/surveyscope/)
 * [code](https://github.com/WildEyeConservation/Detweb/)
 
+#### WildAI
+
+* [home](https://www.wildai.eu/)
+
+Not a ton of information as of 2025.09.12, just entering beta.  Web page says "Simply upload your aerial images to our platform, where our powerful AI model automatically processes and analyzes the data for you, and then seamlessly review and verify the results with complete confidence and ease."
+
 #### WISDAM
 
 "WISDAM is a free, downloadable application designed for researchers (or community groups) conducting wildlife imagery surveys from either piloted aircraft or drones."
@@ -618,3 +624,4 @@ Not directly machine-learning-related, but it seems relevant in the sense that i
 ### OSS repos about drone/aerial wildlife datasets
 
 * WAID (Wildlife Aerial Images from Drone)<br/>[github.com/xiaohuicui/WAID](https://github.com/xiaohuicui/WAID)
+
