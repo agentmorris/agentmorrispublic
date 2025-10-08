@@ -619,9 +619,11 @@ Not directly machine-learning-related, but it seems relevant in the sense that i
 * Scout (AI tools for aerial wildlife detection)<br/>[github.com/WildMeOrg/scout](https://github.com/WildMeOrg/scout)
 * Global model of bird detection<br/>[github.com/weecology/BirdDetector](https://github.com/weecology/BirdDetector)
 * Izembek goose detector<br/>[github.com/agentmorris/usgs-geese](https://github.com/agentmorris/usgs-geese)
+* kabr-tools (behavioral analysis from drone videos)<br/>[github.com/Imageomics/kabr-tools](https://github.com/Imageomics/kabr-tools)
 
 
 ### OSS repos about drone/aerial wildlife datasets
 
 * WAID (Wildlife Aerial Images from Drone)<br/>[github.com/xiaohuicui/WAID](https://github.com/xiaohuicui/WAID)
+
 
