@@ -5,7 +5,7 @@ Permalink to this page:
 <http://lila.science/aerialdata>
 
 
-## TOC
+## Contents
 
 * <a href="#overview">Overview</a>
 * <a href="#publicly-available-datasets">Publicly available datasets</a>
