@@ -18,8 +18,8 @@ import numpy as np
 from collections import defaultdict
 from tqdm import tqdm
 
-from md_visualization import visualization_utils as visutils
-from md_utils import path_utils
+from megadetector.visualization import visualization_utils as visutils
+from megadetector.utils import path_utils
 
 base_folder = r'g:\temp\F21-S22-Combined-D2K-Audubon\Good annotations'
 output_file_annotated = r'g:\temp\kabra_birds_sample_image_annotated.jpg'

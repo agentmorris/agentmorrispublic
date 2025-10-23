@@ -17,13 +17,13 @@ Permalink to this page:
 
 ## Overview
 
-This is a list of datasets with annotated aerial/drone/satellite imagery for wildlife surveys.  We've tried to collected standardized metadata for each dataset, and to provide sample code in a similar format for each dataset that can match annotations to images and render a sample image.  The goal of this exercise was to make it easier to assess whther existing datasets could be useful for training new models, e.g. if you want to find birds in images with a particular gestalt, we wanted to make it easier for you to get the gestalt of existing datasets, and have a starting point for parsing that data.
+This is a list of datasets with annotated aerial/drone/satellite imagery for wildlife surveys.  I've tried to collect basic standardized metadata for each dataset, and to provide sample code in a similar format for each dataset that can match annotations to images and render a sample image.  The goal of this exercise was to make it easier to assess whether existing datasets could be useful for training new models, e.g. if you want to find birds in images with a particular gestalt, we wanted to make it easier for you to get the gestalt of existing datasets, and have a starting point for parsing that data.
 
 Everything listed here is also either listed on LILA's <a href="https://lila.science/otherdatasets">list of other conservation datasets</a> or is on <a href="https://lila.science">LILA</a>.
 
 This list is maintained by <a href="https://dmorris.net">Dan Morris</a>, but it began life as a thread on the AI for Conservation Slack, and was initially assembled with help from <a href="https://www.linkedin.com/in/zhongqi-miao-17a50084/">Zhongqi Miao</a>, <a href="https://www.linkedin.com/in/kalindifonda">Kalindi Fonda</a>, <a href="https://www.linkedin.com/in/aakash-gupta-5ky">Aakash Gupta</a>, <a href="https://www.linkedin.com/in/jveitchmichaelis/">Josh Veitch-Michaelis</a>, and <a href="https://www.linkedin.com/in/edbayes/">Ed Bayes</a>.
 
-Email <a href="mailto:agentmorris+dronedatasets@gmail.com">Dan</a> if anything seems off, or if you know of datasets we're missing.
+Email <a href="mailto:agentmorris+dronedatasets@gmail.com">Dan</a> if anything seems off, or if you know of datasets I'm missing.
 
 As a bonus, this page is also a temporary holding place for a list of <i><a href="#publicly-available-models-for-wildlife-detection-in-droneaerial-images">models</a></i> for wildlife detection in aerial/drone imagery.
 
@@ -387,7 +387,67 @@ Kholiavchenko M, Kline J, Ramirez M, Stevens S, Sheets A, Babu R, Banerji N, Cam
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabr_sample_image_annotated.jpg">
 
 
+### MMLA-OPC
+
+~29k frames with boxes on zebras in UAV images, collected from Ol Pejeta Conservancy in Kenya.
+
+Kline J, Nguyen Ngoc D, Duncan H, Rondaeu Saint-Jean C, Maalouf G, Juma B, Kilwaya A, Vuyiya B, Irungu M, Njoroge W, Mutisya S, Guerin D, Costelloe B, Pastucha E, Hermansen J, Kjeld J, Watson M, Richardson T, Schultz Lundquist UP.  MMLA Ol Pejeta Conservancy (OPC) Dataset, 2025.
+
+* 128GB, downloadable from [Hugging Face](https://huggingface.co/datasets/imageomics/mmla_opc)
+* Metadata in YOLO format
+* Categories: zebra
+* Vehicle type: drone
+* Image information: 29,268 RGB frames
+* Annotation information: ~163k bounding boxes
+* Typical animal size in pixels
+* License: [CC 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-mmla-opc.py">preview-mmla-opc.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/mmla_opc_sample_image_annotated.jpg">
+
+
+### MMLA-Wilds
+
+~8k frames with boxes on onagers (~45k), giraffe (~7k), zebra (~2.5k) and wild dogs (14), collected at The Wilds Conservation Center in Ohio.
+
+Kline J, Zhong A, Yablok J.   MMLA The Wilds Dataset, 2025.
+
+* 21GB, downloadable from [Hugging Face](https://huggingface.co/datasets/imageomics/mmla_wilds)
+* Metadata in YOLO format
+* Categories: zebra, giraffe, onager, dog
+* Vehicle type: drone
+* Image information: 8,009 RGB frames
+* Annotation information: bounding boxes
+* Typical animal size in pixels: 1000px
+* License: [CC 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-mmla-wilds.py">preview-mmla-wilds.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/mmla_wilds_sample_image_annotated.jpg">
+
+
+### MMLA-Mpala
+
+~130k frames with boxes on wild giraffe and zebra, collected at Mpala Research Center in Kenya.
+
+Kline J, Kholiavchenko M, Zhong Alison, Ramirez M, Stevens S, Van Tiel N, Campolongo E, Thompson M, Ramesh Babu R, Banerji N, Sheets A, Magersupp M, Balasubramaniam S, Duporge I, Miliko J, Rosser N, Stewart CV, Berger-Wolf T, Rubenstein DI.
+
+MMLA Mpala Dataset, 2025.
+
+* 490GB, downloadable from [Hugging Face](https://huggingface.co/datasets/imageomics/mmla_mpala)
+* Metadata in YOLO format
+* Categories: zebra, giraffe, onager, dog
+* Vehicle type: drone
+* Image information: 130,102 images
+* Annotation information: bounding boxes
+* Typical animal size in pixels:
+* License: [CC 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-mmla-mpala.py">preview-mmla-mpala.py</a>
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/mmla_mpala_sample_image_annotated.jpg">
+
+
 ### WAID: Wildlife Aerial Images from Drone
+
 
 Mou C, Liu T, Zhu C, Cui X. Waid: A large-scale dataset for wildlife detection with drones. Applied Sciences. 2023 Sep 17;13(18):10397.IEEE/CVF Winter Conference on Applications of Computer Vision 2024.
 
@@ -454,27 +514,6 @@ Reinhard F, Parkan M, Produit T, Betschart S, Bacchilega B, Hauptfleisch ML, Mei
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/savmap_thumb.jpg" width=700>
 
-<!-- Error in annotations, temporarily commenting out -->
-
-<!--
-### USGS avian classification
-
-Cropped patches from aerial images with avian species labels.
-
-Miao Z, Fara LJ, Fronczak D, Landolt KL, Bragger A, Koneff MD, Lubinski B, Robinson LR, Yates S, 2023, [Images and annotations to automate the classification of avian species](https://www.sciencebase.gov/catalog/item/63bf21cdd34e92aad3cdac5a).  U.S. Geological Survey data release.
-
-* 175MB, downloadable via http from ScienceBase (<a href="https://www.sciencebase.gov/catalog/item/63bf21cdd34e92aad3cdac5a">download link</a>)
-* Metadata in text format (filename, class)
-* Categories: Common Eider, King Eider, Long-tailed Duck, Black Scoter, White-winged Scoter, Surf Scoter, Gull, Bufflehead
-* Vehicle type: plane
-* Image information: 10917 cropped patches
-* Annotation information: class labels for each patch
-* Typical animal size in pixels: 25
-* License: unspecified (public domain implied, USGS source)
-
-<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/miao-avian_sample_image_annotated.png" width="500">
--->
-
 
 ## Datasets available by request
 
@@ -509,11 +548,6 @@ Cubaynes HC, Fretwell PT. Whales from space dataset, an annotated satellite imag
 * License: variable
     
   
-<!--
-## Datasets added recently that we haven't had a chance to dig into yet
--->
-
-
 ## Publicly-available models for wildlife detection in drone/aerial images
 
 This section lists ML models one can download and run locally on drone/aerial images of wildlife (or use in cloud-based systems).  This section does not include models that exist in online platforms but can't be downloaded locally.

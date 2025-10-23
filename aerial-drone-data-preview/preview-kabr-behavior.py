@@ -70,7 +70,7 @@ assert len(filename_to_category) == len(train_filename_to_category) + len(val_fi
 
 #%% Enumerate images
 
-from md_utils.path_utils import find_images
+from megadetector.utils.path_utils import find_images
 
 image_files_relative = find_images(image_folder,return_relative_paths=True,recursive=True)
 

@@ -15,8 +15,8 @@ import json
 import operator
 import shutil
 
-from md_visualization import visualization_utils as visutils
-from md_utils import path_utils
+from megadetector.visualization import visualization_utils as visutils
+from megadetector.utils import path_utils
 
 base_folder = r'c:\drone-data\06 - qian'
 assert os.path.isdir(base_folder)

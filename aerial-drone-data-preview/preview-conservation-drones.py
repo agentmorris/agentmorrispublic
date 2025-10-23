@@ -14,7 +14,7 @@ import numpy as np
 import os
 import shutil
 
-from md_visualization import visualization_utils as visutils
+from megadetector.visualization import visualization_utils as visutils
 
 base_folder = r'G:\temp\drone-datasets\conservation-drones'
 

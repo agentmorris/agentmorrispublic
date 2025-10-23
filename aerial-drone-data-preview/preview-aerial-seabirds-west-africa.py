@@ -12,7 +12,7 @@
 import pandas as pd
 from tqdm import tqdm
 
-from md_visualization import visualization_utils as visutils
+from megadetector.visualization import visualization_utils as visutils
 from PIL import Image, ImageDraw
 
 # PIL gets very sad when you try to load large images, suppress the error

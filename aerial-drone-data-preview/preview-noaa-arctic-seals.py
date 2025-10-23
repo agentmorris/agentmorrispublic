@@ -14,7 +14,7 @@ import shutil
 import numpy as np
 from collections import defaultdict
 
-from md_visualization import visualization_utils as visutils
+from megadetector.visualization import visualization_utils as visutils
 
 annotation_csv_file = r"G:\temp\drone-datasets\noaa-arctic-seals\surv_test_kamera_detections_20210212_full_paths.csv"
 image_list_txt_file = r"G:\temp\drone-datasets\noaa-arctic-seals\surv_test_kamera_files.txt"

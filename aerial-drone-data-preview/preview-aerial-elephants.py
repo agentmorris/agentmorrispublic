@@ -16,16 +16,16 @@ import shutil
 from collections import defaultdict
 from PIL import ImageDraw
 
-from md_utils import path_utils
-from md_visualization import visualization_utils as visutils
+from megadetector.utils import path_utils
+from megadetector.visualization import visualization_utils as visutils
 
 base_folder = r'c:\drone-data\08 - naude\AED'
 
 annotation_files = ['test_elephants.csv','training_elephants.csv']
 
-# 
+#
 # The annotation columns are:
-# 
+#
 # [filename], [x], [y]
 #
 #
@@ -46,13 +46,13 @@ image_name_to_relative_path = {os.path.splitext(os.path.basename(fn))[0]:fn for 
 #%% Read the annotation files
 
 annotation_dfs = []
-for fn in annotation_files:    
+for fn in annotation_files:
     df = pd.read_csv(os.path.join(base_folder,fn),header=None)
     annotation_dfs.append(df)
 
 df = pd.concat(annotation_dfs)
 
-df = df.rename(columns={df.columns[0]:'image_id', df.columns[1]:'x', 
+df = df.rename(columns={df.columns[0]:'image_id', df.columns[1]:'x',
                 df.columns[2]:'y'})
 
 print('Read {} annotations'.format(len(df)))
@@ -64,25 +64,25 @@ image_to_annotations = defaultdict(list)
 
 # i_row = 0; row = df.iloc[i_row]
 for i_row,row in df.iterrows():
-    
+
     image_id = row['image_id']
     assert image_id in image_name_to_relative_path
-    
+
     ann = {}
     ann['x'] = row['x']
     ann['y'] = row['y']
-        
+
     image_to_annotations[image_id].append(ann)
-    
-    
+
+
 #%% Render annotations for an image that has a decent number of annotations
 
 image_name_to_count = {}
 for image_name in image_to_annotations:
     image_name_to_count[image_name] = len(image_to_annotations[image_name])
-    
+
 # Sort in descending order by value
-sorted_annotations = dict(sorted(image_name_to_count.items(), 
+sorted_annotations = dict(sorted(image_name_to_count.items(),
                                  key=operator.itemgetter(1),reverse=True))
 
 sorted_annotations = list(sorted_annotations)
@@ -107,10 +107,10 @@ draw = ImageDraw.Draw(pil_im)
 
 ann_radius = 30
 for ann in image_annotations:
-    
+
     x = ann['x']
     y = ann['y']
-    
+
     x0 = x - ann_radius
     y0 = y - ann_radius
     x1 = x + ann_radius
@@ -118,7 +118,7 @@ for ann in image_annotations:
 
     draw.ellipse((x0,y0,x1,y1),fill=None,outline=(255,0,0),width=3)
     # draw.ellipse((x0,y0,x1,y1),fill=(255,0,0),outline=None)
-        
+
 pil_im.save(output_file_annotated,quality=60)
 shutil.copyfile(image_full_path,output_file_unannotated)
 path_utils.open_file(output_file_annotated)

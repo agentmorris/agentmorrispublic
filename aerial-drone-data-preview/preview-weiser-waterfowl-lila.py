@@ -16,7 +16,7 @@ import numpy as np
 from collections import defaultdict
 from tqdm import tqdm
 
-from md_visualization import visualization_utils as vis_utils
+from megadetector.visualization import visualization_utils as vis_utils
 
 output_file_annotated = r'g:\temp\weiser_waterfowl_lila_sample_image_annotated.jpg'
 output_file_unannotated = r'g:\temp\weiser_waterfowl_lila_sample_image_unannotated.jpg'
@@ -168,7 +168,7 @@ vis_utils.draw_bounding_boxes_on_file(selected_image_filename_abs, output_file_a
                                      confidence_threshold=0.0,detector_label_map=category_id_to_name,
                                      thickness=2,expansion=3) # colormap=['red'])
 
-from md_utils import path_utils
+from megadetector.utils import path_utils
 path_utils.open_file(output_file_annotated)
 
 import shutil
