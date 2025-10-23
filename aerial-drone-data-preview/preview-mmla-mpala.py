@@ -14,6 +14,9 @@ import operator
 import numpy as np
 
 from collections import defaultdict
+from functools import partial
+from multiprocessing.pool import ThreadPool
+from multiprocessing.pool import Pool
 from tqdm import tqdm
 
 from megadetector.visualization import visualization_utils as visutils
@@ -24,6 +27,12 @@ output_file_annotated = r'g:\temp\mmla_mpala_sample_image_annotated.jpg'
 output_file_unannotated = r'g:\temp\mmla_mpala_sample_image_unannotated.jpg'
 
 class_list_file = os.path.join(base_folder,'classes.txt')
+
+# Number of workers for image reading
+n_workers = 10
+
+# Should we use threads (rather than processes) for image reading?
+use_threads = True
 
 
 #%% Read class names
@@ -38,22 +47,14 @@ for i_line,line in enumerate(lines):
 # {0: 'zebra', 1: 'giraffe', 2: 'onager', 3: 'dog'}
 
 
-#%% Read and summarize annotations
+#%% Processing function for parallel annotation reading
 
-annotation_files_relative = \
-    path_utils.recursive_file_list(base_folder,return_relative_paths=True,convert_slashes=True)
-annotation_files_relative = [fn for fn in annotation_files_relative if fn.endswith('.txt')]
-annotation_files_relative = [fn for fn in annotation_files_relative if (not fn.endswith('classes.txt'))]
-annotation_files_relative = [fn for fn in annotation_files_relative if (not fn.endswith('test.txt'))]
-annotation_files_relative = [fn for fn in annotation_files_relative if (not fn.endswith('metadata.txt'))]
+def _process_annotation_file(annotation_file_relative, base_folder=None, category_id_to_name=None):
+    """
+    Process a single annotation file and return its annotations and statistics.
 
-n_annotations = 0
-relative_filename_to_annotations = defaultdict(list)
-
-box_widths = []
-
-# annotation_file_relative = annotation_files_relative[0]
-for annotation_file_relative in tqdm(annotation_files_relative):
+    Returns a tuple of (n_annotations, image_filename_relative, annotations_list, box_widths_list)
+    """
 
     image_filename_relative = annotation_file_relative.replace('.txt','.jpg')
     image_filename_abs = os.path.join(base_folder,image_filename_relative)
@@ -69,6 +70,10 @@ for annotation_file_relative in tqdm(annotation_files_relative):
     with open(annotation_filename_abs,'r') as f:
         annotation_lines = f.readlines()
     annotation_lines = [s.strip() for s in annotation_lines]
+
+    n_annotations = 0
+    annotations_list = []
+    box_widths_list = []
 
     # line = annotation_lines[0]
     for i_line,line in enumerate(annotation_lines):
@@ -91,7 +96,7 @@ for annotation_file_relative in tqdm(annotation_files_relative):
         x_norm = x_center_norm - (width_norm / 2.0)
         y_norm = y_center_norm - (height_norm / 2.0)
 
-        box_widths.append(x_norm * image_w)
+        box_widths_list.append(x_norm * image_w)
 
         ann = {}
         ann['file'] = image_filename_relative
@@ -101,12 +106,73 @@ for annotation_file_relative in tqdm(annotation_files_relative):
         ann['width'] = width_norm * image_w
         ann['height'] = height_norm * image_h
 
-        box_widths.append(ann['width'])
-        relative_filename_to_annotations[image_filename_relative].append(ann)
+        box_widths_list.append(ann['width'])
+        annotations_list.append(ann)
 
     # ...for each annotation
 
-# ...for each annotation file
+    return (n_annotations, image_filename_relative, annotations_list, box_widths_list)
+
+# ...def _process_annotation_file(...)
+
+
+#%% Read and summarize annotations
+
+annotation_files_relative = \
+    path_utils.recursive_file_list(base_folder,return_relative_paths=True,convert_slashes=True)
+annotation_files_relative = [fn for fn in annotation_files_relative if fn.endswith('.txt')]
+annotation_files_relative = [fn for fn in annotation_files_relative if (not fn.endswith('classes.txt'))]
+annotation_files_relative = [fn for fn in annotation_files_relative if (not fn.endswith('test.txt'))]
+annotation_files_relative = [fn for fn in annotation_files_relative if (not fn.endswith('metadata.txt'))]
+
+
+## Process annotation files
+
+if n_workers <= 1:
+
+    print('Processing annotation files serially')
+    all_results = []
+    for annotation_file_relative in tqdm(annotation_files_relative):
+        all_results.append(_process_annotation_file(annotation_file_relative,
+                                                     base_folder=base_folder,
+                                                     category_id_to_name=category_id_to_name))
+
+else:
+
+    pool_string = 'process'
+    if use_threads:
+        pool_string = 'thread'
+
+    print('Creating a {} pool with {} workers'.format(pool_string,n_workers))
+    if use_threads:
+        pool = ThreadPool(n_workers)
+    else:
+        pool = Pool(n_workers)
+
+    try:
+        all_results = list(tqdm(pool.imap(
+            partial(_process_annotation_file,
+                    base_folder=base_folder,
+                    category_id_to_name=category_id_to_name),
+            annotation_files_relative),
+            total=len(annotation_files_relative)))
+    finally:
+        pool.close()
+        pool.join()
+        print("Pool closed and joined for annotation processing")
+
+
+## Aggregate results
+
+n_annotations = 0
+relative_filename_to_annotations = defaultdict(list)
+box_widths = []
+
+for result in all_results:
+    n_annotations_this_file, image_filename_relative, annotations_list, box_widths_list = result
+    n_annotations += n_annotations_this_file
+    relative_filename_to_annotations[image_filename_relative].extend(annotations_list)
+    box_widths.extend(box_widths_list)
 
 print('Read {} annotations for {} images, average width {}'.format(
     n_annotations,len(relative_filename_to_annotations),np.mean(box_widths)))

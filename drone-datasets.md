@@ -427,7 +427,7 @@ Kline J, Zhong A, Yablok J.   MMLA The Wilds Dataset, 2025.
 
 ### MMLA-Mpala
 
-~130k frames with boxes on wild giraffe and zebra, collected at Mpala Research Center in Kenya.
+~130k frames with boxes on wild giraffe (~122k) and zebra (~495k), collected at Mpala Research Center in Kenya.
 
 Kline J, Kholiavchenko M, Zhong Alison, Ramirez M, Stevens S, Van Tiel N, Campolongo E, Thompson M, Ramesh Babu R, Banerji N, Sheets A, Magersupp M, Balasubramaniam S, Duporge I, Miliko J, Rosser N, Stewart CV, Berger-Wolf T, Rubenstein DI.
 
@@ -438,8 +438,8 @@ MMLA Mpala Dataset, 2025.
 * Categories: zebra, giraffe, onager, dog
 * Vehicle type: drone
 * Image information: 130,102 images
-* Annotation information: bounding boxes
-* Typical animal size in pixels:
+* Annotation information: ~617k bounding boxes
+* Typical animal size in pixels: 1138px
 * License: [CC 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-mmla-mpala.py">preview-mmla-mpala.py</a>
 
