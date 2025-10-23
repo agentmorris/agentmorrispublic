@@ -408,7 +408,7 @@ Kline J, Nguyen Ngoc D, Duncan H, Rondaeu Saint-Jean C, Maalouf G, Juma B, Kilwa
 
 ### MMLA-Wilds
 
-~8k frames with boxes on onagers (~45k), giraffe (~7k), zebra (~2.5k) and wild dogs (14), collected at The Wilds Conservation Center in Ohio.
+~8k frames with boxes on onagers (~45k), giraffe (~7k), zebra (~2.5k) and wild dogs (14) in UAV images, collected at The Wilds Conservation Center in Ohio.
 
 Kline J, Zhong A, Yablok J.   MMLA The Wilds Dataset, 2025.
 
@@ -427,7 +427,7 @@ Kline J, Zhong A, Yablok J.   MMLA The Wilds Dataset, 2025.
 
 ### MMLA-Mpala
 
-~130k frames with boxes on wild giraffe (~122k) and zebra (~495k), collected at Mpala Research Center in Kenya.
+~130k frames with boxes on giraffe (~122k) and zebra (~495k) in UAV images, collected at Mpala Research Center in Kenya.
 
 Kline J, Kholiavchenko M, Zhong Alison, Ramirez M, Stevens S, Van Tiel N, Campolongo E, Thompson M, Ramesh Babu R, Banerji N, Sheets A, Magersupp M, Balasubramaniam S, Duporge I, Miliko J, Rosser N, Stewart CV, Berger-Wolf T, Rubenstein DI.
 
@@ -435,7 +435,7 @@ MMLA Mpala Dataset, 2025.
 
 * 490GB, downloadable from [Hugging Face](https://huggingface.co/datasets/imageomics/mmla_mpala)
 * Metadata in YOLO format
-* Categories: zebra, giraffe, onager, dog
+* Categories: zebra, giraffe
 * Vehicle type: drone
 * Image information: 130,102 images
 * Annotation information: ~617k bounding boxes
