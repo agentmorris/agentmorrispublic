@@ -53,6 +53,7 @@ I am making a very loose effort to include last-updated dates for each of these.
 
 When possible, the first link for each line item should get you pretty close to the model weights.
 
+* [Community Fish Detector](https://github.com/WildHackers/community-fish-detector) (YOLOv12x detector for fish)
 * [SharkTrack](https://github.com/filippovarini/sharktrack) (YOLOv8n detector and multi-frame tracker for sharks) ([home](https://www.fvarini.com/sharktrack))
 * [AI for the Ocean Fish and Squid Detector](https://zenodo.org/records/7430331) (YOLOv5s, trained on 5600 images in the Eastern Pacific) (2022, [code](https://github.com/heinsense2/AIO_CaseStudy))
 * [MegaFishDetector](https://github.com/warplab/megafishdetector/blob/main/MODEL_ZOO.md) (YOLOv5 models (5s, 5l, 5m) for binary fish detection, trained on a variety of datasets) (2023, [code](https://github.com/warplab/megafishdetector))
@@ -66,3 +67,4 @@ When possible, the first link for each line item should get you pretty close to 
 
 * [Salmon Computer Vision Project](https://github.com/Salmon-Computer-Vision/salmon-computer-vision?tab=readme-ov-file) (2022, [paper](https://www.frontiersin.org/articles/10.3389/fmars.2023.1200408/full))... data and training code are available, but model weights aren't published.
 * The [FathomNet model zoo](https://github.com/fathomnet/models) includes a number of detectors; I included one on the list above that's clearly for fish, but a number of other detectors for smaller marine life are included in the model zoo.
+
