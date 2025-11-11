@@ -44,6 +44,7 @@ Eikelboom JA, Wind J, van de Ven E, Kenana LM, Schroder B, de Knegt HJ, van Lang
 * Typical animal size in pixels: 50
 * License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-eikelboom-savanna.py">preview-eikelboom-savanna.py</a>
+* Shortcode: eikelboom-savanna
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/eikelboom_savanna_sample_image_annotated.jpg" width=700>
   
@@ -63,6 +64,7 @@ Hu Q, Smith J, Woldt W, Tang Z. UAV-derived waterfowl thermal imagery dataset. M
 * Typical animal size in pixels: 7
 * License: CC BY 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-hu-thermal.py">preview-hu-thermal.py</a>
+* Shortcode: hu-thermal
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/hu_thermal_sample_image_annotated.jpg" width=700>
   
@@ -81,6 +83,8 @@ Hodgson JC, Mott R, Baylis SM, Pham TT, Wotherspoon S, Kilpatrick AD, Raja Segar
 * Annotation information: 1560 counts
 * Typical animal size in pixels: variable
 * License: CC0
+* Shortcode: hodgson-counts
+
 
 <img src="https://raw.githubusercontent.com/KalindiFonda/bAIo/main/aerial-drone-data-preview/drone_count_seabird_colony_60m_sample.jpg" width=700>
   
@@ -98,8 +102,9 @@ Qian Y, Humphries G, Trathan P, Lowther A, Donovan C.  Counting animals in aeria
 * Image information: 753 RGB images (orthorectified)
 * Annotation information: 137365 points
 * Typical animal size in pixels: 30
-* License: CC0 
+* License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-qian-penguins.py">preview-qian-penguins.py</a>
+* Shortcode: qian-penguins
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/qian_penguins_sample_image_annotated.jpg" width=700>
   
@@ -119,6 +124,7 @@ Gray PC, Fleishman AB, Klein DJ, McKown MW, Bezy VS, Lohmann KJ, Johnston DW. A 
 * Typical animal size in pixels: 10
 * License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-gray-turtles.py">preview-gray-turtles.py</a>
+* Shortcode: gray-turtles
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/gray_turtles_sample_image_annotated.jpg" width=700>
   
@@ -138,6 +144,7 @@ Naude J, Joubert D. The Aerial Elephant Dataset: A New Public Benchmark for Aeri
 * Typical animal size in pixels: 75
 * License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-aerial-elephants.py">preview-aerial-elephants.py</a>
+* Shortcode: aerial-elephants
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/aerial_elephants_sample_image_annotated.jpg" width=700>
   
@@ -157,6 +164,7 @@ Weinstein BG, Garner L, Saccomanno VR, Steinkraus A, Ortega A, Brush K, Yenni G,
 * Typical animal size in pixels: 35
 * License: CC BY 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weinstein-birds.py">preview-weinstein-birds.py</a>
+* Shortcode: weinstein-birds
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/weinstein_birds_sample_image_annotated.jpg" width=700>
   
@@ -178,6 +186,7 @@ Weiser EL, Flint PL, Marks DK, Shults BS, Wilson HM, Thompson SJ, Fischer JB. Ae
 * License: unspecified, but public domain implied (USGS source)
 * Code to render sample annotated image from the original dataset: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl.py">preview-weiser-waterfowl.py</a>
 * Code to render sample annotated image from the LILA dataset: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-weiser-waterfowl-lila.py">preview-weiser-waterfowl-lila.py</a>
+* Shortcode: weiser-waterfowl-lila
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/weiser_waterfowl_sample_image_annotated.jpg" width=700>
   
@@ -197,6 +206,7 @@ Hayes MC, Gray PC, Harris G, Sedgwick WC, Crawford VD, Chazal N, Crofts S, Johns
 * Typical animal size in pixels: 300
 * License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-hayes-seabirds.py">preview-hayes-seabirds.py</a>
+* Shortcode: hayes-seabirds
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/hayes_seabirds_sample_image_annotated.jpg" width=700>
   
@@ -207,7 +217,7 @@ Hayes MC, Gray PC, Harris G, Sedgwick WC, Crawford VD, Chazal N, Crofts S, Johns
   
 Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection and counting in UAV images based on convolutional neural networks. International Journal of Remote Sensing. 2020 Jan 2;41(1):31-52.
 
-* 3.2 GB, downloadable via http from University of Tokyo (<a href="http://bird.nae-lab.org/cattle/">download link</a>)
+* 3.2 GB, downloadable via http from University of Tokyo (<a href="http://bird.nae-lab.org/cattle">download link</a>)
 * Metadata in txt format
 * Categories: cattle
 * Vehicle type: drone
@@ -216,6 +226,7 @@ Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection a
 * Typical animal size in pixels: 90
 * License: unspecified
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-shao-cattle.py">preview-shao-cattle.py</a>
+* Shortcode: shao-cattle
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/shao_cattle_sample_image_annotated.jpg" width=700>
   
@@ -226,13 +237,14 @@ Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection a
   
 * 103 GB, downloadable via http or torrent from Kaggle (<a href="https://www.kaggle.com/c/noaa-fisheries-steller-sea-lion-population-count">download link</a>)
 * Metadata in csv format
-* Categories: steller sea lion
+* Categories: Steller sea lion
 * Vehicle type: plane
 * Image information: 948 RGB images
 * Annotation information: 948 counts
 * Typical animal size in pixels: 75
 * License: unspecified (public domain implied, NOAA source)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-steller-sea-lion-count.py">preview-steller-sea-lion-count.py</a>
+* Shortcode: steller-sea-lion-count
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/steller_sea_lion_count_sample_image.jpg" width=700>
   
@@ -250,6 +262,7 @@ Shao W, Kawakami R, Yoshihashi R, You S, Kawase H, Naemura T. Cattle detection a
 * Typical animal size in pixels: 1500
 * License: unspecified (public domain implied, NOAA source)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-right-whale-recognition.py">preview-right-whale-recognition.py</a>
+* Shortcode: right-whale-recognition
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/right_whale_recognition_sample_image.jpg" width=700>
   
@@ -269,6 +282,7 @@ Alaska Fisheries Science Center, 2021: A Dataset for Machine Learning Algorithm 
 * Typical animal size in pixels: 55
 * License: CDLA-permissive
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-noaa-arctic-seals.py">preview-noaa-arctic-seals.py</a>
+* Shortcode: noaa-arctic-seals
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/noaa_arctic_seals_sample_image_annotated.jpg" width=700>
   
@@ -288,6 +302,7 @@ Kellenberger B, Veen T, Folmer E, Tuia D. 21,000 birds in 4.5 h: efficient large
 * Typical animal size in pixels: 30
 * License: CDLA-permissive
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-aerial-seabirds-west-africa.py">preview-aerial-seabirds-west-africa.py</a>
+* Shortcode: aerial-seabirds-west-africa
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/aerial_seabirds_west_africa_sample_image_annotated.jpg" width=700>
   
@@ -307,6 +322,7 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
 * Typical animal size in pixels: 35
 * License: CDLA-permissive
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-conservation-drones.py">preview-conservation-drones.py</a>
+* Shortcode: conservation-drones
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/conservation_drones_sample_image_annotated.jpg" width=700>
 
@@ -317,7 +333,7 @@ Oblique aerial videos of zebras with 162931 bounding boxes and behavioral labels
 
 Price E, Khandelwal PC, Rubenstein DI, Ahmad A. A Framework for Fast, Large-scale, Semi-Automatic Inference of Animal Behavior from Monocular Videos. bioRxiv. 2023:2023-07.
 
-* 96GB, downloadable via http from Keeper (<a href="https://keeper.mpdl.mpg.de/d/a9822e000aff4b5391e1/">download link</a>)
+* 96GB, downloadable via http from Keeper (<a href="https://keeper.mpdl.mpg.de/d/a9822e000aff4b5391e1">download link</a>)
 * More information available on the [dataset home page](https://www.aamirahmad.de/datasets/dazzle/)
 * Metadata in json format (Labelme standard)
 * Categories: zebra, person, vehicle
@@ -327,6 +343,7 @@ Price E, Khandelwal PC, Rubenstein DI, Ahmad A. A Framework for Fast, Large-scal
 * Typical animal size in pixels: 134
 * License: unspecified
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-price-zebras.py">preview-price-zebras.py</a>
+* Shortcode: price-zebras
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/price_zebras_sample_image_annotated.jpg" width=700>
 
@@ -346,6 +363,7 @@ Koger B, Deshpande A, Kerby JT, Graving JM, Costelloe BR, Couzin ID. [Quantifyin
 * Typical animal size in pixels: 56
 * License: CC0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-koger-drones.py">preview-koger-drones.py</a>
+* Shortcode: koger-drones
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/koger_drones_sample_image_annotated.jpg" width=700>
 
@@ -354,7 +372,7 @@ Koger B, Deshpande A, Kerby JT, Graving JM, Costelloe BR, Couzin ID. [Quantifyin
 
 Kabra K, Xiong A, Li W, Luo M, Lu W, Yu T, Yu J, Singh D, Garcia R, Tang M, Arnold H. [Deep object detection for waterbird monitoring using aerial imagery](https://ieeexplore.ieee.org/document/10069986). In 2022 21st IEEE International Conference on Machine Learning and Applications (ICMLA) 2022 Dec 12 (pp. 455-460). IEEE.
 
-* 3.7TB, downloadable from Google Drive (<a href="https://drive.google.com/file/d/1hoP1ev8Npj5m0MZWZU7LpjU9c8JYYoFe/view?usp=share_link">download link</a>)
+* 3.7GB, downloadable from Google Drive (<a href="https://drive.google.com/file/d/1hoP1ev8Npj5m0MZWZU7LpjU9c8JYYoFe/view?usp=share_link">download link</a>)
 * Metadata in .csv format
 * Categories: <a href="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabra_birds_categories.txt">list of categories</a>
 * Vehicle type: drone
@@ -363,7 +381,7 @@ Kabra K, Xiong A, Li W, Luo M, Lu W, Yu T, Yu J, Singh D, Garcia R, Tang M, Arno
 * Typical animal size in pixels: 88.9
 * License: unspecified
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-kabra-birds.py">preview-kabra-birds.py</a>
-
+* Shortcode: kabra-birds
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabra_birds_sample_image_annotated.jpg" width=700>
 
@@ -383,6 +401,7 @@ Kholiavchenko M, Kline J, Ramirez M, Stevens S, Sheets A, Babu R, Banerji N, Cam
 * Typical animal size in pixels: 100
 * License: unspecified
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-kabr-behavior.py">preview-kabr-behavior.py</a>
+* Shortcode: kabr-behavior
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/kabr_sample_image_annotated.jpg">
 
@@ -393,7 +412,7 @@ Kholiavchenko M, Kline J, Ramirez M, Stevens S, Sheets A, Babu R, Banerji N, Cam
 
 Kline J, Nguyen Ngoc D, Duncan H, Rondaeu Saint-Jean C, Maalouf G, Juma B, Kilwaya A, Vuyiya B, Irungu M, Njoroge W, Mutisya S, Guerin D, Costelloe B, Pastucha E, Hermansen J, Kjeld J, Watson M, Richardson T, Schultz Lundquist UP.  MMLA Ol Pejeta Conservancy (OPC) Dataset, 2025.
 
-* 128GB, downloadable from [Hugging Face](https://huggingface.co/datasets/imageomics/mmla_opc)
+* 64GB, downloadable from [Hugging Face](https://huggingface.co/datasets/imageomics/mmla_opc)
 * Metadata in YOLO format
 * Categories: zebra
 * Vehicle type: drone
@@ -402,6 +421,7 @@ Kline J, Nguyen Ngoc D, Duncan H, Rondaeu Saint-Jean C, Maalouf G, Juma B, Kilwa
 * Typical animal size in pixels
 * License: [CC 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-mmla-opc.py">preview-mmla-opc.py</a>
+* Shortcode: mmla-opc
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/mmla_opc_sample_image_annotated.jpg">
 
@@ -410,7 +430,7 @@ Kline J, Nguyen Ngoc D, Duncan H, Rondaeu Saint-Jean C, Maalouf G, Juma B, Kilwa
 
 ~8k frames with boxes on onagers (~45k), giraffe (~7k), zebra (~2.5k) and wild dogs (14) in UAV images, collected at The Wilds Conservation Center in Ohio.
 
-Kline J, Zhong A, Yablok J.   MMLA The Wilds Dataset, 2025.
+Kline J, Zhong A, Yablok J.  MMLA The Wilds Dataset, 2025.
 
 * 21GB, downloadable from [Hugging Face](https://huggingface.co/datasets/imageomics/mmla_wilds)
 * Metadata in YOLO format
@@ -421,6 +441,7 @@ Kline J, Zhong A, Yablok J.   MMLA The Wilds Dataset, 2025.
 * Typical animal size in pixels: 1000px
 * License: [CC 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-mmla-wilds.py">preview-mmla-wilds.py</a>
+* Shortcode: mmla-wilds
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/mmla_wilds_sample_image_annotated.jpg">
 
@@ -442,6 +463,7 @@ MMLA Mpala Dataset, 2025.
 * Typical animal size in pixels: 1138px
 * License: [CC 1.0](https://creativecommons.org/publicdomain/zero/1.0/)
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-mmla-mpala.py">preview-mmla-mpala.py</a>
+* Shortcode: mmla-mpala
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/mmla_mpala_sample_image_annotated.jpg">
 
@@ -460,6 +482,7 @@ Mou C, Liu T, Zhu C, Cui X. Waid: A large-scale dataset for wildlife detection w
 * Typical animal size in pixels: 166
 * License: unspecified
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-waid-drones.py">preview-waid-drones.py</a>
+* Shortcode: waid-drones
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/waid_sample_image_annotated.jpg">
 
@@ -477,6 +500,7 @@ Converse RC, Lippitt CD, Sesnie SE, Harris GM, Butler MG, Stewart DR. Observer v
 * Typical animal size in pixels: 50
 * License: CC-BY-NC 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-nm-waterfowl.py">preview-nm-waterfowl.py</a>
+* Shortcode: nm-waterfowl
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/nm_waterfowl_sample_image_annotated.png">
 
@@ -494,6 +518,7 @@ Delplanque A, Foucher S, Lejeune P, Linchant J, Théau J. Multispecies detection
 * Typical animal size in pixels: 47
 * License: CC-BY-NC-SA 4.0
 * Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-delplanque-mammals.py">preview-delplanque-mammals.py</a>
+* Shortcode: delplanque-mammals
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/delplanque_mammals_sample_image_annotated.jpg" width=700>
 
@@ -503,14 +528,32 @@ Delplanque A, Foucher S, Lejeune P, Linchant J, Théau J. Multispecies detection
 Reinhard F, Parkan M, Produit T, Betschart S, Bacchilega B, Hauptfleisch ML, Meier P, Joost S, Tuia D. Near real-time ultrahigh-resolution imaging from unmanned aerial vehicles for sustainable land use management and biodiversity conservation in semi-arid savanna under regional and global change (SAVMAP). Zenodo.
 
 * 3GB, downloadable from <a href="https://zenodo.org/records/1204408">Zenodo</a> or <a href="https://huggingface.co/datasets/fadel841/savmap">Hugging Face</a>
-* Metadata in .geojson format
+
+According to the documentation provided with the Hugging Face version of the dataset:
+
+> "This dataset is not identical to the [Zenodo version]. The images have been cropped to 2000*2000 and only a portion of the negative samples (i.e. empty images) have been selected. The dataset comprises 3545 negative samples and 379 positive samples."
+
+For both versions:
+
 * Categories: animal
 * Vehicle type: UAV
-* Image information: 659 images, each 4000x3000
-* Annotation information: ~7.5k polygons, though those really approximate boxes, and there are a smaller number of unique annotations. But O(thousands).
 * Typical animal size in pixels: <100
 * License: AFL-3.0
-* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-savmap.py">preview-savmap.py</a>
+* Shortcode: reinhard-savmap
+
+For the Zenodo version:
+
+* Metadata in .geojson format
+* Image information: 659 images, each 4000x3000
+* Annotation information: ~7.5k polygons, though those really approximate boxes, and there are a smaller number of unique annotations. But O(thousands).
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-reinhard-savmap.py">preview-reinhard-savmap.py</a>
+
+For the Hugging Face version:
+
+* Metadata in Parquet format
+* Image information: 3,924 images, each 2000x2000
+* Annotation information: 1283 boxes
+* Code to convert Parquet to COCO and render sample images: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/convert-savmap-huggingface.py">convert-savmap-huggingface.py</a>
 
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/savmap_thumb.jpg" width=700>
 

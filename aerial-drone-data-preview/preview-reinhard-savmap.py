@@ -1,5 +1,5 @@
 """
-Code to render sample images and points in the SAVMAP dataset:
+Code to render sample images and points in the Zenodo version of the SAVMAP dataset:
 
 https://zenodo.org/records/1204408
 
@@ -54,8 +54,8 @@ for feature in geojson_data['features']:
 # Find images with at least min_annotations annotations
 min_annotations = 5
 n_images = 100
-images_with_multiple_annotations = {img_id: annotations 
-                                   for img_id, annotations in image_annotations.items() 
+images_with_multiple_annotations = {img_id: annotations
+                                   for img_id, annotations in image_annotations.items()
                                    if len(annotations) >= min_annotations}
 
 num_samples = min(n_images, len(images_with_multiple_annotations))
@@ -71,20 +71,20 @@ def merge_overlapping_boxes(boxes):
     """Merge overlapping bounding boxes"""
     if not boxes:
         return []
-    
+
     # Sort boxes by the x-coordinate of top-left corner
     sorted_boxes = sorted(boxes, key=lambda box: box[0])
     merged_boxes = [sorted_boxes[0]]
-    
+
     for current_box in sorted_boxes[1:]:
         previous_box = merged_boxes[-1]
-        
+
         # Check if current box overlaps with the previous box
         if (current_box[0] <= previous_box[2] and  # x_min_curr <= x_max_prev
             current_box[1] <= previous_box[3] and  # y_min_curr <= y_max_prev
             current_box[2] >= previous_box[0] and  # x_max_curr >= x_min_prev
             current_box[3] >= previous_box[1]):    # y_max_curr >= y_min_prev
-            
+
             # Merge the boxes
             merged_boxes[-1] = [
                 min(previous_box[0], current_box[0]),  # x_min
@@ -95,28 +95,28 @@ def merge_overlapping_boxes(boxes):
         else:
             # No overlap, add the current box to the result
             merged_boxes.append(current_box)
-    
+
     return merged_boxes
 
 # Process each sampled image
 for image_id in sampled_image_ids:
     # Construct the image path
     image_path = os.path.join(base_folder, f"{image_id}.JPG")
-    
+
     try:
         # Open the image
         img = Image.open(image_path)
         draw = ImageDraw.Draw(img)
-        
+
         # Convert polygons to bounding boxes
         bboxes = []
         for polygon_coords in image_annotations[image_id]:
             bbox = polygon_to_bbox(polygon_coords)
             bboxes.append(bbox)
-        
+
         # Merge overlapping boxes
         merged_boxes = merge_overlapping_boxes(bboxes)
-        
+
         # Draw the merged bounding boxes
         for box in merged_boxes:
             # box format: [xmin, ymin, xmax, ymax]
@@ -125,11 +125,11 @@ for image_id in sampled_image_ids:
                 outline=(255, 0, 0),
                 width=8
             )
-        
+
         # Save the image with annotations
         output_path = os.path.join(output_folder, f"{image_id}.JPG")
         img.save(output_path)
-        
+
         print(f"Processed image: {image_id}")
     except Exception as e:
         print(f"Error processing image {image_id}: {e}")
