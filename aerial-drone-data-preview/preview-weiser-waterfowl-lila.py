@@ -3,7 +3,7 @@
 #
 # https://lila.science/datasets/izembek-lagoon-waterfowl/
 #
-# Annotations are boxes in a COCO .json file 
+# Annotations are boxes in a COCO .json file.
 #
 
 #%% Constants and imports
@@ -28,7 +28,7 @@ image_base = r"J:\lila\izembek-lagoon-birds"
 #%% Read and summarize annotations
 
 with open(annotation_file,'r') as f:
-    d = json.load(f)    
+    d = json.load(f)
 
 image_id_to_annotations = defaultdict(list)
 category_name_to_id = {}
@@ -49,24 +49,24 @@ for cat in d['categories']:
 
 # im = d['images'][0]
 for im in tqdm(d['images']):
-    
+
     file_name_short = im['file_name']
     fn_abs = os.path.join(image_base,file_name_short)
     assert os.path.isfile(fn_abs)
-    
+
     annotations_this_image = image_id_to_annotations[im['id']]
-    
+
     for ann in annotations_this_image:
         category_id = ann['category_id']
         category_id_to_count[category_id] = category_id_to_count[category_id] + 1
         if 'bbox' in ann:
-            assert len(ann['bbox']) == 4        
+            assert len(ann['bbox']) == 4
             box_widths.append(ann['bbox'][3])
-        
+
     # ...for each annotation
-    
+
 # ...for each image
-    
+
 print('\nRead {} annotations (average width {}) for {} images'.format(
     len(d['annotations']),np.mean(box_widths),len(d['images'])))
 
@@ -82,13 +82,13 @@ threshold_species = 3
 selected_image_id = None
 
 for image_id in image_id_to_annotations:
-    
+
     category_to_count_this_image = defaultdict(int)
     annotations_this_image = image_id_to_annotations[image_id]
     for ann in annotations_this_image:
         if 'bbox' in ann:
             category_to_count_this_image[ann['category_id']] += 1
-    
+
     species_over_threshold_this_image = 0
     for category_id in category_name_to_id.values():
         if category_id in category_to_count_this_image and \
@@ -124,21 +124,21 @@ image_annotations = image_id_to_annotations[selected_image_id]
 
 # ann = image_annotations[0]
 for ann in image_annotations:
-    
+
     if 'bbox' not in ann:
         continue
-    
+
     x0 = ann['bbox'][0]
     y0 = ann['bbox'][1]
     x1 = x0 + ann['bbox'][2]
     y1 = y0 + ann['bbox'][3]
-    
+
     if y1 < y0:
         y0, y1 = y1, y0
-    
+
     if x1 < x0:
         x0, x1 = x1, x0
-        
+
     det = {}
     det['conf'] = None
     det['category'] = ann['category_id']
@@ -149,10 +149,10 @@ for ann in image_annotations:
            y0/image_h,
            box_w/image_w,
            box_h/image_h]
-    
-    det['bbox'] = box    
-    detection_formatted_boxes.append(det)    
-    
+
+    det['bbox'] = box
+    detection_formatted_boxes.append(det)
+
 """
 def draw_bounding_boxes_on_file(input_file, output_file, detections, confidence_threshold=0.0,
                                 detector_label_map=DEFAULT_DETECTOR_LABEL_MAP,
@@ -160,11 +160,11 @@ def draw_bounding_boxes_on_file(input_file, output_file, detections, confidence_
                                 colormap=DEFAULT_COLORS,
                                 custom_strings=None):
 
-"""    
+"""
 
 category_id_to_name = {v: k for k, v in category_name_to_id.items()}
 
-vis_utils.draw_bounding_boxes_on_file(selected_image_filename_abs, output_file_annotated, detection_formatted_boxes,       
+vis_utils.draw_bounding_boxes_on_file(selected_image_filename_abs, output_file_annotated, detection_formatted_boxes,
                                      confidence_threshold=0.0,detector_label_map=category_id_to_name,
                                      thickness=2,expansion=3) # colormap=['red'])
 
@@ -172,4 +172,4 @@ from megadetector.utils import path_utils
 path_utils.open_file(output_file_annotated)
 
 import shutil
-shutil.copyfile(selected_image_filename_abs,output_file_unannotated)    
+shutil.copyfile(selected_image_filename_abs,output_file_unannotated)

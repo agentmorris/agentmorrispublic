@@ -176,8 +176,8 @@ Weinstein BG, Garner L, Saccomanno VR, Steinkraus A, Ortega A, Brush K, Yenni G,
 Weiser EL, Flint PL, Marks DK, Shults BS, Wilson HM, Thompson SJ, Fischer JB. Aerial photo imagery from fall waterfowl surveys, Izembek Lagoon, Alaska, 2017-2019: U.S. Geological Survey data release. 2022.
 
 * 1.82 TB, downloadable via http from USGS (<a href="https://alaska.usgs.gov/products/data.php?dataid=484">download link</a>)
-* A slightly-more-curated but technically-incomplete version of this dataset (many of the blank images hve been removed) is [hosted on LILA](https://lila.science/datasets/izembek-lagoon-waterfowl/).
-* Metadata in csv, json format (CountThings standard)
+* A slightly-more-curated version of this dataset, minus many of the blank images, is [hosted on LILA](https://lila.science/datasets/izembek-lagoon-waterfowl/).  This version is 124GB.
+* Metadata for the original version is in csv, json format (CountThings format); metadata for the LILA version is in COCO format.
 * Categories: brant goose, emperor goose, canada goose, gull, other
 * Vehicle type: plane
 * Image information: 110667 RGB images
@@ -277,7 +277,7 @@ Alaska Fisheries Science Center, 2021: A Dataset for Machine Learning Algorithm 
 * Metadata in csv format
 * Categories: ringed_seal, ringed_pup, unknown_seal, bearded_pup, bearded_seal, unknown_pup
 * Vehicle type: plane
-* Image information: 44185 RGB+IR images (rGB and IR are different resolutions, but registered well, and annotations for every animal are provided for both images)
+* Image information: 44185 RGB+IR images (RGB and IR are different resolutions, but registered well, and annotations for every animal are provided for both images)
 * Annotation information: 14311 boxes
 * Typical animal size in pixels: 55
 * License: CDLA-permissive
@@ -317,7 +317,7 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
 * Metadata in csv format (MOT standard)
 * Categories: human, elephant, giraffe, lion, dog
 * Vehicle type: drone
-* Image information: 61994 frames from 48 videos thermal images
+* Image information: 61994 frames from 48 thermal videos
 * Annotation information: 166221 boxes
 * Typical animal size in pixels: 35
 * License: CDLA-permissive
@@ -327,13 +327,34 @@ Bondi E, Jain R, Aggrawal P, Anand S, Hannaford R, Kapoor A, Piavis J, Shah S, J
 <img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/conservation_drones_sample_image_annotated.jpg" width=700>
 
 
+### BuckTales: A multi-UAV dataset for multi-object tracking and re-identification of wild antelopes
+
+This is really three datasets in one: a detection dataset, a re-ID dataset, and a tracking dataset, all using an overlapping set of videos, specifically UAV images over a herd of blackbuck.  The detection dataset is 320 images with 18.4k boxes, the tracking dataset is 1.2M boxes over 12 video sequences (it's not explicitly stated, but I think those boxes are generated via a detector trained on the detection dataset), and the Re-ID dataset labels 730 individuals.
+
+Naik H, Yang J, Das D, Crofoot MC, Rathore A, Sridhar VH. BuckTales: A multi-UAV dataset for multi-object tracking and re-identification of wild antelopes. Advances in Neural Information Processing Systems. 2024 Dec 16;37:81992-2009.
+
+* 80GB, downloadable via http from Edmond (<a href="https://edmond.mpg.de/dataset.xhtml?persistentId=doi:10.17617/3.JCZ9WK">download link</a>)
+* Metadata in COCO and YOLO format (for the detection dataset) and MOT format (for the tracking dataset)
+* Categories: drone, bird, unknown, shadow, female blackbuck, male blackbuck
+* Vehicle type: drone
+* License: CC BY-SA 4.0
+* Annotation information: 18.4k boxes in the detection dataset
+* Image information: 320 images
+* Annotation information: 21,069 boxes
+* Typical animal size in pixels: 40
+* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/aerial-drone-data-preview/preview-naik-bucktales.py">preview-naik-bucktales.py</a>
+* Shortcode: naik-bucktales
+
+<img src="https://raw.githubusercontent.com/agentmorris/agentmorrispublic/main/aerial-drone-data-preview/bucktales_annotated.jpg" width=700>
+
+
 ### DAZZLE: Drone-Acquired Zebra Data for Large-scale Ecology Research
 
 Oblique aerial videos of zebras with 162931 bounding boxes and behavioral labels (standing, grazing, etc.).
 
 Price E, Khandelwal PC, Rubenstein DI, Ahmad A. A Framework for Fast, Large-scale, Semi-Automatic Inference of Animal Behavior from Monocular Videos. bioRxiv. 2023:2023-07.
 
-* 96GB, downloadable via http from Keeper (<a href="https://keeper.mpdl.mpg.de/d/a9822e000aff4b5391e1">download link</a>)
+* 96GB, downloadable via http from Darus(<a href="https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi:10.18419/DARUS-5162">download link</a>)
 * More information available on the [dataset home page](https://www.aamirahmad.de/datasets/dazzle/)
 * Metadata in json format (Labelme standard)
 * Categories: zebra, person, vehicle
