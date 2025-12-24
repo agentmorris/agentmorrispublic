@@ -160,6 +160,9 @@ detection_formatted_boxes = []
 # ann = image_annotations[0]
 for ann in image_annotations:
 
+    if ann['category_id'] in category_ids_to_ignore:
+        continue
+
     x0 = ann['bbox'][0]
     y0 = ann['bbox'][1]
     x1 = x0 + ann['bbox'][2]
