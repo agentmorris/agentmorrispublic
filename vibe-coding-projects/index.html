@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A bunch of Dan's vibe-coded projects</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            padding: 2rem;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+            color: #1a1a2e;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .card a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card .thumb {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+            background: #e8e8e8;
+        }
+        .card .info {
+            padding: 1rem 1.2rem;
+        }
+        .card .info h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            color: #1a1a2e;
+        }
+        .card .info p {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.45;
+        }
+    </style>
+</head>
+<body>
+
+<h1>A bunch of Dan's vibe-coded projects</h1>
+<p class="subtitle">&nbsp;</p>
+
+<!--<p class="subtitle">A collection of personal projects built with AI-assisted ("vibe") coding</p>-->
+
+<div class="grid">
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/animal-counting">
+            <img class="thumb" src="thumbnails/animal-counting.jpg" alt="Animal Counting">
+            <div class="info">
+                <h2>Animal Counting with VLMs</h2>
+                <p>Using VLMs to estimate group sizes in sequences of camera trap images</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/cow-behavior-experiments">
+            <img class="thumb" src="thumbnails/cow-behavior.jpg" alt="Cow Behavior Analysis">
+            <div class="info">
+                <h2>Cow Behavior Analysis</h2>
+                <p>Using VLMs to estimate cattle posture in camera trap images</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/nfl-playback-automation">
+            <img class="thumb" src="thumbnails/nfl-playback.jpg" alt="NFL Playback Automation">
+            <div class="info">
+                <h2>NFL Playback Automation</h2>
+                <p>Chrome extension to remember playback positions in nfl.com streams</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/ipython-cell-executor">
+            <img class="thumb" src="thumbnails/ipython-cell-executor.png" alt="IPython Cell Executor">
+            <div class="info">
+                <h2>IPython Cell Executor</h2>
+                <p>VS Code extension for running code cells in an IPython terminal</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/python-cell-highlighter">
+            <img class="thumb" src="thumbnails/python-cell-highlighter.jpg" alt="Python Cell Highlighter">
+            <div class="info">
+                <h2>Python Cell Highlighter</h2>
+                <p>VS Code extension for highlighting the selected code cell</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/task-viewer">
+            <img class="thumb" src="thumbnails/task-viewer.png" alt="Task Viewer">
+            <div class="info">
+                <h2>Task Viewer</h2>
+                <p>Custom task viewer for issues/tasks stored in a markdown file</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/chord-voicings">
+            <img class="thumb" src="thumbnails/chord-voicings.jpg" alt="Chord Voicing Challenges">
+            <div class="info">
+                <h2>Chord Voicing Challenges</h2>
+                <p>Using AI to create chord voicing challenges for guitarists</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/hero-images">
+            <img class="thumb" src="thumbnails/hero-images.png" alt="Camera Trap Hero Images">
+            <div class="info">
+                <h2>Hero Images</h2>
+                <p>Using VLMs to find aesthetically pleasing camera trap images</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/lila-game">
+            <img class="thumb" src="thumbnails/lila-game.jpg" alt="LILA Game">
+            <div class="info">
+                <h2>LILA Game</h2>
+                <p>A game about identifying species in camera trap images</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/inat-diff">
+            <img class="thumb" src="thumbnails/inat-diff.png" alt="iNat Diff">
+            <div class="info">
+                <h2>iNat Diff</h2>
+                <p>Finding species that were reported on iNaturalist for the first time in a particular area</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/google-research/ecology-georeferencing/tree/main/georeferencing">
+            <img class="thumb" src="thumbnails/ecology-georeferencing.png" alt="Ecology Georeferencing">
+            <div class="info">
+                <h2>Ecology Georeferencing</h2>
+                <p>Using VLMs to identify the geographic location of maps in ecology papers</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/scoreblocker-2000">
+            <img class="thumb" src="thumbnails/scoreblocker-2000.png" alt="Score Blocker 2000">
+            <div class="info">
+                <h2>Score Blocker 2000</h2>
+                <p>Blocking part of the screen so I don't see the scores of other games while watching football</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/nfl-chatbot">
+            <img class="thumb" src="thumbnails/nfl-chatbot.png" alt="NFL Chatbot">
+            <div class="info">
+                <h2>NFL Chatbot</h2>
+                <p>Simulated post-game interview with an NFL player</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/camera-trap-horse-classifier">
+            <img class="thumb" src="thumbnails/horse-classifier.jpg" alt="Horse Classifier">
+            <div class="info">
+                <h2>Horse Classifier</h2>
+                <p>Classifier for horses (packhorse, saddlehorse, free-roaming horse) in camera trap images</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="card">
+        <a href="https://github.com/agentmorris/camera-trap-vehicle-classifier">
+            <img class="thumb" src="thumbnails/vehicle-classifier.jpg" alt="Vehicle Classifier">
+            <div class="info">
+                <h2>Vehicle Classifier</h2>
+                <p>Classifier for vehicle types (car/truck, quad, motorbike, mountain bike) in camera trap images</p>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

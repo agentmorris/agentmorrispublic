@@ -1,3 +1,11 @@
+# AI stuff
+.claude
+.gemini
+.playwright-mcp
+claude.md
+gemini.md
+agents.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
