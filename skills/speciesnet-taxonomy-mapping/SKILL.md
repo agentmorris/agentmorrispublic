@@ -14,7 +14,7 @@ This skill turns a user's list of camera-trap category labels (the tags they act
 - **Input file**: a path to the user's label list. Usually a one-label-per-line `.txt`/`.csv` with no header (e.g. `Baboon_chacma`, `Buffalo_cape`), sometimes a CSV with a header. Read it as-is; the user's tokens become the `original_common` column verbatim.
 - **Output file**: the path to write the mapping CSV. If the user has a `taxonomy-lists/` folder, that is the usual home; mirror existing filenames (e.g. `<project>_speciesnet.csv`).
 - **Country / state / region**: ask for this if the user doesn't provide it — it resolves many ambiguities (a "lion" tag means *mountain lion* in Idaho but *Panthera leo* in Tanzania; a "robin" means different birds in North America vs Europe). If the user truly has no region, ask whether the mapping is meant to be global or region-specific.
-- **Scope** (ask if unclear): is this a **specific study area / reserve** (treat the list as the full set of taxa present — fold predictions of unlisted species into the nearest listed taxon) or **a whole country/region** (unlisted species may genuinely occur; be more conservative about absorbing them)? Specific-study-area is the common case and licenses more aggressive mapping.
+- **Scope** (ask if unclear): by default, assuming this mapping is for a **specific study area / reserve** (treat the list as the full set of taxa present — fold predictions of unlisted species into the nearest listed taxon); only if the user expressly indicates that the list is non-exhaustive should you treat this mapping as applying to **a whole country/region** (unlisted species may genuinely occur; be more conservative about absorbing them)? Specific-study-area is the common case and licenses more aggressive mapping.
 
 ## Locating the SpeciesNet taxonomy
 
@@ -49,7 +49,7 @@ Worked consequences (all from the taxonomy, not memory):
 
 - If the list has `red_fox` and `bobcat` and no other canids/felids, map `canidae` -> red fox and `felidae` -> bobcat (each family has only one representative in the list), NOT the species. If it also had `vulpes` and no other carnivores, map the whole order `carnivora` -> vulpes.
 - If the list has three species in one genus (e.g. bushbuck, nyala, greater kudu — all `tragelaphus`), you cannot use the genus; map each at the species level (`tragelaphus scriptus`, `tragelaphus angasii`, `tragelaphus strepsiceros`).
-- If a genus has exactly one representative in the list, map at the genus (e.g. only `aepyceros melampus` -> map `aepyceros` -> impala), which also folds any other species in that genus into the label.
+- If a genus has exactly one representative in the list, map at the genus (e.g. only `aepyceros melampus` -> map `aepyceros` -> impala), which also folds any other species in that genus into the label.  Ditto for family and order level.  **It will be very common to map labels to the genus level**.  Family and even order-level mappings will also be quite common.
 - This is independent of whether common or Latin names were provided; apply the same "highest unambiguous level" logic either way.
 - You can also create deliberately nested rows when the user has an "other" bucket, because the most specific matching row wins: `odocoileus,white-tailed deer` then `cervidae,other deer` sends the genus Odocoileus to "white-tailed deer" and all remaining deer to "other deer".
 
@@ -59,7 +59,7 @@ Labels like `Mammal_unspecified`, `Bird_unspecified`, `Rodent_unspecified`, or p
 
 ### Aggressiveness and the notes column
 
-Default to **aggressive** mapping for a specific study area: climb to the highest unambiguous level even when the broader taxon contains other species that occur in the region but aren't in the list — the list defines the study area, so off-list predictions are best folded into the nearest listed taxon. BUT add a `notes` entry whenever the fold is **surprising** — i.e. it absorbs a species that is common/iconic in the region and whose absence from the list is genuinely unexpected. Example: in South Africa, mapping `panthera` -> leopard folds lions into "leopard"; lions are common there, so note it and ask the user to confirm lions are truly absent. Do not over-note unremarkable folds (e.g. folding korhaans into "kori bustard" needs no note). Use judgment to avoid ecologically absurd climbs even when technically unambiguous: e.g. don't climb `struthio` up to the order `struthioniformes` if that order also contains rheas/emus/tinamous — cap at the sensible group.
+Default to **aggressive** mapping for a specific study area: climb to the highest unambiguous level even when the broader taxon contains other species that occur in the region but aren't in the list — the list defines the study area, so off-list predictions are best folded into the nearest listed taxon. BUT add a `notes` entry whenever the fold is **surprising** — i.e. it absorbs a species that is common/iconic in the region and whose absence from the list is genuinely unexpected. Example: in South Africa, mapping `panthera` -> leopard folds lions into "leopard"; lions are common there, so note it and ask the user to confirm lions are truly absent. Do not over-note unremarkable folds (e.g. folding korhaans into "kori bustard" needs no note).
 
 ## Special cases
 
@@ -112,6 +112,7 @@ Fix any reported rows (usually a nomenclature mismatch — search the taxonomy/w
 3. Read the user's label list verbatim.
 4. For each label, identify the species/concept and its SpeciesNet target taxon (grep the taxonomy; web-search to reconcile names; apply the region to disambiguate).
 5. Across the whole list, compute the highest-unambiguous-level `latin` for each label; handle catch-alls, non-taxonomic entities, sex/age variants, absent-species, and multi-row cases per the rules above.
-6. Write the CSV (`latin,common,original_latin,original_common,notes`), preserving input order, quoting fields with commas, adding `notes` for surprises and judgment calls.
-7. Run the validation script; fix until zero invalid `latin` values.
-8. Tell the user what you wrote, and call out the rows you flagged in `notes` (surprising folds, unmapped taxa) so they know what to review.
+6. Double-check each mapping to make sure there isn't an opportunity for a higher-level mapping, in particular check that you didn't map species when you could have unambiguously mapped a genus.
+7. Write the CSV (`latin,common,original_latin,original_common,notes`), preserving input order, quoting fields with commas, adding `notes` for surprises and judgment calls.
+8. Run the validation script; fix until zero invalid `latin` values.
+9. Tell the user what you wrote, and call out the rows you flagged in `notes` (surprising folds, unmapped taxa) so they know what to review.
