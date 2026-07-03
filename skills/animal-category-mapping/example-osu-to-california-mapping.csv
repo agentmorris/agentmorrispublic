@@ -1,0 +1,47 @@
+source_category,target_category,notes
+empty,blank,
+american_bullfrog,amphibian,
+american_toad,amphibian,
+green_frog,amphibian,
+northern_leopard_frog,amphibian,
+common_yellowthroat,bird,
+eastern_bluebird,bird,
+gray_catbird,bird,
+indigo_bunting,bird,
+northern_house_wren,bird,
+song_sparrow,bird,
+sora,bird,Sora is a rail (bird)
+invertebrate,other_invert,Generic invertebrate; not clearly insect/spider/isopod
+common_five-lined_skink,skink,
+american_mink,weasel,Mink is a mustelid (closest match to weasel); no dedicated mink/carnivore class
+brown_rat,woodrat_rat,
+eastern_chipmunk,chipmunk,
+eastern_cottontail,rabbit_hare,
+long-tailed_weasel,weasel,
+masked_shrew,shrew_mole,
+meadow_jumping_mouse,mouse,"Jumping mouse (Zapodidae), not a true mouse; mapped to mouse for best eval alignment"
+meadow_vole,vole,
+n._short-tailed_shrew,shrew_mole,
+raccoon,mammal_other,No raccoon/carnivore class; mapped to generic mammal_other
+star-nosed_mole,shrew_mole,
+striped_skunk,skunk,
+virginia_opossum,opossum,
+white-footed_mouse,mouse,
+woodchuck,mammal_other,Woodchuck/marmot is family Sciuridae but morphologically distinct from typical squirrels; per user decision
+woodland_jumping_mouse,mouse,"Jumping mouse (Zapodidae), not a true mouse; mapped to mouse for best eval alignment"
+butler's_gartersnake,snake,
+dekay's_brownsnake,snake,
+eastern_gartersnake,snake,
+eastern_hog-nosed_snake,snake,
+eastern_massasauga,rattlesnake,Massasauga is a rattlesnake; mapped to rattlesnake rather than generic snake
+eastern_milksnake,snake,
+eastern_racer_snake,snake,
+eastern_ribbonsnake,snake,
+gray_ratsnake,snake,
+kirtland's_snake,snake,
+northern_watersnake,snake,
+plains_gartersnake,snake,
+red-bellied_snake,snake,
+smooth_greensnake,snake,
+painted_turtle,,No turtle or reptile_other class in target; left blank
+snapping_turtle,,No turtle or reptile_other class in target; left blank
