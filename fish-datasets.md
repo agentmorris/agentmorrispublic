@@ -2,17 +2,9 @@
 
 ## TOC
 
-* <a href="#overview">Overview</a>
 * <a href="#publicly-available-datasets">Publicly available datasets</a>
 * <a href="#publicly-available-models-for-fish-detection">Publicly-available models for fish detection</a>
 * <a href="#systems-with-closed-weights-fish-detection-models">Systems with (closed-weights) fish detection models</a>
-
-
-## Overview
-
-This is (theoretically) a list of datasets with annotated marine/freshwater imagery, suitable for training fish detectors/classifiers.  Right now, it's not exactly that, it's just a link to a list of datasets.  But I'd like it to grow into something analogous to the (list of datasets with annotated wildlife in drone/aerial images)[drone-datasets.md], with standardized metadata for each dataset, and consistent sample code for match annotations to images and rendering sample images.
-
-I haven't actually done that part yet, so for now, the "datasets" portion of this page is just a link to a less-structured place where I'm keeping a list of datasets.  The <i>models</i> list at the bottom of the page is slightly more comprehensive.
 
 
 ## Publicly available datasets
