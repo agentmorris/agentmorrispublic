@@ -1,16 +1,12 @@
-# Datasets with annotated fish in marine/freshwater imagery/video
-
-## Also see
-
-* [Filippo Varini](https://www.linkedin.com/in/filippo-varini/?originalSubdomain=uk) has [picked up where this page leaves off](https://github.com/filippovarini/fish-datasets); if you are looking for a comprehensive list of fish datasets with sample code, start there.  Now that Filippo's list exists, the page you're looking at now is almost obsolete, other than the <a href="#publicly-available-models-for-fish-detection">list of models</a>.
-* Though there's almost no detail there, I still try to keep [LILA's list of marine image datasets](<https://lila.science/otherdatasets#images-marine-fish>
-) up to date.
+# Datasets, models, and systems related to fish detection in marine/freshwater imagery/video
 
 ## TOC
 
 * <a href="#overview">Overview</a>
 * <a href="#publicly-available-datasets">Publicly available datasets</a>
 * <a href="#publicly-available-models-for-fish-detection">Publicly-available models for fish detection</a>
+* <a href="#systems-with-closed-weights-fish-detection-models">Systems with (closed-weights) fish detection models</a>
+
 
 ## Overview
 
@@ -18,29 +14,10 @@ This is (theoretically) a list of datasets with annotated marine/freshwater imag
 
 I haven't actually done that part yet, so for now, the "datasets" portion of this page is just a link to a less-structured place where I'm keeping a list of datasets.  The <i>models</i> list at the bottom of the page is slightly more comprehensive.
 
+
 ## Publicly available datasets
 
-As per above, this section is currently a placeholder for a hypothetical future where someone collects standardized metadata and sample code for each dataset.  For now, I'm going to do this for just <i>one</i> dataset, to paint the picture.  But the real list of relevant datasets is at:
-
-<https://lila.science/otherdatasets#images-marine-fish>
-
-Here's the one dataset, to provide an example of what I'd like to do for all the other datasets...
-
-### NOAA Puget Sound Nearshore Fish 2017-2018
-
-Images with 67990 bounding boxes on fish and crustaceans
-  
-Farrell DM, Ferriss B, Sanderson B, Veggerby K, Robinson L, Trivedi A, Pathak S, Muppalla S, Wang J, Morris D, Dodhia R. A labeled data set of underwater images of fish and crab species from five mesohabitats in Puget Sound WA USA. Scientific Data. 2023 Nov 13;10(1):799.
-
-* 7 GB, downloadable via http or gsutil from LILA (<a href="https://lila.science/datasets/noaa-puget-sound-nearshore-fish">download link</a>)
-* Metadata in COCO format
-* Categories: fish, crustacean
-* Image information: 77,739 images from shellfish aquaculture farms in the Northeast Pacific
-* Annotation information: 67990 boxes
-* License: CDLA-permissive 1.0
-* Code to render sample annotated image: <a href="https://github.com/agentmorris/agentmorrispublic/blob/main/fish-data-preview/preview-noaa-psnf.py">preview-noaa-psnf.py</a>
-
-<img src="http://lila.science/wp-content/uploads/2022/07/noaa-estuary-thumb-800.png" width=700>
+This section has been moved to [its own page](https://github.com/filippovarini/community-fish-detector-dataset).
 
 
 ## Publicly-available models for fish detection
@@ -53,7 +30,7 @@ I am making a very loose effort to include last-updated dates for each of these.
 
 When possible, the first link for each line item should get you pretty close to the model weights.
 
-* [Community Fish Detector](https://github.com/WildHackers/community-fish-detector) (YOLOv12x detector for fish)
+* [Community Fish Detector](https://github.com/WildHackers/community-fish-detector) (family of one-class ("fish") RF-DETR  models)
 * [SharkTrack](https://github.com/filippovarini/sharktrack) (YOLOv8n detector and multi-frame tracker for sharks) ([home](https://www.fvarini.com/sharktrack)) ([paper](https://www.sciencedirect.com/science/article/pii/S1574954126001196))
 * [AI for the Ocean Fish and Squid Detector](https://zenodo.org/records/7430331) (YOLOv5s, trained on 5600 images in the Eastern Pacific) (2022, [code](https://github.com/heinsense2/AIO_CaseStudy))
 * [MegaFishDetector](https://github.com/warplab/megafishdetector/blob/main/MODEL_ZOO.md) (YOLOv5 models (5s, 5l, 5m) for binary fish detection, trained on a variety of datasets) (2023, [code](https://github.com/warplab/megafishdetector))
@@ -68,3 +45,14 @@ When possible, the first link for each line item should get you pretty close to 
 * [Salmon Computer Vision Project](https://github.com/Salmon-Computer-Vision/salmon-computer-vision?tab=readme-ov-file) (2022, [paper](https://www.frontiersin.org/articles/10.3389/fmars.2023.1200408/full))... data and training code are available, but model weights aren't published.
 * The [FathomNet model zoo](https://github.com/fathomnet/models) includes a number of detectors; I included one on the list above that's clearly for fish, but a number of other detectors for smaller marine life are included in the model zoo.
 
+
+## Systems with (closed-weights) fish detection models
+
+* [SeaLens](https://sealens.app/)
+* [Whooshh FishlRecognition](https://www.whooshh.com/product/fishlrecognition/) (fish passage monitoring system with cameras and AI)
+* [AI.Fish](https://www.ai.fish/) (detection and classification for commercial fishing vessels)
+* [OnDeck AI](https://ondeckai.com/) (video analysis for fisheries monitoring and marine wildlife surveys)
+* [i-Ocean AI Fish Counter](https://i-ocean-global.com/en/products/fish-counter) (AI-accelerated tools for fish counting/monitoring in transport environments, including fish counting/measurement)
+* [Vaki Riverwatchter](https://www.riverwatcher.is/) (AI-enabled camera/monitoring systems installed at passages)
+* [MarineSitu SaltySuite](https://marinesitu.com/products/software) ("Full-stack software for underwater monitoring: edge and cloud AI, deep analytics...")
+* [Ark CV](https://arkcv.com/) ("Ark CV helps fisheries teams monitor passage around the clock—adapting to the cameras, sensors, and footage already available on site")
