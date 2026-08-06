@@ -48,3 +48,4 @@ When possible, the first link for each line item should get you pretty close to 
 * [Vaki Riverwatchter](https://www.riverwatcher.is/) (AI-enabled camera/monitoring systems installed at passages)
 * [MarineSitu SaltySuite](https://marinesitu.com/products/software) ("Full-stack software for underwater monitoring: edge and cloud AI, deep analytics...")
 * [Ark CV](https://arkcv.com/) ("Ark CV helps fisheries teams monitor passage around the clock—adapting to the cameras, sensors, and footage already available on site")
+* [Anemo Robotics](https://anemorobotics.com/) ("Underwater cameras powered by AI and computer vision")
